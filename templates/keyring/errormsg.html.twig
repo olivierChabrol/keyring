@@ -1,0 +1,14 @@
+{# templates/dhcp/list.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur{% endblock %}
+{% block addPretNavBarItem %}active{% endblock %}
+{% block body %}
+<form action="/addPret" id="formSavePret" method="post">
+<div class="row">
+    <div class="col-sm">
+	<label for="hostname">Vous n'avez pas les droits afin d'atteindre cette page</label> <br>
+	<a href="/">Cliquer ici pour revenir en arrière</a>
+
+       
+{% endblock %}

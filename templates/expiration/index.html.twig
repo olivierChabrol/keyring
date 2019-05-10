@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Expirations a venir{% endblock %}
+
+{% block listPretNavBarItem %}active{% endblock %}
+
+{% block body %}
+
+  <div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Suppression</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Voulez vous vraiment supprimer ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+        <button type="button" class="btn btn-primary" id="buttonConfirmDelete">Oui</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+<script type="text/javascript">
+
+Highcharts.chart('container', {
+  chart: {
+    plotBackgroundColor: null,
+    plotBorderWidth: 0,
+    plotShadow: false
+  },
+  title: {
+    text: 'Répartitions<br>trousseaux',
+    align: 'center',
+    verticalAlign: 'middle',
+    y: 40
+  },
+  tooltip: {
+    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+  },
+  plotOptions: {
+    pie: {
+      dataLabels: {
+        enabled: true,
+        distance: -50,
+        style: {
+          fontWeight: 'bold',
+          color: 'white'
+        }
+      },
+      startAngle: -90,
+      endAngle: 90,
+      center: ['50%', '75%'],
+      size: '110%'
+    }
+  },
+  series: [{
+    type: 'pie',
+    name: 'Répartition trousseaux',
+    innerSize: '50%',
+    data: [
+      ['Chateau Gombert', 58.9],
+      ['Luminy', 13.29],
+      ['Saint-Charles', 13],
+      {
+        dataLabels: {
+          enabled: false
+        }
+      }
+    ]
+  }]
+});
+
+
+</script>
+
+{% endblock %}

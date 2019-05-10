@@ -1,0 +1,141 @@
+{# templates/dhcp/list.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajout d'une nouvelle clef{% endblock %}
+{% block addKeyNavBarItem %} active {% endblock %}
+
+{% block body %}
+<form action="/saveKey" id="formSaveKey" method="post">
+	<div class="form-row">
+
+		<div class="col-md-4 mb-3">
+			<label for="modele">Modele</label>
+			<input type="text" class="form-control" id="modele" name="modele" placeholder="Entrez le modèle de la clé" value="">
+		</div>
+
+		<div class="col-md-4 mb-3">
+			<label for="reference">Référence</label>
+			<input type="text" class="form-control" id="reference" name="reference" placeholder="Entrez la référence de la clé" value="">
+		</div>
+
+
+		<div class="col-md-4 mb-3">
+			<label for="type">Type</label>
+    	<select class="form-control" id="type" name="type">
+
+    	{% for val in types %}
+      	<option value="{{val.id}}">
+					{{ val.value }}
+				</option>
+    	{% endfor %}
+
+			</select>
+    </div>
+
+		<div class="col-md-6 mb-3">
+				<label for="lieu">Lieu</label>
+				<select class="form-control" id="lieu" name="lieu">
+		    	{% for val in lieux %}
+		      	<option value="{{val.id}}">{{ val.value }}</option>
+		    	{% endfor %}
+		    </select>
+		</div>
+	<div class="col-md-6 mb-3">
+	<label for="hostname">Etat</label>
+    <select class="form-control" id="state" name="state">
+		{% for val in state %}
+			<option value="{{val.id}}">{{ val.value }}</option>
+		{% endfor %}
+    </select>
+    </div>
+
+
+	</div>
+</form>
+
+<button type="button" class="btn btn-link" id="backButton">Back</button>
+<button type="button" class="btn btn-success" id="saveButton">Save</button>
+
+<div id="hostExist" style="display:none;">
+	L'hote
+	<b><span id="hostExist_hostname"></span></b> existe deja en base.
+  <button type="button" class="btn btn-success" id="hostExist_load">Charger</button>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+
+function loadPreviousHost() {
+  var url = "/modifyHost?id="+$("#hostname").val();
+  window.location.replace(url);
+}
+
+$(document).ready(function(){
+
+    $('#backButton').on('click', function(event) {
+      window.location = '/';
+    });
+
+    $("#hostname").focusout(function() {
+	    $.ajax({
+		      url: "/verifyHostname",
+		      data: {id: $("#hostname").val()}
+	    }).done(function(json) {
+		   if (json['data'] == 1)
+	           {
+		      $("#hostExist").dialog({title: "Warning"}).parent().addClass("ui-state-error");
+                      $("#hostExist_hostname").text($("#hostname").val());
+		      $('#hostExist_load').attr("onclick","loadPreviousHost()");
+		      $("#hostExist").dialog();
+	           }
+	    })
+	    .fail(function() {
+	        alert( "error" );
+	    })
+	    //.always(function() {
+	        //alert( "complete" );
+	    //});
+    });
+
+    $('#expirationDateCheck').on('change', function(event) {
+      if ($('#expirationDateCheck').is(':checked')) {
+		$('#expirationDate').prop('disabled', false);
+	  }
+	  else
+	  {
+		$('#expirationDate').prop('disabled', true);
+	  }
+    });
+
+    // coche la checkbox d'IP fixe selon si le champ ipFixed est renreigne ou non
+	//$('#fixedIPCheck').prop( "checked", $("#ipFixed").val() != "" );
+	//if (!$('#fixedIPCheck').is(':checked')) {
+	 // $('#ipFixed').prop('disabled', true);
+	//}
+
+	if(!$("#expirationDate").is(":checked")) {
+	  $('#expirationDate').prop('disabled', true);
+	}
+
+	$("#expirationDate").datepicker({
+		language:"fr",
+	});
+
+	$("#dateModif").datepicker({
+		language:"fr",
+	});
+
+	$( "#saveButton" ).click(function() {
+		$( "#formSaveKey" ).submit();
+	});
+	$( "#deleteButton" ).click(function() {
+
+	});
+
+	$('#confirm-delete').on('show.bs.modal', function(e) {
+		$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+	});
+});
+</script>
+{% endblock %}

@@ -1,0 +1,117 @@
+{# templates/base.html.twig #}
+<!DOCTYPE html>
+<html style="background-color:#343a40;">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}KeyRing{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=2" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css">
+	       <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    </head>
+    <body style="background-color:#dee2e6;">
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="/">KeyRing</a><img src="/KeyRingLogoDark.png" style="width:3%;"/>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+          <li class="nav-item dropdown {% block cssKeyNavBarItem %}{% endblock %}" >
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Trousseau</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{{ path('list_key') }}">Liste des trousseaux</a>
+              <a class="dropdown-item" href="{{ path('add_key') }}">Nouveau trousseau</a>
+            </div>
+          </li>
+
+          <li class="nav-item dropdown {% block cssPretNavBarItem %}{% endblock %}">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pret</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/listagePret">Liste des prets</a>
+              <a class="dropdown-item" href="/pret">Nouveau pret</a>
+              <a class="dropdown-item" href="/expiration">Prets arrivant a expiration</a>
+            </div>
+          </li>
+
+
+        <li class="nav-item dropdown {% block cssUserNavBarItem %}{% endblock %}">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Utilisateur</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/listusers">Liste des utilisateurs</a>
+              <a class="dropdown-item" href="/user">Nouvel utilisateur</a>
+            </div>
+          </li>
+
+          <li class="nav-item {% block cssAccountNavBarItem %}{% endblock %}">
+          {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <a class= "nav-link" href="/">Compte: {{ app.user.email }}</a>
+          {% endif %}
+          </li>
+
+          {% endif %}
+
+          <li class="nav-item {% block logout %}{% endblock %}" >
+          {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <a href="/logout"><button type="button" class="btn btn-success" id="logoutButton">Logout</button></a>
+          {% endif %}
+          </li>
+
+        </ul>
+
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Recherche" aria-label="Search" id="searchHost">
+          <br>
+        </form>
+      </div>
+    </nav>
+
+	  <div class="container">
+      <div class="starter-template">
+        <br>
+        {% block body %}{% endblock %}
+      </div>
+    </div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.fr.min.js"></script>
+	<script src="http://bootstrap-notify.remabledesigns.com/js/bootstrap-notify.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <script>
+    {% for message in app.flashes('notice') %}
+  	$.notify({
+  		message: '{{ message }}'
+  		},{
+  			type: 'info',
+  			showProgressbar: true,
+  			delay: 2000,
+  		});
+  	{% endfor %}
+      {% for message in app.flashes('warning') %}
+  	$.notify({
+  		message: '{{ message }}'
+  		},{
+  			type: 'warning',
+  			showProgressbar: true,
+  			delay: 2000,
+  		});
+  	{% endfor %}
+	</script>
+
+  	{% block js %}
+    {% endblock %}
+
+  </body>
+</html>

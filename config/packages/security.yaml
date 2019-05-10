@@ -1,0 +1,58 @@
+security:
+    encoders:
+        App\Entity\User: bcrypt
+
+    access_denied_url: /errormsg
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        #in_memory: { memory: ~ }
+        users:
+            entity:
+                # the class of the entity that represents users
+                class: 'App\Entity\User'
+                # the property to query by - e.g. username, email, etc
+                property: 'username'
+                # optional: if you're using multiple Doctrine entity
+                # managers, this option defines which one to use
+                # manager_name: 'customer'
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            logout:
+              path: /logout
+              target: /
+            anonymous: true
+            guard:
+                authenticators:
+                    - App\Security\AppCustomAuthenticator
+
+            # activate different ways to authenticate
+
+            # http_basic: true
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: true
+            # https://symfony.com/doc/current/security/form_login_setup.html
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+      - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+      - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
+      - { path: ^/listKey$, roles: ROLE_ADMIN }
+      - { path: ^/trousseau$, roles: ROLE_ADMIN }
+      - { path: ^/pret$, roles: ROLE_ADMIN }
+      - { path: ^/listagePret$, roles: IS_AUTHENTICATED_FULLY }
+      - { path: ^/deleteTrousseau$, roles: ROLE_ADMIN }
+      - { path: ^/modifyTrousseau$, roles: ROLE_ADMIN }
+      - { path: ^/modifyPret$, roles: ROLE_ADMIN }
+      - { path: ^/deletePret$, roles: ROLE_ADMIN }
+      - { path: ^/listTrousseauAjax$, roles: ROLE_ADMIN }
+      #- { path: ^/listusers$, roles: ROLE_ADMIN }
+      - { path: ^/expiration$, roles: ROLE_ADMIN }
+      #- { path: ^/user$, roles: ROLE_ADMIN }
+      - { path: ^/listPret$, roles: ROLE_ADMIN }

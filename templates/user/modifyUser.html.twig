@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block head %}
+<head>
+  <script type="text/javascript">
+
+  function validate() {
+
+          var a = document.getElementById("password").value;
+          var b = document.getElementById("password_confirm").value;
+
+          if (a!=b) {
+            alert("Les mots de passe ne correspondent pas.");
+            return false; }
+          else {
+            alert("Les mots de passe correspondent.");
+            return false; }
+          }
+  </script>
+<head>
+
+{% endblock %}
+
+{% block title %}Ajouter un utilisateur{% endblock %}
+
+{% block body %}
+
+<form action="/adduser" id="saveUser" method="post">
+	<input type="hidden" name="userId" value="{{ user.id }}"/>
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Nom</label>
+      <input type="text" value="{{user.name}}" class="form-control" id="name" name="name" placeholder="Nom">
+  </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Prénom</label>
+        <input type="text" value="{{user.firstname}}" class="form-control" id="firstname" name="firstname" placeholder="Prénom">
+    </div>
+  </div>
+
+	<div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Origine</label>
+        <input type="text" value="{{user.origine}}" class="form-control" id="origine" name="origine" placeholder="Origine">
+    </div>
+  </div>
+
+<div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="hostname"> Role  {{ user.roles[0] }}</label>
+        <select  class="form-control" id="roles" name="roles" placeholder="Role">
+            <option value="ROLE_ADMIN" {{ user.roles[0] == "ROLE_ADMIN" ? "selected" :"" }}>admin</option>
+            <option value="ROLE_USER" {{ user.roles[0] == "ROLE_USER" ? "selected" :"" }}>default</option>
+			</select>
+    </div>
+  </div>
+
+
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Email</label>
+        <input type="email" value="{{user.email}}" class="form-control" id="email" name="email" placeholder="email">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Nom d'utilisateur</label>
+        <input type="text" value="{{user.username}}" class="form-control" id="username" name="username" placeholder="Nom d'utilisateur">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Mot de passe</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" value="">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Confirmez votre Mot de passe</label>
+        <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Confirmez votre Mot de passe" value="">
+    </div>
+  </div>
+
+<button type="submit" class="btn btn-success" id="saveButton">Sauvegarder</button>
+<button type="button" class="btn btn-link" id="backButton">Back</button>
+</form>
+
+{% endblock %}
+{% block js %}
+
+  <script>
+	$(document).ready(function(){
+    $('#backButton').on('click', function(event) {
+      window.location = '/listusers';
+    });
+    });
+    
+  function validate() {
+          var a = document.getElementById("password").value;
+          var b = document.getElementById("password_confirm").value;
+          if (a!=b) {
+            alert("Les mots de passe ne correspondent pas.");
+            return false; }
+          else {
+            alert("Les mots de passe correspondent.");
+            return false; }
+          }
+  </script>
+  
+{% endblock %}

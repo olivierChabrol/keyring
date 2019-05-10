@@ -1,0 +1,86 @@
+#index:
+#    path: /
+#    defaults: { _controller: 'App\Controller\DefaultController::index' }
+keyring_index:
+    path: /
+    controller: App\Controller\MainController::index
+
+list_key:
+    path: /listKey
+    controller: App\Controller\KeyringController::listKey
+
+app_dhcp_add:
+    path: /modifyuser
+    controller: App\Controller\UserController::modifyUser
+
+add_key:
+    path: /trousseau
+    controller: App\Controller\KeyringController::newKey
+    
+app_dhcp_vivs_errormessage:
+    path: /errormsg
+    controller: App\Controller\KeyringController::errormsg
+
+app_dhcp_vivs_savetrousseau:
+    path: /saveKey
+    controller: App\Controller\KeyringController::saveKey
+
+app_dhcp_vivs_listtrousseau:
+    path: /listageKey
+    controller: App\Controller\KeyringController::listKey
+
+app_vivs_modif_trousseau:
+    path: /modifyKey
+    controller: App\Controller\KeyringController::modifyKey
+
+app_vivs_modif_pret:
+    path: /modifyPret
+    controller: App\Controller\KeyringController::modifyPret
+
+app_vivs_delete_trousseau:
+    path: /deleteKey
+    controller: App\Controller\KeyringController:deleteKey
+
+app_vivs_delete_pret:
+    path: /deletePret
+    controller: App\Controller\KeyringController:deletePret
+
+app_vivs_new_pret:
+    path: /pret
+    controller: App\Controller\KeyringController:newPret
+
+app_vivs_ajax_list_trousseau:
+    path: /listKeyAjax
+    controller: App\Controller\KeyringController:listKeyAjax
+
+app_vivs_ajax_list_trousseau_free:
+    path: /listFreeKeyAjax
+    controller: App\Controller\KeyringController:listFreeKeyAjax
+
+app_vivs_list_pret:
+    path: /listagePret
+    controller: App\Controller\KeyringController:listPret
+
+app_vivs_add_pret:
+    path: /addPret
+    controller: App\Controller\KeyringController::addPret
+
+app_vivs_createUser:
+    path: /adduser
+    controller: App\Controller\createUser::createUser
+
+app_vivs_login_page:
+    path: /login
+    controller: app\Controller\MainController::MainController
+
+app_vivs_list_users:
+    path: /listusers
+    controller: app\Controller\UserController::listUser
+
+app_vivs_expiration:
+    path: /expiration
+    controller: app\Controller\KeyringController::listExpiration
+
+keyring_user_autoComplete:
+    path: /searchUserAjax
+    controller: App\Controller\UserController::autoComplete

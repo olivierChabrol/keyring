@@ -1,0 +1,132 @@
+{# templates/dhcp/user/listageUsers #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Utilisateurs{% endblock %}
+{% block cssUserNavBarItem %} active {% endblock %}
+
+
+{% block body %}
+<div class="table-responsive">
+	<table class="table table-hover table-sm">
+	<tr>
+		<th>
+			#
+		</th>
+		<th>
+			Nom
+		</th>
+		<th>
+			Prenom
+		</th>
+		<th>
+			Email
+		</th>
+		<th>
+			Role
+		</th>
+		<th>
+			Origine
+		</th>
+		<th>
+			Suppression
+		</th>
+	</tr>
+
+	{% for user in users %}
+
+			<tr>
+				<th scope="row">{{ loop.index0 }}</th>
+					<td>
+						<a href="/modifyuser?id={{ user.id }}">
+							{{ user.name }}
+						</a>
+					</td>
+					<td>
+						<a href="/modifyuser?id={{ user.id }}">
+							{{ user.firstname }}
+						</a>
+					</td>
+					<td>
+						<a href="/modifyuser?id={{ user.id }}" >
+							{{ user.email }}
+						</a>
+					</td>
+					<td>
+						<a href="/modifyuser?id={{ user.id }}" >
+							{{ user.roles[0] }}
+						</a>
+					</td>
+					<td>
+						<a href="/modifyuser?id={{ user.id }}" >
+							{{ user.origine }}
+						</a>
+					</td>
+					<td>
+						<button type="button" class="btn btn-outline-danger" id="deleteuser{{ user.id }}" name={{ user.id }}>
+							Supprimer
+						</button>
+					</td>
+				</tr>
+	{% endfor %}
+	</table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Suppression</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Voulez vous vraiment supprimer ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+        <button type="button" class="btn btn-primary" id="buttonConfirmDelete">Oui</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script>
+
+    $(document).ready(function(){
+
+	  $('[id^=deleteuser]').click(function(){
+		//alert(this.name);
+		$('#buttonConfirmDelete').attr("name", this.name);
+		$('#deleteModal').modal('show')
+      });
+
+      $('#buttonConfirmDelete').click(function(){
+        window.location.href = "/deleteuser?id=" + this.name;
+      });
+      $('#deleteModal').on('shown.bs.modal', function () {
+         $('#myInput').trigger('focus')
+      });
+
+    });
+
+function deleteuser(){
+	if ( deleteuser = true ) {
+  var txt;
+  var r = window.confirm("si vous voulez supprimer cliquez sur  OK sinon sur Cancel.\n");
+  if (r == true) {
+    deleteuser;
+  } else {
+    txt = "You pressed Cancel!";
+  }
+}
+
+}
+
+</script>
+
+{% endblock %}

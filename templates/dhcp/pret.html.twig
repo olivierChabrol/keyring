@@ -1,0 +1,164 @@
+{# templates/dhcp/list.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajout d'un nouveau emprunteur{% endblock %}
+{% block addPretNavBarItem %}active{% endblock %}
+{% block body %}
+<form action="/addPret" id="formSavePret" method="post">
+<div class="row">
+    <div class="col-sm">
+	<label for="hostname">Type</label>
+    <select class="form-control" id="type" name="type">
+
+    {% for val in types %}
+      <option value="{{val.id}}">{{ val.value }}</option>
+    {% endfor %}
+    </select>
+    </div>
+    <div class="col-sm">
+
+	<label for="hostname">Site</label>
+        <select class="form-control" id="lieu" name="lieu">
+    {% for val in lieux %}
+      <option value="{{val.id}}">{{ val.value }}</option>
+    {% endfor %}
+    </select>
+  </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+		<label for="hostname">Clef</label>
+        <select class="form-control" id="trousseauId" name="trousseauId"></select>
+	</div>
+</div>
+
+<div class="row">
+    <div class="col-sm">
+		<label for="hostname">Utilisateur</label>
+        <select class="form-control" id="userId" name="userId">
+    {% for val in mails %}
+      <option value="{{val.id}}">{{ val.email }}</option>
+    {% endfor %}
+    </select>
+	</div>
+</div>
+
+<div class="row">
+    <div class="col-sm">
+		  <label for="dateModif">Date</label>
+		  <input type="text" class="form-control" id="dateStart" name="dateStart" placeholder="" value="">
+	 </div>
+     <div class="col-sm">
+	  <div class="checkbox">
+		  <label><input type="checkbox" value="" class="form-check-input" id="expirationDate">Expiration date</label>
+		</div>
+      <input type="text" class="form-control" id="dateEnd" name="dateEnd" placeholder="" value="">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="desciption">Description</label>
+    <textarea class="form-control" id="description" name="description" placeholder="Description... (1500 caractères max)" rows="5"></textarea>
+  </div>
+</form>
+<button type="button" class="btn btn-link" id="backButton">Back</button>
+<button type="button" class="btn btn-success" id="saveButton">Save</button>
+
+<div id="hostExist" style="display:none;">
+	L'hote <b><span id="hostExist_hostname"></span></b> existe deja en base.
+  <button type="button" class="btn btn-success" id="hostExist_load">Charger</button>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+
+$(document).ready(function(){
+	$.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
+
+    $("#dateStart").datepicker().datepicker("setDate", new Date());
+
+
+    $('#backButton').on('click', function(event) {
+      window.location = '/';
+    });
+
+      $('#expirationDate').on('change', function(event) {
+      if ($('#expirationDate').is(':checked')) {
+		$('#dateEnd').prop('disabled', false);
+	  }
+	  else
+	  {
+		$('#dateEnd').prop('disabled', true);
+	  }
+    });
+
+    if($('#expirationDate').val() != true  )
+    {
+
+      $('#dateEnd').prop('disabled', false);
+   	  $("#expirationDate").prop('checked', true);
+	}
+
+
+	if(!$("#expirationDate").is(":checked")) {
+	  $('#dateEnd').prop('disabled', true);
+	}
+
+	$("#dateEnd").datepicker({
+		language:"fr",
+	});
+
+	$("#dateStart").datepicker({
+		language:"fr",
+	});
+
+	$( "#saveButton" ).click(function() {
+		$( "#formSaveKey" ).submit();
+	});
+	$( "#deleteButton" ).click(function() {
+
+	});
+
+	$('#confirm-delete').on('show.bs.modal', function(e) {
+		$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+	});
+	searchKey();
+
+	$("#type").on('change', function(event) {
+		searchKey();
+	});
+
+	$("#lieu").on('change', function(event) {
+		searchKey();
+	});
+
+
+	$( "#saveButton" ).click(function() {
+		$( "#formSavePret" ).submit();
+	});
+});
+
+function searchKey()
+	{
+	    $.ajax({
+        url:"/listFreeKeyAjax",
+		method: "post",
+		data: {type: $("#type").val(), site: $("#lieu").val()},
+		dataType: 'json',
+		success: function (data) {
+			 $("#trousseauId").find("option").remove();
+			 $js = JSON.parse(data);
+			$.each($js["data"], function(index, element) {
+				var classCss = "";
+				$('#trousseauId').append(new Option(element.modele + " " + element.ref, element.id));
+		});
+	    }
+	});
+}
+
+
+</script>
+
+
+{% endblock %}
