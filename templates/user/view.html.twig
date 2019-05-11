@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateur {{ user.firstName }} {{ user.name }}{% endblock %}
+{% block cssUserNavBarItem %} active {% endblock %}
+
+
+{% block body %}
+
+<h1 class="mt-5">{{ user.firstName }} {{ user.name }}</h1><a href="{{ path("user_modify", {id: user.id} ) }}">edit</a>
+
+<div class="row">
+    <div class="col-sm">
+        <h2 class="mt-5">{{ user.email }}</h2>
+        {{ user.origine }}<br>
+        Login : {{ user.username }}
+    </div>
+    <div class="col-sm">
+        <h2 class="mt-5">Prêts en cours :</h2>
+        <div class="alert alert-success">
+        {% if prets == null %}
+            Aucun
+        {% endif %}
+		<br />
+			{% for val in prets %}
+				<ul><h5>{{ params[val.trousseau.type] }} :</h5>{{ val.trousseau.modele }}, {{ val.trousseau.ref }}</ul>
+			{% endfor %}
+        </div>
+    </div>
+  </div>
+
+<button type="button" class="btn btn-link" id="backButton">Back</button>
+{% endblock %}
+{% block js %}
+  <script>
+	$(document).ready(function(){
+        $('#backButton').on('click', function(event) {
+        window.location = '{{ path('user_list') }}';
+        });
+        $( "#editUserButton" ).button({
+               icons: {
+                  primary: "ui-icon-pencil"
+               },
+               text: false
+            });
+    });
+  </script>
+{% endblock %}

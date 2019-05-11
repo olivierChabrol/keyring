@@ -26,10 +26,10 @@
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
           <li class="nav-item dropdown {% block cssKeyNavBarItem %}{% endblock %}" >
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Trousseau</a>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Clefs</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{{ path('list_key') }}">Liste des trousseaux</a>
-              <a class="dropdown-item" href="{{ path('add_key') }}">Nouveau trousseau</a>
+              <a class="dropdown-item" href="{{ path('list_key') }}">Liste des Clefs</a>
+              <a class="dropdown-item" href="{{ path('add_key') }}">Créer une nouvelle clef</a>
             </div>
           </li>
 
@@ -53,7 +53,7 @@
 
           <li class="nav-item {% block cssAccountNavBarItem %}{% endblock %}">
           {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <a class= "nav-link" href="/">Compte: {{ app.user.email }}</a>
+            <a class= "nav-link" href="{{ path('user_profil') }}">Compte: {{ app.user.email }}</a>
           {% endif %}
           </li>
 

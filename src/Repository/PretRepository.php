@@ -19,6 +19,25 @@ class PretRepository extends ServiceEntityRepository
         parent::__construct($registry, Pret::class);
     }
 
+    public function getPretByTrousseau($trousseauId)
+    {
+		 $qb = $this->createQueryBuilder('p')
+            ->andWhere('p.trousseau = (:trousseauId)')
+            ->setParameter('trousseauId', $trousseauId)
+            ->getQuery();
+        return $qb->execute();
+	}
+
+    public function getPretByUser($userId)
+    {
+     $qb = $this->createQueryBuilder('p')
+            ->andWhere('p.user = (:userId)')
+            ->setParameter('userId', $userId)
+            ->getQuery();
+        return $qb->execute();
+    }
+  
+
     // /**
     //  * @return Pret[] Returns an array of Pret objects
     //  */

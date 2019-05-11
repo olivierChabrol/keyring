@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Param
 {
+    const TYPE  = 1;
+    const SITE  = 2;
+    const STATE = 3;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

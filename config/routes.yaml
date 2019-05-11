@@ -73,7 +73,7 @@ app_vivs_login_page:
     path: /login
     controller: app\Controller\MainController::MainController
 
-app_vivs_list_users:
+user_list:
     path: /listusers
     controller: app\Controller\UserController::listUser
 
@@ -84,3 +84,31 @@ app_vivs_expiration:
 keyring_user_autoComplete:
     path: /searchUserAjax
     controller: App\Controller\UserController::autoComplete
+
+chart_key_site:
+    path: /listTrousseauPerSitesAjax
+    controller: App\Controller\KeyringController:listTrousseauPerSitesAjax
+
+chart_key_state:
+    path: /listTrousseauPerStateAjax
+    controller: App\Controller\KeyringController:listTrousseauPerStateAjax
+
+user_view:
+    path: /user/view
+    controller: App\Controller\UserController::view
+
+user_modify:
+    path: /user/modify
+    controller: App\Controller\UserController::modifyUser
+
+user_profil:
+    path: /user/profil
+    controller: App\Controller\UserController::profil
+
+key_view:
+    path: /key/view
+    controller: App\Controller\KeyringController::viewKey
+
+key_modify:
+    path: /key/modify
+    controller: App\Controller\KeyringController::modifyKey

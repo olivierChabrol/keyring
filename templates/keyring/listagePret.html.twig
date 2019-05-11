@@ -13,7 +13,12 @@
 
 		{% for pret in prets %}
 
-		<tr><th scope="row">{{ loop.index0 }}</th><td><a href="/modifyPret?id={{ pret.id }}">{{ pret.trousseau.modele }}</a></td><td><a href="/modifyPret?id={{ pret.id }}">{{ params[pret.trousseau.site] }} </a></td><td> <a href="/modifyPret?id={{ pret.id }}">{{pret.trousseau.ref }}</a></td><td> <a href="/modifyPret?id={{ pret.id }}">{{ params[pret.trousseau.type] }}</a> </td><td> <a href="/modifyPret?id={{ pret.id }}">{{ params[pret.trousseau.state] }}</a> </td><td> <button type="button" class="btn btn-outline-danger" id="deletePret{{ pret.id }}" name={{ pret.id }}>Supprimer</button></td></tr>
+		<tr><th scope="row">{{ loop.index0 }}</th><td><a href="/modifyPret?id={{ pret.id }}">{{ pret.trousseau.modele }}</a></td>
+        <td><a href="/modifyPret?id={{ pret.id }}">{{ params[pret.trousseau.site] }} </a></td>
+        <td> <a href="/modifyPret?id={{ pret.id }}">{{pret.trousseau.ref }}</a></td>
+        <td> <a href="/modifyPret?id={{ pret.id }}">{{ params[pret.trousseau.type] }}</a></td>
+        <td> <a href="/modifyPret?id={{ pret.id }}">{{ params[pret.trousseau.state] }}</a></td>
+        <td> <button type="button" class="btn btn-outline-danger" id="deletePret{{ pret.id }}" name={{ pret.id }}>Supprimer</button></td></tr>
 
 		{% endfor %}
 

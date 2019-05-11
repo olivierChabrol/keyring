@@ -19,7 +19,13 @@ class MainController extends AbstractController
     {
       $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
       $userNameInSession = $request->getSession()->get(Security::LAST_USERNAME);
-
-      return $this->render('main/main.html.twig', array('sessionUserName' => $userNameInSession));
+      $loggedUser = $this->getUser();
+      if ($loggedUser->getRoles()[0] == "ROLE_ADMIN") {
+        //return $this->render('main/main.html.twig', array('sessionUserName' => $userNameInSession));
+        return $this->forward('\App\Controller\KeyringController::listExpiration');
+      }
+      else {
+        return $this->render('main/main.html.twig', array('sessionUserName' => $userNameInSession));
+      }
     }
 }

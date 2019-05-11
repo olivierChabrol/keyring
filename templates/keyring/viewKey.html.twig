@@ -1,0 +1,48 @@
+{# templates/dhcp/list.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Cle {{ key.modele }} {{ key.ref }}{% endblock %}
+{% block cssKeyNavBarItem %} active {% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-sm">
+        <h1 class="mt-5">{{ key.modele }} {{ key.ref }}</h1><a href="{{ path("key_modify", {id: key.id} ) }}">edit</a>
+        <h5>{{ params[key.type] }} :</h5>
+    </div>
+    <div class="col-sm">
+        <h2 class="mt-5">Prêts en cours :</h2>
+        <div class="alert alert-success">
+        {% if prets == null %}
+            Aucun
+        {% endif %}
+		<br />
+			{% for val in prets %}
+				<ul><h5>{{ val.user.firstName }} {{ val.user.name }}</h5></ul>
+                {% if ( val.end != null ) %}
+				<ul>Depuis du {{ val.start|date('m/d/Y') }} au {{ val.end|date('m/d/Y') }}</ul><br>
+                {% endif %}
+                {% if ( val.end == null ) %}
+				<ul>Depuis le {{ val.start|date('m/d/Y') }}</ul><br>
+                {% endif %}
+			{% endfor %}
+        </div>
+    </div>
+  </div>
+
+<button type="button" class="btn btn-link" id="backButton">Back</button>
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+
+$(document).ready(function(){
+    $('#backButton').on('click', function(event) {
+      window.location = '/';
+    });
+});
+</script>
+{% endblock %}

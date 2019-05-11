@@ -37,34 +37,33 @@
 			<tr>
 				<th scope="row">{{ loop.index0 }}</th>
 					<td>
-						<a href="/modifyuser?id={{ user.id }}">
+						<a href="{{ path('user_view', {id: user.id}) }}">
 							{{ user.name }}
 						</a>
 					</td>
 					<td>
-						<a href="/modifyuser?id={{ user.id }}">
+						<a href="{{ path('user_view', {id: user.id}) }}">
 							{{ user.firstname }}
 						</a>
 					</td>
 					<td>
-						<a href="/modifyuser?id={{ user.id }}" >
+						<a href="{{ path('user_view', {id: user.id}) }}" >
 							{{ user.email }}
 						</a>
 					</td>
 					<td>
-						<a href="/modifyuser?id={{ user.id }}" >
+						<a href="{{ path('user_view', {id: user.id}) }}" >
 							{{ user.roles[0] }}
 						</a>
 					</td>
 					<td>
-						<a href="/modifyuser?id={{ user.id }}" >
+						<a href="{{ path('user_view', {id: user.id}) }}" >
 							{{ user.origine }}
 						</a>
 					</td>
 					<td>
-						<button type="button" class="btn btn-outline-danger" id="deleteuser{{ user.id }}" name={{ user.id }}>
-							Supprimer
-						</button>
+						<button type="button" class="btn btn-outline-warning" id="modifyUser{{ user.id }}" name={{ user.id }}>Modifier</button>
+						<button type="button" class="btn btn-outline-danger" id="deleteuser{{ user.id }}" name={{ user.id }}>Supprimer</button>
 					</td>
 				</tr>
 	{% endfor %}
@@ -98,6 +97,9 @@
 <script>
 
     $(document).ready(function(){
+			$("[id^=modifyUser]").click(function() {
+				window.location.href="{{ path('user_modify') }}?id="+this.name;
+			});
 
 	  $('[id^=deleteuser]').click(function(){
 		//alert(this.name);

@@ -46,11 +46,13 @@ class ParamRepository extends ServiceEntityRepository
 		 return $this->getParamByType(2);
 	}
 
-	public function getAssociativeArrayParam()
+	public function getAssociativeArrayParam($typeParam = null)
 	{
-		$qb = $this->createQueryBuilder('p')
-            ->orderBy('p.value', 'ASC')
-            ->getQuery();
+        $qb = $this->createQueryBuilder('p');
+        if (null !== $typeParam) {
+            $qb->andWhere('p.type = (:type)')->setParameter('type', $typeParam);
+        }
+        $qb = $qb->orderBy('p.value', 'ASC')->getQuery();
 
         $params = $qb->execute();
         $assocArray = array();
@@ -59,7 +61,7 @@ class ParamRepository extends ServiceEntityRepository
 		}
 
 		return $assocArray;
-	}
+    }
 
     // /**
     //  * @return Param[] Returns an array of Param objects

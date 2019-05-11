@@ -27,7 +27,24 @@ class TrousseauRepository extends ServiceEntityRepository
             ->getQuery();
 
         return $qb->execute();
-	}
+    }
+
+    public function listTrousseauPerSite() {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'select t.site, COUNT(t.site) FROM trousseau t group BY t.site';
+        //$sql = 'select t.* FROM trousseau t';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function listStatePerSite() {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'select t.state, COUNT(t.state) FROM trousseau t group BY t.state';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 	
     public function getListFreeKeyWithCondition($type, $site)
     {

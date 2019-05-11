@@ -51,6 +51,44 @@ class KeyringController extends Controller
 		return new Response("Error : not and ajax request", 400);
 	}
 
+	public function listTrousseauPerSitesAjax(Request $request) {
+		if ($request->isXmlHttpRequest()) 
+		{
+			$ret = $this->getDoctrine()->getRepository(Trousseau::class)->listTrousseauPerSite();
+			$paramsSite = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam(Param::SITE);
+			$a = array();
+			foreach( $ret as $r) {
+				$sa = array();
+				$sa[] = $paramsSite[$r["site"]];
+				$sa[] = intval($r["COUNT(t.site)"]);
+				$a[] = $sa;
+			}
+			//dump($a);die;
+			return new JSonResponse(json_encode($a));
+		}
+		return new Response("Error : not and ajax request", 400);
+	}
+
+
+	public function listTrousseauPerStateAjax(Request $request) {
+		//if ($request->isXmlHttpRequest()) 
+		{
+			$ret = $this->getDoctrine()->getRepository(Trousseau::class)->listStatePerSite();
+			$paramsState = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam(Param::STATE);
+			//dump($ret);die();
+			$a = array();
+			foreach( $ret as $r) {
+				$sa = array();
+				$sa[] = $paramsState[$r["state"]];
+				$sa[] = intval($r["COUNT(t.state)"]);
+				$a[] = $sa;
+			}
+			//dump($a);die;
+			return new JSonResponse(json_encode($a));
+		}
+		return new Response("Error : not and ajax request", 400);
+	}
+
     public function listKey(Request $request){
 
 		$entityManager = $this->getDoctrine()->getManager();
@@ -70,6 +108,21 @@ class KeyringController extends Controller
 		
         return $this->render('keyring/modifyCle.html.twig', array('trousseau' => $trousseau,'types' => $paramTypes, 'lieux' => $paramLieux, 'etats' => $paramEtat));
 	}
+
+	public function viewKey(Request $request)
+    {
+		$keyId = $request->query->get('id');
+		if ($keyId == null)
+		{
+		  $this->listKey($request);
+		}
+		$key    = $this->getDoctrine()->getRepository(Trousseau::class)->find($keyId);
+		$prets  = $this->getDoctrine()->getRepository(Pret::class)->getPretByTrousseau($keyId);
+		$params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+
+		return $this->render('keyring/viewKey.html.twig', array('key' => $key, 'prets' => $prets, 'params' => $params));
+	}
+
     public function newKey (Request $request) {
 		$entityManager = $this->getDoctrine()->getManager();
 

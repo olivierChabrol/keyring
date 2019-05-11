@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Param;
+use App\Entity\Pret;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Security\Core\Security;
 
 class UserController extends AbstractController
 {
@@ -91,6 +94,26 @@ class UserController extends AbstractController
 
     }
 
+    public function profil(Request $request)
+    {
+      $userNameInSession = $request->getSession()->get(Security::LAST_USERNAME);
+      return $this->render("/user/profil.html.twig", array('sessionUserName' => $userNameInSession));
+    }
+
+    public function view(Request $request)
+    {
+      $userId = $request->query->get('id');
+      if ($userId == null)
+      {
+        $this->listUser($request);
+      }
+
+      $user   = $this->getDoctrine()->getRepository(User::class)->find($userId);
+      $prets  = $this->getDoctrine()->getRepository(Pret::class)->getPretByUser($userId);
+      $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+
+      return $this->render('user/view.html.twig', array('user' => $user, "prets" => $prets, "params" => $params));
+    }
 
     public function modifyUser(Request $request)
     {
@@ -98,10 +121,6 @@ class UserController extends AbstractController
 
      $array = $request->request->all();
      $id = $this->getDoctrine()->getRepository(User::class)->find($id);
-     //$name = $this->getDoctrine()->getRepository(User::class)->find($name);
-     //$firstname = $this->getDoctrine()->getRepository(User::class)->find($firstname);
-     //$username = $this->getDoctrine()->getRepository(User::class)->find($username);
-     //$email = $this->getDoctrine()->getRepository(User::class)->find($email);
 
 
       return $this->render('user/modifyUser.html.twig', array('user' => $id)); //'name' => $name, 'firstname' => $firstname, 'username' => $username, 'email' => $email));
