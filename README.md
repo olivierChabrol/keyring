@@ -11,6 +11,7 @@ web application based on Symfony framework, to mange keys, magnetic cards... on 
 
 ## Installation
 In the keyring directory, create a *.env* file 
+
 *.env* file will contains your credentials to connect the database:
 ```
 # This file is a "template" of which env vars need to be defined for your application
