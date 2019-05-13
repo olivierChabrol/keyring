@@ -28,3 +28,6 @@ DATABASE_URL="mysql://[dbuserName]:[dbPassword]!@[ipAddress]:[port]/[dbName]"
 #TRUSTED_HOSTS=localhost,example.com
 ###< symfony/framework-bundle ###
 ```
+
+use
+```composer update```
