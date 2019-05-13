@@ -88,7 +88,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.fr.min.js"></script>
 	<script src="http://bootstrap-notify.remabledesigns.com/js/bootstrap-notify.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
+  {% block js_importedLib %}
+  {% endblock %}
   <script>
     {% for message in app.flashes('notice') %}
   	$.notify({
@@ -108,10 +109,17 @@
   			delay: 2000,
   		});
   	{% endfor %}
-	</script>
 
   	{% block js %}
     {% endblock %}
+    
+$(document).ready(function () {
+  	{% block js_documentReady %}
+    {% endblock %}
+
+});
+	</script>
+
 
   </body>
 </html>

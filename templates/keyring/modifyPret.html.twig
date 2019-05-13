@@ -90,28 +90,45 @@
 {% endblock %}
 
 {% block js %}
-<script>
 
-$(document).ready(function(){
-    $('#backButton').on('click', function(event) {
-      window.location = '/listagePret';
-    });
+function searchKey() {
+	    $.ajax({
+        url:"/listKeyAjax",
+		method: "post",
+		data: {type: $("#type").val(), site: $("#lieu").val()},
+		dataType: 'json',
+		success: function (data) {
+			 $("#trousseauId").find("option").remove();
+			 $js = JSON.parse(data);
+			 $.each($js["data"], function(index, element) {
+				var classCss = "";
+				$('#trousseauId').append(new Option(element.modele + " " + element.ref, element.id));
+		     });
+		     $("#trousseauId").val("{{ pret.trousseau.id }}");
+	    }
+	});
+}
+{% endblock %}
 
-      $('#expirationDate').on('change', function(event) {
-      if ($('#expirationDate').is(':checked')) {
+
+{% block js_documentReady %}
+	$('#backButton').on('click', function(event) {
+		window.location = '/listagePret';
+	});
+
+	$('#expirationDate').on('change', function(event) {
+		if ($('#expirationDate').is(':checked')) {
+			$('#dateEnd').prop('disabled', false);
+		}
+		else {
+			$('#dateEnd').prop('disabled', true);
+		}
+	});
+	
+	if($('#expirationDate').val() != true  )
+	{
 		$('#dateEnd').prop('disabled', false);
-	  }
-	  else
-	  {
-		$('#dateEnd').prop('disabled', true);
-	  }
-    });
-    
-    if($('#expirationDate').val() != true  )
-    {
-           
-      $('#dateEnd').prop('disabled', false);
-   	  $("#expirationDate").prop('checked', true);
+		$("#expirationDate").prop('checked', true);
 	}
     
 	if(!$("#expirationDate").is(":checked")) {
@@ -129,13 +146,7 @@ $(document).ready(function(){
 	$( "#saveButton" ).click(function() {
 		$( "#formSaveKey" ).submit();
 	});
-	$( "#deleteButton" ).click(function() {
-		
-	});
 	
-	$('#confirm-delete').on('show.bs.modal', function(e) {
-		$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-	});
 	searchKey();
 	
 	$("#type").on('change', function(event) {
@@ -150,29 +161,4 @@ $(document).ready(function(){
 	$( "#saveButton" ).click(function() {
 		$( "#formSavePret" ).submit();
 	});
-});
-
-function searchKey()
-	{
-	    $.ajax({
-        url:"/listKeyAjax",
-		method: "post",
-		data: {type: $("#type").val(), site: $("#lieu").val()},
-		dataType: 'json',
-		success: function (data) {
-			 $("#trousseauId").find("option").remove();
-			 $js = JSON.parse(data);
-			 $.each($js["data"], function(index, element) {
-				var classCss = "";
-				$('#trousseauId').append(new Option(element.modele + " " + element.ref, element.id));
-		     });
-		     $("#trousseauId").val("{{ pret.trousseau.id }}");
-	    }
-	});
-}
-
-	
-</script>
-
-
 {% endblock %}

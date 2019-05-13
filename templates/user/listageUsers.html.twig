@@ -93,42 +93,33 @@
 {% endblock %}
 
 {% block js %}
-
-<script>
-
-    $(document).ready(function(){
-			$("[id^=modifyUser]").click(function() {
-				window.location.href="{{ path('user_modify') }}?id="+this.name;
-			});
-
-	  $('[id^=deleteuser]').click(function(){
-		//alert(this.name);
-		$('#buttonConfirmDelete').attr("name", this.name);
-		$('#deleteModal').modal('show')
-      });
-
-      $('#buttonConfirmDelete').click(function(){
-        window.location.href = "/deleteuser?id=" + this.name;
-      });
-      $('#deleteModal').on('shown.bs.modal', function () {
-         $('#myInput').trigger('focus')
-      });
-
-    });
-
 function deleteuser(){
 	if ( deleteuser = true ) {
-  var txt;
-  var r = window.confirm("si vous voulez supprimer cliquez sur  OK sinon sur Cancel.\n");
-  if (r == true) {
-    deleteuser;
-  } else {
-    txt = "You pressed Cancel!";
-  }
+		var txt;
+		var r = window.confirm("si vous voulez supprimer cliquez sur  OK sinon sur Cancel.\n");
+		if (r == true) {
+			deleteuser;
+		} else {
+			txt = "You pressed Cancel!";
+		}
+	}
 }
+{% endblock %}
 
-}
+{% block js_documentReady %}
+	$("[id^=modifyUser]").click(function() {
+		window.location.href="{{ path('user_modify') }}?id="+this.name;
+	});
 
-</script>
+	$('[id^=deleteuser]').click(function(){
+		$('#buttonConfirmDelete').attr("name", this.name);
+		$('#deleteModal').modal('show')
+	});
 
+	$('#buttonConfirmDelete').click(function(){
+		window.location.href = "/deleteuser?id=" + this.name;
+	});
+	$('#deleteModal').on('shown.bs.modal', function () {
+		$('#myInput').trigger('focus')
+	});
 {% endblock %}

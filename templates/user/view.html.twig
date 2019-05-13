@@ -30,18 +30,14 @@
 
 <button type="button" class="btn btn-link" id="backButton">Back</button>
 {% endblock %}
-{% block js %}
-  <script>
-	$(document).ready(function(){
-        $('#backButton').on('click', function(event) {
-        window.location = '{{ path('user_list') }}';
-        });
-        $( "#editUserButton" ).button({
-               icons: {
-                  primary: "ui-icon-pencil"
-               },
-               text: false
-            });
-    });
-  </script>
+{% block js_documentReady %}
+  $('#backButton').on('click', function(event) {
+  window.location = '{{ path('user_list') }}';
+  });
+  $( "#editUserButton" ).button({
+          icons: {
+            primary: "ui-icon-pencil"
+          },
+          text: false
+      });
 {% endblock %}

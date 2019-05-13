@@ -89,30 +89,26 @@
     </div>
   </div>
 
-<button type="submit" class="btn btn-success" id="saveButton">Sauvegarder</button>
 <button type="button" class="btn btn-link" id="backButton">Back</button>
+<button type="submit" class="btn btn-success" id="saveButton">Sauvegarder</button>
 </form>
 
 {% endblock %}
 {% block js %}
-
-  <script>
-	$(document).ready(function(){
-    $('#backButton').on('click', function(event) {
-      window.location = '/listusers';
-    });
-    });
-    
   function validate() {
-          var a = document.getElementById("password").value;
-          var b = document.getElementById("password_confirm").value;
-          if (a!=b) {
-            alert("Les mots de passe ne correspondent pas.");
-            return false; }
-          else {
-            alert("Les mots de passe correspondent.");
-            return false; }
-          }
-  </script>
-  
+    var a = document.getElementById("password").value;
+    var b = document.getElementById("password_confirm").value;
+    if (a!=b) {
+      alert("Les mots de passe ne correspondent pas.");
+      return false; }
+    else {
+      alert("Les mots de passe correspondent.");
+      return false; }
+  }
+{% endblock %}
+
+{% block js_documentReady %}
+  $('#backButton').on('click', function(event) {
+    window.location = '/listusers';
+  });
 {% endblock %}

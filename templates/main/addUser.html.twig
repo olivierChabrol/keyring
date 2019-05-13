@@ -1,26 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block head %}
-<head>
-  <script type="text/javascript">
-
-  function validate() {
-
-          var a = document.getElementById("password").value;
-          var b = document.getElementById("password_confirm").value;
-
-          if (a!=b) {
-            alert("Les mots de passe ne correspondent pas.");
-            return false; }
-          else {
-            alert("Les mots de passe correspondent.");
-            return false; }
-          }
-  </script>
-<head>
-
-{% endblock %}
-
 {% block title %}Ajouter un utilisateur{% endblock %}
 
 {% block body %}
@@ -89,4 +68,20 @@
 <button type="submit">Save</button>
 </form>
 
+{% endblock %}
+{% block js %}
+  function validate() {
+    var a = document.getElementById("password").value;
+    var b = document.getElementById("password_confirm").value;
+
+    if (a!=b) {
+      alert("Les mots de passe ne correspondent pas.");
+      return false; 
+    }
+    else {
+      alert("Les mots de passe correspondent.");
+      return false; 
+    }
+  }
+          
 {% endblock %}

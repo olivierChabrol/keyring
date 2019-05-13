@@ -24,6 +24,7 @@ security:
               path: /logout
               target: /
             anonymous: true
+            logout_on_user_change: true
             guard:
                 authenticators:
                     - App\Security\AppCustomAuthenticator
@@ -56,3 +57,6 @@ security:
       - { path: ^/expiration$, roles: ROLE_ADMIN }
       #- { path: ^/user$, roles: ROLE_ADMIN }
       - { path: ^/listPret$, roles: ROLE_ADMIN }
+      - { path: ^/adduser$, roles: ROLE_ADMIN }
+      - { path: ^/user/profil$, roles: IS_AUTHENTICATED_FULLY }
+      - { path: ^/user/*, roles: ROLE_ADMIN }

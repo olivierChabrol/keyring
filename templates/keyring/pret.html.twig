@@ -68,74 +68,6 @@
 {% endblock %}
 
 {% block js %}
-<script>
-
-$(document).ready(function(){
-	$.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
-
-    $("#dateStart").datepicker().datepicker("setDate", new Date());
-
-
-    $('#backButton').on('click', function(event) {
-      window.location = '/';
-    });
-
-      $('#expirationDate').on('change', function(event) {
-      if ($('#expirationDate').is(':checked')) {
-		$('#dateEnd').prop('disabled', false);
-	  }
-	  else
-	  {
-		$('#dateEnd').prop('disabled', true);
-	  }
-    });
-
-    if($('#expirationDate').val() != true  )
-    {
-
-      $('#dateEnd').prop('disabled', false);
-   	  $("#expirationDate").prop('checked', true);
-	}
-
-
-	if(!$("#expirationDate").is(":checked")) {
-	  $('#dateEnd').prop('disabled', true);
-	}
-
-	$("#dateEnd").datepicker({
-		language:"fr",
-	});
-
-	$("#dateStart").datepicker({
-		language:"fr",
-	});
-
-	$( "#saveButton" ).click(function() {
-		$( "#formSaveKey" ).submit();
-	});
-	$( "#deleteButton" ).click(function() {
-
-	});
-
-	$('#confirm-delete').on('show.bs.modal', function(e) {
-		$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-	});
-	searchKey();
-
-	$("#type").on('change', function(event) {
-		searchKey();
-	});
-
-	$("#lieu").on('change', function(event) {
-		searchKey();
-	});
-
-
-	$( "#saveButton" ).click(function() {
-		$( "#formSavePret" ).submit();
-	});
-});
-
 function searchKey()
 	{
 	    $.ajax({
@@ -153,43 +85,96 @@ function searchKey()
 	    }
 	});
 }
+{% endblock %}
+{% block js_documentReady %}
+	$.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
+
+	$("#dateStart").datepicker().datepicker("setDate", new Date());
+
+
+	$('#backButton').on('click', function(event) {
+		window.location = '/';
+	});
+
+	$('#expirationDate').on('change', function(event) {
+		if ($('#expirationDate').is(':checked')) {
+			$('#dateEnd').prop('disabled', false);
+	  }
+	  else {
+			$('#dateEnd').prop('disabled', true);
+	  }
+	});
+
+	if($('#expirationDate').val() != true  )
+	{
+		$('#dateEnd').prop('disabled', false);
+		$("#expirationDate").prop('checked', true);
+	}
+
+	if(!$("#expirationDate").is(":checked")) {
+	  $('#dateEnd').prop('disabled', true);
+	}
+
+	$("#dateEnd").datepicker({
+		language:"fr",
+	});
+
+	$("#dateStart").datepicker({
+		language:"fr",
+	});
+
+	$( "#saveButton" ).click(function() {
+		$( "#formSaveKey" ).submit();
+	});
+
+	searchKey();
+
+	$("#type").on('change', function(event) {
+		searchKey();
+	});
+
+	$("#lieu").on('change', function(event) {
+		searchKey();
+	});
+
+
+	$( "#saveButton" ).click(function() {
+		$( "#formSavePret" ).submit();
+	});
+
 	$("#searchId").autocomplete({
     source: function( request, response ) {
-        $.ajax({
-            dataType: "json",
-            type : 'Get',
-            url: '/searchUserAjax',
-            data: {q: request.term},
-            success: function(data) {
-				var parsed = JSON.parse(data);				
-                $('input.suggest-user').removeClass('ui-autocomplete-loading');  
-                var newArray = new Array(parsed.length);
-                var i = 0;
-				$.each(parsed["data"], function(index, element) {
-					var newObject = { label: element.name, id: element.id };
-					newArray[i] = newObject;
-					i++;
-				});
-                response(newArray);
-            },
-            error: function(data) {
-                $('input.suggest-user').removeClass('ui-autocomplete-loading');  
-            }
-        });
-    },
-	select: function (event, ui) {    
-		  //alert(ui.item.id);
-		  $("#userId").val(ui.item.id);
-		  $("#searchId").val(ui.item.label);
-		  return false;
-	},
+			$.ajax({
+					dataType: "json",
+					type : 'Get',
+					url: '/searchUserAjax',
+					data: {q: request.term},
+					success: function(data) {
+			var parsed = JSON.parse(data);				
+							$('input.suggest-user').removeClass('ui-autocomplete-loading');  
+							var newArray = new Array(parsed.length);
+							var i = 0;
+			$.each(parsed["data"], function(index, element) {
+				var newObject = { label: element.name, id: element.id };
+				newArray[i] = newObject;
+				i++;
+			});
+							response(newArray);
+					},
+					error: function(data) {
+							$('input.suggest-user').removeClass('ui-autocomplete-loading');  
+					}
+			});
+		},
+		select: function (event, ui) {    
+				//alert(ui.item.id);
+				$("#userId").val(ui.item.id);
+				$("#searchId").val(ui.item.label);
+				return false;
+		},
     minLength: 1,
     open: function() {},
     close: function() {},
     focus: function(event,ui) {}
-});
-
-</script>
-
-
+	});
 {% endblock %}

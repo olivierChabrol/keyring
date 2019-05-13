@@ -19,8 +19,7 @@
 
 
 
-{% block js %}
-
+{% block js_importedLib %}
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
@@ -30,8 +29,9 @@
 <script src="https://www.highcharts.com/media/com_demo/js/highslide-full.min.js"></script>
 <script src="https://www.highcharts.com/media/com_demo/js/highslide.config.js" charset="utf-8"></script>
 <link rel="stylesheet" type="text/css" href="https://www.highcharts.com/media/com_demo/css/highslide.css" />
+{% endblock %}
 
-<script type="text/javascript">
+{% block js %}
 var chart;
 function drawChart(data) {
   var options = {
@@ -115,7 +115,8 @@ function lostKeys(data) {
   };
   Highcharts.chart('lostKeys', options);
 }
-$(document).ready(function () {
+{% endblock %}
+{% block js_documentReady %}
   $.ajax({
       url: "/listTrousseauPerSitesAjax",
       data: {},
@@ -139,7 +140,4 @@ $(document).ready(function () {
   .fail(function() {
       alert( "error" );
   });
-});
-</script>
-
 {% endblock %}
