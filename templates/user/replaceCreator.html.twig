@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur {{ user.firstName }} {{ user.name }}{% endblock %}
+{% block cssUserNavBarItem %} active {% endblock %}
+{% block body %}
+L'utilisat·rice·eur {{ user.firstName }} {{ user.name }} a enregistré·e les clefs suivantes: 
+<div class="alert alert-success">
+{% for key in keys %}
+    <ul>{{ key.modele }} {{ key.ref }} </ul>
+{% endfor %}
+</div>
+Pour pouvoir supprimer l'utilisateur {{ user.firstName }} {{ user.name }} , vous devez vous les affecter?
+<button type="button" class="btn btn-warning" id="yes">Oui</button>
+<button type="button" class="btn btn-primary" id="no">Non</button>
+{% endblock %}
+{% block js_documentReady %}
+  $('#yes').on('click', function(event) {
+  window.location = '{{ path('user_replaceCreatorKeys', {id: user.id}) }}';
+  });
+  $('#no').on('click', function(event) {
+  window.location = '{{ path('user_list') }}';
+  });
+{% endblock %}

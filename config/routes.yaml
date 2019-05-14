@@ -105,6 +105,10 @@ user_profil:
     path: /user/profil
     controller: App\Controller\UserController::profil
 
+user_replaceCreatorKeys:
+    path: /user/replaceCK
+    controller: App\Controller\UserController::replaceCreatorKey
+
 key_view:
     path: /key/view
     controller: App\Controller\KeyringController::viewKey

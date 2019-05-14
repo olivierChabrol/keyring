@@ -29,6 +29,11 @@ class TrousseauRepository extends ServiceEntityRepository
         return $qb->execute();
     }
 
+    public function listTrousseauByCreator($userId) {
+        $qb = $this->createQueryBuilder('u')->andWhere('u.creator = :userId')->setParameter("userId", $userId)->getQuery();
+        return $qb->execute();
+    }
+
     public function listTrousseauPerSite() {
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'select t.site, COUNT(t.site) FROM trousseau t group BY t.site';

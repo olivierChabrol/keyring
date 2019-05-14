@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Param;
 use App\Entity\Pret;
+use App\Entity\Trousseau;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,15 +84,40 @@ class UserController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $idUser = ($request->query->get('id'));
-        if ($idUser == NULL || $this->getDoctrine()->getRepository(User::class)->find($idUser) == NULL)    {
-        return $this->listUser($request);
+        if ($idUser == NULL) {
+          return $this->listUser($request);
         }
 
         $user = $this->getDoctrine()->getRepository(User::class)->find($idUser);
+        if ($user == null) {
+          return $this->listUser($request);
+        }
+
+        $keys = $this->getDoctrine()->getRepository(Trousseau::class)->listTrousseauByCreator($idUser);
+        if ($keys != null || count($keys) > 0) {
+          return $this->render('user/replaceCreator.html.twig', array('user' => $user, "keys" => $keys));
+        }
+
         $entityManager->remove($user);
         $entityManager->flush();
         return $this->listUser($request);
 
+    }
+
+    public function replaceCreatorKey(Request $request) {
+      $userId = ($request->query->get('id'));
+      if ($userId == NULL) {
+        return $this->listUser($request);
+      }
+      $entityManager = $this->getDoctrine()->getManager();
+      $keys = $this->getDoctrine()->getRepository(Trousseau::class)->listTrousseauByCreator($userId);
+      //dump($this->getUser());die();
+
+      foreach( $keys as $key) {
+        $key->setCreator($this->getUser());
+      }
+      $entityManager->flush();
+      return $this->deleteUser ($request);
     }
 
     public function profil(Request $request)
