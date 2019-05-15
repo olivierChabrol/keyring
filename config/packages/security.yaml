@@ -24,7 +24,6 @@ security:
               path: /logout
               target: /
             anonymous: true
-            logout_on_user_change: true
             guard:
                 authenticators:
                     - App\Security\AppCustomAuthenticator

@@ -24,9 +24,8 @@
 			<th>
 				Type
 			</th>
-			<th>
-				Etat
-			</th>
+			<th>Etat</th>
+			<th>Créateur</th>
 		</tr>
 	{% for trousseau in trousseaux %}
 			<tr>
@@ -54,6 +53,11 @@
 					<td>
 						<a href="{{ path('key_view', {id: trousseau.id}) }}">
 							{{ params[trousseau.state] }}
+						</a>
+					</td>
+					<td>
+						<a href="{{ path('user_view', {id: trousseau.creator.id}) }}">
+							{{ trousseau.creator.firstName }} {{ trousseau.creator.name }}
 						</a>
 					</td>
 					<td>

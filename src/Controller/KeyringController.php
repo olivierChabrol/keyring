@@ -2,7 +2,7 @@
 // src/Controller/VIVSController
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +24,7 @@ use App\Entity\User;
 
 use \Datetime;
 
-class KeyringController extends Controller
+class KeyringController extends AbstractController
 {
 	public function listKeyAjax(Request $request)
     {
