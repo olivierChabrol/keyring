@@ -28,17 +28,16 @@
           <li class="nav-item dropdown {% block cssKeyNavBarItem %}{% endblock %}" >
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Clefs</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{{ path('list_key') }}">Liste des Clefs</a>
-              <a class="dropdown-item" href="{{ path('add_key') }}">Créer une nouvelle clef</a>
+              <a class="dropdown-item" href="{{ path('key_list') }}">Liste des Clefs</a>
+              <a class="dropdown-item" href="{{ path('key_new') }}">Créer une nouvelle clef</a>
             </div>
           </li>
 
           <li class="nav-item dropdown {% block cssPretNavBarItem %}{% endblock %}">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pret</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/listagePret">Liste des prets</a>
-              <a class="dropdown-item" href="/pret">Nouveau pret</a>
-              <a class="dropdown-item" href="/expiration">Prets arrivant a expiration</a>
+              <a class="dropdown-item" href="{{path('lend_list')}}">Liste des prets</a>
+              <a class="dropdown-item" href="{{ path('lend_new') }}">Nouveau pret</a>
             </div>
           </li>
 
@@ -68,7 +67,7 @@
         </ul>
 
         <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Recherche" aria-label="Search" id="searchHost">
+          <input class="form-control mr-sm-2" type="search" placeholder="Recherche" aria-label="Search" id="searchBase">
           <br>
         </form>
       </div>
@@ -110,13 +109,31 @@
   		});
   	{% endfor %}
 
+    var params = null;
+    function loadParams()
+    {
+      $.ajax({
+					dataType: "json",
+					type : 'Get',
+					url: '{{ path("param_list_ajax") }}',
+					success: function(data) {
+						params = JSON.parse(data);
+					},
+					error: function(data) {
+							$('input.suggest-user').removeClass('ui-autocomplete-loading');  
+					}
+			});
+    }
   	{% block js %}
     {% endblock %}
     
 $(document).ready(function () {
-  	{% block js_documentReady %}
-    {% endblock %}
-
+  loadParams();
+  $("#searchBase").keyup(function() {
+    search();
+  });
+  {% block js_documentReady %}
+  {% endblock %}
 });
 	</script>
 

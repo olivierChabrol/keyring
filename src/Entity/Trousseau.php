@@ -58,6 +58,21 @@ class Trousseau implements JsonSerializable
      */
     private $creationDate;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $access;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $ticketIn;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $ticketOut;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -118,6 +133,9 @@ class Trousseau implements JsonSerializable
             'ref' => $this->ref,
             'site' => $this->site,
             'type' => $this->type,
+            'access' => $this->access,
+            'state' => $this->state,
+            'creator' => $this->creator,
             'id' => $this->id
 
         ];
@@ -167,6 +185,42 @@ class Trousseau implements JsonSerializable
      public function setCreationDate(\DateTimeInterface $creationDate): self
      {
          $this->creationDate = $creationDate;
+
+         return $this;
+     }
+
+     public function getAccess(): ?string
+     {
+         return $this->access;
+     }
+
+     public function setAccess(?string $access): self
+     {
+         $this->access = $access;
+
+         return $this;
+     }
+
+     public function getTicketIn(): ?string
+     {
+         return $this->ticketIn;
+     }
+
+     public function setTicketIn(?string $ticketIn): self
+     {
+         $this->ticketIn = $ticketIn;
+
+         return $this;
+     }
+
+     public function getTicketOut(): ?string
+     {
+         return $this->ticketOut;
+     }
+
+     public function setTicketOut(?string $ticketOut): self
+     {
+         $this->ticketOut = $ticketOut;
 
          return $this;
      }

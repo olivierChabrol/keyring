@@ -47,13 +47,15 @@ class UserController extends AbstractController
 			$userId = $array["userId"];
 			$User = $entityManager->getRepository(User::class)->find($userId);
 		}
-			  $User->setRoles(array($array["roles"]));
-        $User->setOrigine($array["origine"]);
-        $User->setName($array["name"]);
-        $User->setFirstName($array["firstname"]);
-        $User->setEmail($array["email"]);
-        $User->setUsername($array["username"]);
-        $User->setPassword($passwordEncoder->encodePassword($User, $array["password"]));
+    $User->setRoles(array($array["roles"]));
+    $User->setOrigine($array["origine"]);
+    $User->setName($array["name"]);
+    $User->setFirstName($array["firstname"]);
+    $User->setEmail($array["email"]);
+    $User->setUsername($array["username"]);
+    if (!empty($array["password"])) {
+      $User->setPassword($passwordEncoder->encodePassword($User, $array["password"]));
+    }
 
               // tell Doctrine you want to (eventually) save the Product (no queries yet)
 		if ($newUser) {

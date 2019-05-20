@@ -72,7 +72,25 @@ class TrousseauRepository extends ServiceEntityRepository
             ->getQuery();
 
         return $qb->execute();
-	}
+    }
+    
+    public function getKeys($type = null, $site = null, $string = null)
+    {
+        $qb = $this->createQueryBuilder('l');
+        
+        if ($type != null) {
+            $qb->andWhere('l.type = :type')->setParameter('type', $type);
+        }
+        if ($site != null) {
+            $qb->andWhere('l.site = :site')->setParameter('site', $site);
+        }
+        if ($string != null || !empty($string)) {
+            $qb->andWhere('l.modele LIKE :modele')->setParameter('modele', '%'.$string.'%');
+            $qb->orWhere('l.ref LIKE :ref')->setParameter('ref', '%'.$string.'%');
+        }
+        $q = $qb->orderBy('l.modele', 'ASC')->getQuery();
+        return $q->execute();
+    }
 
     // /**
     //  * @return Trousseau[] Returns an array of Trousseau objects

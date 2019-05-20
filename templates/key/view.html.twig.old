@@ -22,7 +22,6 @@
 		<div class="col-md-4 mb-3">
 			<label for="type">Type</label>
     	<select class="form-control" id="type" name="type">
-
     	{% for val in types %}
       	<option value="{{val.id}}">
 					{{ val.value }}
@@ -48,8 +47,22 @@
 		{% endfor %}
     </select>
     </div>
-
-
+	</div>
+	<div class="form-row">
+		<div class="col-md-4 mb-3">
+			<label for="access">Accés (Bureau, porte, ...)</label>
+			<input type="text" class="form-control" id="access" name="access" placeholder="Entrez ce que la porte peut ouvrir" value="">
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="col-md-4 mb-3">
+			<label for="ticketIn">Numéro de ticket d'activation :</label>
+			<input type="text" class="form-control" id="ticketIn" name="ticketIn" placeholder="Numéro ENT de ticket" value="">
+		</div>
+		<div class="col-md-4 mb-3">
+			<label for="ticketOut">Numéro de ticket de désactivation :</label>
+			<input type="text" class="form-control" id="ticketOut" name="ticketOut" placeholder="Numéro ENT de ticket" value="">
+		</div>
 	</div>
 </form>
 
@@ -60,7 +73,7 @@
 
 {% block js_documentReady %}
 	$('#backButton').on('click', function(event) {
-		window.location = '/';
+		window.location = '{{ path("key_list") }}';
 	});
 
 	$( "#saveButton" ).click(function() {

@@ -38,10 +38,32 @@ class KeyringController extends AbstractController
 		return new Response("Error : not and ajax request", 400);
 	}
 
+	public function listKeysAjax(Request $request) 
+	{
+      if ($request->isXmlHttpRequest())
+	    {
+		  	$entityManager = $this->getDoctrine()->getManager();
+		   	$keys = $this->getDoctrine()->getRepository(Trousseau::class)->getKeys($request->get("type"), $request->get("site"), $request->get("search"));
+		   	$retour = array("data" => $keys);
+		   	return new JSonResponse(json_encode($keys));
+		}
+		return new Response("Error : not and ajax request", 400);
+	}
+
+	public function getParamsAjax(Request $request)
+	{
+		if ($request->isXmlHttpRequest())
+		{
+			$assocArrayParams = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+			return new JSonResponse(json_encode($assocArrayParams));
+		}
+		return new Response("Error : not and ajax request", 400);
+	}
+
 
 	public function listFreeKeyAjax(Request $request)
     {
-        if ($request->isXmlHttpRequest())
+      if ($request->isXmlHttpRequest())
 	    {
 		   $entityManager = $this->getDoctrine()->getManager();
 		   $trousseaux = $this->getDoctrine()->getRepository(Trousseau::class)->getListFreeKeyWithCondition($request->get("type"), $request->get("site"));
@@ -95,18 +117,21 @@ class KeyringController extends AbstractController
 		$assocArrayParams = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
 		$keys = $this->getDoctrine()->getRepository(Trousseau::class)->getListKeys();
 
-        return $this->render('keyring/listKeys.html.twig', array('trousseaux' => $keys, 'params' => $assocArrayParams));
+        return $this->render('key/list.html.twig', array('trousseaux' => $keys, 'params' => $assocArrayParams));
 	}
     public function modifyKey(Request $request)
     {
-
+		$keyId = $request->query->get('id');
+		if ($keyId == null)
+		{
+		  $this->listKey($request);
+		}
 		$paramTypes = $this->getDoctrine()->getRepository(Param::class)->getKeyType();
 		$paramLieux = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
 		$paramEtat  = $this->getDoctrine()->getRepository(Param::class)->getKeyState();
-		$idKey      = ($request->query->get('id'));
-		$trousseau  = $this->getDoctrine()->getRepository(Trousseau::class)->find($idKey);
+		$trousseau  = $this->getDoctrine()->getRepository(Trousseau::class)->find($keyId);
 		
-        return $this->render('keyring/modifyCle.html.twig', array('trousseau' => $trousseau,'types' => $paramTypes, 'lieux' => $paramLieux, 'etats' => $paramEtat));
+        return $this->render('key/modify.html.twig', array('key' => $trousseau,'types' => $paramTypes, 'lieux' => $paramLieux, 'etats' => $paramEtat));
 	}
 
 	public function viewKey(Request $request)
@@ -120,7 +145,7 @@ class KeyringController extends AbstractController
 		$prets  = $this->getDoctrine()->getRepository(Pret::class)->getPretByTrousseau($keyId);
 		$params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
 
-		return $this->render('keyring/viewKey.html.twig', array('key' => $key, 'prets' => $prets, 'params' => $params));
+		return $this->render('key/view.html.twig', array('key' => $key, 'prets' => $prets, 'params' => $params));
 	}
 
     public function newKey (Request $request) {
@@ -130,18 +155,9 @@ class KeyringController extends AbstractController
 		$paramSites = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
 		$paramEtat = $this->getDoctrine()->getRepository(Param::class)->getKeyState();
 
-        return $this->render('keyring/trousseau.html.twig', array( 'types' => $paramTypes, 'lieux' => $paramSites, 'state' => $paramEtat));
+        return $this->render('keyring/key.html.twig', array( 'types' => $paramTypes, 'lieux' => $paramSites, 'state' => $paramEtat));
     }
 
-	public function listPret(Request $request) {
-
-		$entityManager = $this->getDoctrine()->getManager();
-		$prets = $this->getDoctrine()->getRepository(Pret::class)->findAll();
-		$assocArrayParams = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
-
-        return $this->render('keyring/listagePret.html.twig', array('prets' => $prets, 'params' => $assocArrayParams));
-
-	}
 
 	/**
 	 * @Route("/expiration", name="expiration")
@@ -157,15 +173,28 @@ class KeyringController extends AbstractController
     }
 
 
+	public function listLend(Request $request) {
+
+		$entityManager = $this->getDoctrine()->getManager();
+		$prets = $this->getDoctrine()->getRepository(Pret::class)->findAll();
+		$assocArrayParams = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+
+        return $this->render('lend/list.html.twig', array('prets' => $prets, 'params' => $assocArrayParams));
+
+	}
 	 public function modifyPret(Request $request)
     {
+		$idPret = $request->query->get('id');
+		if ($idPret == null)
+		{
+		  $this->listLend($request);
+		}
 		$paramTypes = $this->getDoctrine()->getRepository(Param::class)->getKeyType();
 		$paramLieux = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
 		$paramMails = $this->getDoctrine()->getRepository(User::class)->getUserEmail();
-		$idPret = ($request->query->get('id'));
 
-		$pret = $this->getDoctrine()->getRepository(Pret::class)->find($idPret);
-        return $this->render('keyring/modifyPret.html.twig', array('pret' => $pret,'types' => $paramTypes, 'lieux' => $paramLieux,'mails'=>$paramMails));
+		$lend = $this->getDoctrine()->getRepository(Pret::class)->find($idPret);
+        return $this->render('lend/modify.html.twig', array('pret' => $lend,'types' => $paramTypes, 'lieux' => $paramLieux,'mails'=>$paramMails));
 
 	}
 
@@ -190,7 +219,7 @@ class KeyringController extends AbstractController
 		
 	}
 
-		public function deletePret (Request $request)
+	public function deletePret (Request $request)
 	{
 		$entityManager = $this->getDoctrine()->getManager();
 		$idPret = ($request->query->get('id'));
@@ -206,15 +235,15 @@ class KeyringController extends AbstractController
 	}
 
 
-    	public function newPret (Request $request) {
+	public function newLend (Request $request) {
 
-		  $paramTypes = $this->getDoctrine()->getRepository(Param::class)->getKeyType();
-		  $paramLieux = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
-		  $paramMails = $this->getDoctrine()->getRepository(User::class)->getUserEmail();
+		$paramTypes = $this->getDoctrine()->getRepository(Param::class)->getKeyType();
+		$paramLieux = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
+		$paramMails = $this->getDoctrine()->getRepository(User::class)->getUserEmail();
 
-          return $this->render('keyring/pret.html.twig', array('types' => $paramTypes, 'lieux' => $paramLieux, 'mails' => $paramMails));
+		return $this->render('keyring/pret.html.twig', array('types' => $paramTypes, 'lieux' => $paramLieux, 'mails' => $paramMails));
 
-		}
+	}
 
 
   public function saveKey(Request $request) {
@@ -225,6 +254,9 @@ class KeyringController extends AbstractController
 	$reference = $array["reference"];
 	$modele    = $array["modele"];
 	$etat      = $array["state"];
+	$access    = $array["access"];
+	$ticketIn  = $array["ticketIn"];
+	$ticketOut = $array["ticketOut"];
 	$trousseauId = null;
 	$trousseau  = null;
 	$newKey = $request->request->get('trousseauId') == NULL;
@@ -243,6 +275,9 @@ class KeyringController extends AbstractController
 	$trousseau->setRef($reference);
 	$trousseau->setModele($modele);
 	$trousseau->setState($etat);
+	$trousseau->setAccess($access);
+	$trousseau->setTicketIn($ticketIn);
+	$trousseau->setTicketOut($ticketOut);
 	$trousseau->setCreationDate(new DateTime());
 
 	$trousseau->setCreator($this->getUser());

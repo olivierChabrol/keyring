@@ -6,17 +6,17 @@
 
 {% block body %}
 <form action="/saveKey" id="formSaveKey" method="post">
-	<input id="trousseauId" name="trousseauId" type="hidden" value="{{ trousseau.id }}">
+	<input id="trousseauId" name="trousseauId" type="hidden" value="{{ key.id }}">
 
 	<div class="form-row">
 		<div class="col-md-4 mb-3">
 			<label for="reference">Référence</label>
-			<input type="text" class="form-control" id="reference" name="reference" placeholder="Entrez id clé" value="{{ trousseau.ref }}">
+			<input type="text" class="form-control" id="reference" name="reference" placeholder="Entrez id clé" value="{{ key.ref }}">
 		</div>
 
 		<div class="col-md-4 mb-3">
 	  	<label for="modele">Modele</label>
-	  	<input type="text" class="form-control" id="modele" name="modele" placeholder="" value="{{ trousseau.modele }}">
+	  	<input type="text" class="form-control" id="modele" name="modele" placeholder="" value="{{ key.modele }}">
 		</div>
 
 		<div class="col-md-4 mb-3">
@@ -24,7 +24,7 @@
 			<select class="form-control" id="type" name="type">
 				{% for val in types %}
 				{% set selected = '' %}
-				{% if (val.id == trousseau.type) %}
+				{% if (val.id == key.type) %}
 				{% set selected = 'selected' %}
 				{% endif %}
 				<option value="{{val.id}}" {{ selected }}>{{ val.value }}</option>
@@ -40,7 +40,7 @@
       <select class="form-control" id="lieu" name="lieu">
     		{% for val in lieux %}
       	{% set selected = '' %}
-    		{% if (val.id == trousseau.site) %}
+    		{% if (val.id == key.site) %}
       	{% set selected = 'selected' %}
     		{% endif %}
       	<option value="{{val.id}}" {{ selected }}>{{ val.value }}</option>
@@ -55,7 +55,7 @@
       <select class="form-control" id="state" name="state">
     		{% for val in etats %}
       	{% set selected = '' %}
-    		{% if (val.id == trousseau.state) %}
+    		{% if (val.id == key.state) %}
       	{% set selected = 'selected' %}
       	{% endif %}
     		<option value="{{val.id}}" {{ selected }}>{{ val.value }}</option>
@@ -68,7 +68,7 @@
 	<div class="form-row">
 		<div class="col-md-4 mb-3">
 		<label for="access">Accés</label>
-		<input type="text" class="form-control" id="access" name="access" placeholder="" value="{{ trousseau.access }}">
+		<input type="text" class="form-control" id="access" name="access" placeholder="" value="{{ key.access }}">
 		</div>
 	</div>
 	<div class="form-row">
@@ -91,7 +91,7 @@
 
 {% block js_documentReady %}
 	$('#backButton').on('click', function(event) {
-		window.location = '/';
+		window.location = '{{ path("key_list") }}';
 	});
 
 	$( "#saveButton" ).click(function() {

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use \JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -17,7 +18,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * message= "l'email existe deja"
  * )
  */
-class User implements UserInterface
+class User implements UserInterface, JsonSerializable
 {
 /**
  * @ORM\Id()
@@ -272,4 +273,15 @@ public function setRoles(array $roles): void
 {
 	$this->roles = $roles;
 }
+
+    public function jsonSerialize() {
+        return [
+            'name' => $this->name,
+            'origine' => $this->origine,
+            'note' => $this->note,
+            'firstName' => $this->firstName,
+            'id' => $this->id,
+            'email' => $this->email
+        ];
+    }
 }

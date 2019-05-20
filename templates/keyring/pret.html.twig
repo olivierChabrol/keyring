@@ -150,16 +150,16 @@ function searchKey()
 					url: '/searchUserAjax',
 					data: {q: request.term},
 					success: function(data) {
-			var parsed = JSON.parse(data);				
-							$('input.suggest-user').removeClass('ui-autocomplete-loading');  
-							var newArray = new Array(parsed.length);
-							var i = 0;
-			$.each(parsed["data"], function(index, element) {
-				var newObject = { label: element.name, id: element.id };
-				newArray[i] = newObject;
-				i++;
-			});
-							response(newArray);
+						var parsed = JSON.parse(data);				
+						$('input.suggest-user').removeClass('ui-autocomplete-loading');  
+						var newArray = new Array(parsed.length);
+						var i = 0;
+						$.each(parsed["data"], function(index, element) {
+							var newObject = { label: element.name, id: element.id };
+							newArray[i] = newObject;
+							i++;
+						});
+						response(newArray);
 					},
 					error: function(data) {
 							$('input.suggest-user').removeClass('ui-autocomplete-loading');  
