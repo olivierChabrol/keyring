@@ -8,7 +8,7 @@
 {% block body %}
 <div class="table-responsive">
 	<table class="table table-hover table-sm" id="tableKeys">
-		<tr><th>#</th><th>Type</th><th>Modele</th><th>Site</th><th>Référence</th><th>Accés</th><th>Etat</th><th>Créateur</th></tr>
+		<tr><th>#</th><th>Type</th><th>Modele</th><th>Site</th><th>Référence</th><th>Accés</th><th>Etat</th></tr>
 	{% for trousseau in trousseaux %}
 			<tr>
 				<th scope="row">{{ loop.index0 }}</th>
@@ -40,11 +40,6 @@
 					<td>
 						<a href="{{ path('key_view', {id: trousseau.id}) }}">
 							{{ params[trousseau.state] }}
-						</a>
-					</td>
-					<td>
-						<a href="{{ path('user_view', {id: trousseau.creator.id}) }}">
-							{{ trousseau.creator.firstName }} {{ trousseau.creator.name }}
 						</a>
 					</td>
 					<td>

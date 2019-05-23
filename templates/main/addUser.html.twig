@@ -47,7 +47,28 @@
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname">Nom d'utilisateur</label>
-        <input type="text" class="form-control" id="username" name="username" placeholder="username" value="">
+        <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Financement</label>
+        <input type="text" class="form-control" id="financement" name="financement" placeholder="Financement" value="">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Equipe</label>
+        <input type="text" class="form-control" id="equipe" name="equipe" placeholder="Equipe" value="">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Nom d'utilisateur</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="">
     </div>
   </div>
 
@@ -76,12 +97,12 @@
 
     if (a!=b) {
       alert("Les mots de passe ne correspondent pas.");
-      return false; 
+      return false;
     }
     else {
       alert("Les mots de passe correspondent.");
-      return false; 
+      return false;
     }
   }
-          
+
 {% endblock %}

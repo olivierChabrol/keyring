@@ -88,6 +88,16 @@ private $origine;
 */
 private $roles = [];
 
+/**
+ * @ORM\Column(type="string", length=255, nullable=true)
+ */
+private $financement;
+
+/**
+ * @ORM\Column(type="string", length=255, nullable=true)
+ */
+private $equipe;
+
 
 public function __construct()
 {
@@ -283,5 +293,29 @@ public function setRoles(array $roles): void
             'id' => $this->id,
             'email' => $this->email
         ];
+    }
+
+    public function getFinancement(): ?string
+    {
+        return $this->financement;
+    }
+
+    public function setFinancement(?string $financement): self
+    {
+        $this->financement = $financement;
+
+        return $this;
+    }
+
+    public function getEquipe(): ?string
+    {
+        return $this->equipe;
+    }
+
+    public function setEquipe(?string $equipe): self
+    {
+        $this->equipe = $equipe;
+
+        return $this;
     }
 }
