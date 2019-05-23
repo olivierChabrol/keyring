@@ -137,3 +137,7 @@ param_list_ajax:
 pdf_key_list:
     path: /key/list/pdf
     controller: App\Controller\KeyringController::pdfAction
+
+pdf_lend_view:
+    path: /lend/view/pdf
+    controller: App\Controller\KeyringController::lendPdf
