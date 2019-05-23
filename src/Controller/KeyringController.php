@@ -158,7 +158,7 @@ class KeyringController extends AbstractController
 		$paramSites = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
 		$paramEtat = $this->getDoctrine()->getRepository(Param::class)->getKeyState();
 
-        return $this->render('keyring/key.html.twig', array( 'types' => $paramTypes, 'lieux' => $paramSites, 'state' => $paramEtat));
+        return $this->render('key/key.html.twig', array( 'types' => $paramTypes, 'lieux' => $paramSites, 'state' => $paramEtat));
     }
 
 
