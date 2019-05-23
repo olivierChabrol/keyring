@@ -67,6 +67,8 @@
 
         </ul>
 
+        <button onclick="window.print()" class="btn btn-success">Impression Page</button>
+
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Recherche" aria-label="Search" id="searchBase">
           <br>
@@ -121,13 +123,13 @@
 						params = JSON.parse(data);
 					},
 					error: function(data) {
-							$('input.suggest-user').removeClass('ui-autocomplete-loading');  
+							$('input.suggest-user').removeClass('ui-autocomplete-loading');
 					}
 			});
     }
   	{% block js %}
     {% endblock %}
-    
+
 $(document).ready(function () {
   loadParams();
   $("#searchBase").keyup(function() {
@@ -136,6 +138,10 @@ $(document).ready(function () {
   {% block js_documentReady %}
   {% endblock %}
 });
+
+function window.print(){
+  window.print();
+}
 	</script>
 
 
