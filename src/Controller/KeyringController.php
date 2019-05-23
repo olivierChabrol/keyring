@@ -151,14 +151,15 @@ class KeyringController extends AbstractController
 		return $this->render('key/view.html.twig', array('key' => $key, 'prets' => $prets, 'params' => $params));
 	}
 
-    public function newKey (Request $request) {
-		$entityManager = $this->getDoctrine()->getManager();
+		public function newKey (Request $request) 
+		{
+			$entityManager = $this->getDoctrine()->getManager();
 
-		$paramTypes = $this->getDoctrine()->getRepository(Param::class)->getKeyType();
-		$paramSites = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
-		$paramEtat = $this->getDoctrine()->getRepository(Param::class)->getKeyState();
+			$paramTypes = $this->getDoctrine()->getRepository(Param::class)->getKeyType();
+			$paramSites = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
+			$paramEtat = $this->getDoctrine()->getRepository(Param::class)->getKeyState();
 
-        return $this->render('key/key.html.twig', array( 'types' => $paramTypes, 'lieux' => $paramSites, 'state' => $paramEtat));
+      return $this->render('key/key.html.twig', array( 'types' => $paramTypes, 'lieux' => $paramSites, 'state' => $paramEtat));
     }
 
 
@@ -170,10 +171,10 @@ class KeyringController extends AbstractController
 	}
 
 
-    public function index(Request $request)
-    {
-        return $this->render('keyring/index.html.twig', array());
-    }
+	public function index(Request $request)
+	{
+		return $this->render('keyring/index.html.twig', array());
+	}
 
 
 	public function listLend(Request $request) {
@@ -182,22 +183,22 @@ class KeyringController extends AbstractController
 		$prets = $this->getDoctrine()->getRepository(Pret::class)->findAll();
 		$assocArrayParams = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
 
-        return $this->render('lend/list.html.twig', array('prets' => $prets, 'params' => $assocArrayParams));
-
+		return $this->render('lend/list.html.twig', array('prets' => $prets, 'params' => $assocArrayParams));
 	}
-	 public function modifyPret(Request $request)
-    {
+
+	public function modifyPret(Request $request)
+	{
 		$idPret = $request->query->get('id');
 		if ($idPret == null)
 		{
-		  $this->listLend($request);
+			$this->listLend($request);
 		}
 		$paramTypes = $this->getDoctrine()->getRepository(Param::class)->getKeyType();
 		$paramLieux = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
 		$paramMails = $this->getDoctrine()->getRepository(User::class)->getUserEmail();
 
 		$lend = $this->getDoctrine()->getRepository(Pret::class)->find($idPret);
-        return $this->render('lend/modify.html.twig', array('pret' => $lend,'types' => $paramTypes, 'lieux' => $paramLieux,'mails'=>$paramMails));
+		return $this->render('lend/modify.html.twig', array('pret' => $lend,'types' => $paramTypes, 'lieux' => $paramLieux,'mails'=>$paramMails));
 
 	}
 
@@ -353,6 +354,46 @@ class KeyringController extends AbstractController
 		}
 		array_multisort($price, SORT_DESC, $array);
 		return $array;
+	}
+
+	public function lendPdf(Request $request) 
+	{
+		$lendId = $request->query->get('id');
+		if ($lendId == null)
+		{
+			$this->listLend($request);
+		}
+
+		$lend   = $this->getDoctrine()->getRepository(Pret::class)->find($lendId);
+		$userId = $lend->getUser()->getId();
+		$user   = $this->getDoctrine()->getRepository(User::class)->find($userId);
+		$prets  = $this->getDoctrine()->getRepository(Pret::class)->getPretByUser($userId);
+		$params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+
+		$pdfOptions = new Options();
+		$pdfOptions->set('defaultFont', 'Arial');
+		
+		// Instantiate Dompdf with our options
+		$dompdf = new Dompdf($pdfOptions);
+		
+		// Retrieve the HTML generated in our twig file
+		$html = $this->renderView('user/viewPdf.html.twig', [
+				'user' => $user, "prets" => $prets, "params" => $params
+		]);
+
+		// Load HTML to Dompdf
+		$dompdf->loadHtml($html);
+				
+		// (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+		$dompdf->setPaper('A4', 'portrait');
+
+		// Render the HTML as PDF
+		$dompdf->render();
+
+		// Output the generated PDF to Browser (inline view)
+		$dompdf->stream("mypdf.pdf", [
+				"Attachment" => true
+		]);
 	}
 
 	public function pdfAction(Request $request)
