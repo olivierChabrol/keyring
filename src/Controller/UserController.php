@@ -16,6 +16,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Security\Core\Security;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 class UserController extends AbstractController
 {
     /**
@@ -142,6 +145,47 @@ class UserController extends AbstractController
 
       return $this->render('user/view.html.twig', array('user' => $user, "prets" => $prets, "params" => $params));
     }
+
+    public function viewPdf(Request $request)
+    {
+      $userId = $request->query->get('id');
+      if ($userId == null)
+      {
+        $this->listUser($request);
+      }
+
+      $user   = $this->getDoctrine()->getRepository(User::class)->find($userId);
+      $prets  = $this->getDoctrine()->getRepository(Pret::class)->getPretByUser($userId);
+      $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+
+
+      $pdfOptions = new Options();
+      $pdfOptions->set('defaultFont', 'Arial');
+      
+      // Instantiate Dompdf with our options
+      $dompdf = new Dompdf($pdfOptions);
+      
+      // Retrieve the HTML generated in our twig file
+      $html = $this->renderView('user/viewPdf.html.twig', [
+          'user' => $user, "prets" => $prets, "params" => $params
+      ]);
+  
+      // Load HTML to Dompdf
+      $dompdf->loadHtml($html);
+          
+      // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+      $dompdf->setPaper('A4', 'portrait');
+  
+      // Render the HTML as PDF
+      $dompdf->render();
+  
+      // Output the generated PDF to Browser (inline view)
+      $dompdf->stream("mypdf.pdf", [
+          "Attachment" => true
+      ]);
+
+    }
+
 
     public function modifyUser(Request $request)
     {

@@ -6,7 +6,7 @@
 
 {% block body %}
 
-<h1 class="mt-5">{{ user.firstName }} {{ user.name }}</h1><a href="{{ path("user_modify", {id: user.id} ) }}">edit</a>
+<h1 class="mt-5">{{ user.firstName }} {{ user.name }}</h1><a href="{{ path("user_modify", {id: user.id} ) }}">edit</a><a href="{{ path("user_view_pdf", {id: user.id} ) }}">pdf</a>
 
 <div class="row">
     <div class="col-sm">

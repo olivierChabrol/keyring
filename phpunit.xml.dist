@@ -13,6 +13,11 @@
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="6.5" />
+
+        <!-- ###+ knplabs/knp-snappy-bundle ### -->
+        <env name="WKHTMLTOPDF_PATH" value="/usr/local/bin/wkhtmltopdf"/>
+        <env name="WKHTMLTOIMAGE_PATH" value="/usr/local/bin/wkhtmltoimage"/>
+        <!-- ###- knplabs/knp-snappy-bundle ### -->
     </php>
 
     <testsuites>

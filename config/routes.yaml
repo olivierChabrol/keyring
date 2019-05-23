@@ -81,6 +81,11 @@ user_view:
     path: /user/view
     controller: App\Controller\UserController::view
 
+user_view_pdf:
+    path: /user/view/pdf
+    controller: App\Controller\UserController::viewPdf
+
+
 user_modify:
     path: /user/modify
     controller: App\Controller\UserController::modifyUser
@@ -128,3 +133,7 @@ lend_list:
 param_list_ajax:
     path: /param/list/ajax
     controller: App\Controller\KeyringController::getParamsAjax
+
+pdf_key_list:
+    path: /key/list/pdf
+    controller: App\Controller\KeyringController::pdfAction
