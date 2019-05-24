@@ -7,6 +7,8 @@
 
 {% block body %}
 <div class="table-responsive">
+	<h1> Liste des clefs </h1>
+	<button onclick="window.print()">Imprimer cette page</button>
 	<table class="table table-hover table-sm" id="tableKeys">
 		<tr><th>#</th><th>Type</th><th>Modele</th><th>Site</th><th>Référence</th><th>Accés</th><th>Etat</th><th>Créateur</th></tr>
 	{% for trousseau in trousseaux %}
@@ -130,6 +132,10 @@ function deleteKey(){
 			txt = "You pressed Cancel!";
 		}
 	}
+}
+
+function window.print () {
+	window.print();
 }
 
 function showModalDelete(id) {

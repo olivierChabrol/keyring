@@ -228,7 +228,7 @@ class KeyringController extends AbstractController
 		$entityManager = $this->getDoctrine()->getManager();
 		$idPret = ($request->query->get('id'));
 		if ($idPret == NULL || $this->getDoctrine()->getRepository(Pret::class)->find($idPret) == NULL)	{
-			return $this->listPret($request);
+			return $this->listLend($request);
 		}
 
 		$pret = $this->getDoctrine()->getRepository(Pret::class)->find($idPret);

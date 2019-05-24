@@ -5,10 +5,16 @@
 {% block cssKeyNavBarItem %} active {% endblock %}
 
 {% block body %}
+
+
+
 <form action="/saveKey" id="formSaveKey" method="post">
+	
 	<input id="trousseauId" name="trousseauId" type="hidden" value="{{ trousseau.id }}">
 
+
 	<div class="form-row">
+			<h1 value="{{val.id}}"> Modification de clé </h1>
 		<div class="col-md-4 mb-3">
 			<label for="reference">Référence</label>
 			<input type="text" class="form-control" id="reference" name="reference" placeholder="Entrez id clé" value="{{ trousseau.ref }}">

@@ -43,7 +43,7 @@ app_vivs_ajax_list_trousseau_free:
 
 app_vivs_list_pret:
     path: /listagePret
-    controller: App\Controller\KeyringController:listPret
+    controller: App\Controller\KeyringController:listLend
 
 app_vivs_add_pret:
     path: /addPret
