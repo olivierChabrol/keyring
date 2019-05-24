@@ -234,7 +234,7 @@ class KeyringController extends AbstractController
 		$pret = $this->getDoctrine()->getRepository(Pret::class)->find($idPret);
 		$entityManager->remove($pret);
 		$entityManager->flush();
-		return $this->listPret($request);
+		return $this->listLend($request);
 
 	}
 
@@ -342,7 +342,7 @@ class KeyringController extends AbstractController
 	    }
 		$entityManager->flush();
 
-	    return $this->listPret($request);
+	    return $this->listLend($request);
 	}
 
 	private function sortArray($array)
