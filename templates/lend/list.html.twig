@@ -5,8 +5,8 @@
 {% block cssPretNavBarItem %}active{% endblock %}
 
 {% block body %}
+<h1> Liste des prets </h1> <a href="#" class="btn btn-info" id="excel" ><span class="glyphicon glyphicon-file"></span> excel</a>
 
-<h1> Liste des prets </h1><a href="#" class="btn btn-info" id="excel" ><span class="glyphicon glyphicon-file"></span> excel</a>
 <div class="table-responsive">
 	<table class="table table-hover table-sm">
 		<tr>
@@ -79,9 +79,9 @@ $('#deleteModal').modal('show')
   $("a[id^='pdf']").click(function(){
     window.location.href = "{{ path('pdf_lend_view') }}?id=" + this.name;
   });
-  
+
   $('#excel').click(function(){
-	
+
 	  console.log("click sur excel");
     window.location.href = "{{ path('excel_lend') }}";
   });

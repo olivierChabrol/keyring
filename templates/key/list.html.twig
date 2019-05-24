@@ -6,10 +6,8 @@
 
 
 {% block body %}
-<h1>Liste des clés et badges</h1>
 <div class="table-responsive">
-
-	<button onclick="window.print()">Imprimer cette page</button>
+	<h1> Liste des clefs </h1>
 	<table class="table table-hover table-sm" id="tableKeys">
 		<tr><th>#</th><th>Type</th><th>Modele</th><th>Site</th><th>Référence</th><th>Accès</th><th>Etat</th></tr>
 	{% for trousseau in trousseaux %}
