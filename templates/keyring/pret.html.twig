@@ -4,6 +4,8 @@
 {% block title %}Ajout d'un nouveau emprunteur{% endblock %}
 {% block cssPretNavBarItem %}active{% endblock %}
 {% block body %}
+<h1>Ajouter un pret</h1>
+
 <form action="/addPret" id="formSavePret" method="post">
 	<h1> Nouveau Pret </h1>
 <input type="hidden" name="userId" id="userId">
@@ -63,7 +65,7 @@
 <button type="button" class="btn btn-success" id="saveButton">Save</button>
 
 <div id="hostExist" style="display:none;">
-	L'hote <b><span id="hostExist_hostname"></span></b> existe deja en base.
+	L'hote <b><span id="hostExist_hostname"></span></b> Existe deja en base.
   <button type="button" class="btn btn-success" id="hostExist_load">Charger</button>
 </div>
 {% endblock %}
@@ -151,8 +153,8 @@ function searchKey()
 					url: '/searchUserAjax',
 					data: {q: request.term},
 					success: function(data) {
-						var parsed = JSON.parse(data);				
-						$('input.suggest-user').removeClass('ui-autocomplete-loading');  
+						var parsed = JSON.parse(data);
+						$('input.suggest-user').removeClass('ui-autocomplete-loading');
 						var newArray = new Array(parsed.length);
 						var i = 0;
 						$.each(parsed["data"], function(index, element) {
@@ -163,11 +165,11 @@ function searchKey()
 						response(newArray);
 					},
 					error: function(data) {
-							$('input.suggest-user').removeClass('ui-autocomplete-loading');  
+							$('input.suggest-user').removeClass('ui-autocomplete-loading');
 					}
 			});
 		},
-		select: function (event, ui) {    
+		select: function (event, ui) {
 				//alert(ui.item.id);
 				$("#userId").val(ui.item.id);
 				$("#searchId").val(ui.item.label);

@@ -30,7 +30,6 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{{ path('key_list') }}">Liste des Clefs</a>
               <a class="dropdown-item" href="{{ path('key_new') }}">Créer une nouvelle clef</a>
-              <a class="dropdown-item" href="{{ path('pdf_key_list') }}">Test pdf</a>
             </div>
           </li>
 
@@ -61,11 +60,19 @@
 
           <li class="nav-item {% block logout %}{% endblock %}" >
           {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <a href="/logout"><button type="button" class="btn btn-success" id="logoutButton">Logout</button></a>
+            <a href="/logout"><button type="button" class="btn btn-danger" id="logoutButton">Deconnexion</button></a>
           {% endif %}
           </li>
 
+          <li> </li>
+
+          <li>
+            <a href="javascript:window.print()"><button class="btn btn-success">Imprimer</button></a>
+          </li>
+
         </ul>
+
+
 
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Recherche" aria-label="Search" id="searchBase">
@@ -121,13 +128,13 @@
 						params = JSON.parse(data);
 					},
 					error: function(data) {
-							$('input.suggest-user').removeClass('ui-autocomplete-loading');  
+							$('input.suggest-user').removeClass('ui-autocomplete-loading');
 					}
 			});
     }
   	{% block js %}
     {% endblock %}
-    
+
 $(document).ready(function () {
   loadParams();
   $("#searchBase").keyup(function() {
@@ -136,6 +143,7 @@ $(document).ready(function () {
   {% block js_documentReady %}
   {% endblock %}
 });
+
 	</script>
 
 

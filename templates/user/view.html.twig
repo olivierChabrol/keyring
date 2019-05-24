@@ -6,27 +6,29 @@
 
 {% block body %}
 
-<h1 class="mt-5">{{ user.firstName }} {{ user.name }}</h1><a href="{{ path("user_modify", {id: user.id} ) }}">edit</a><a href="{{ path("user_view_pdf", {id: user.id} ) }}">pdf</a>
+<h1 class="mt-5">{{ user.firstName }} {{ user.name }}</h1>
+<a href="{{ path("user_view_pdf", {id: user.id} ) }}" class="btn btn-info"> PDF </a>
+<a href="{{ path("user_modify", {id: user.id} ) }}" class="btn btn-success"> Modifier </a>
 
 <div class="row">
-    <div class="col-sm">
-        <h2 class="mt-5">{{ user.email }}</h2>
-        {{ user.origine }}<br>
-        Login : {{ user.username }}
-    </div>
-    <div class="col-sm">
-        <h2 class="mt-5">Prêts en cours :</h2>
-        <div class="alert alert-success">
-        {% if prets == null %}
-            Aucun
-        {% endif %}
-		<br />
+  <div class="col-sm">
+    <h2 class="mt-5">{{ user.email }}</h2>
+    {{ user.origine }}<br>
+    Login : {{ user.username }}
+  </div>
+  <div class="col-sm">
+    <h2 class="mt-5">Prêts en cours :</h2>
+    <div class="alert alert-success">
+      {% if prets == null %}
+        Aucun
+      {% endif %}
+  		<br />
 			{% for val in prets %}
 				<ul><h5>{{ params[val.trousseau.type] }} :</h5>{{ val.trousseau.modele }}, {{ val.trousseau.ref }}</ul>
 			{% endfor %}
-        </div>
     </div>
   </div>
+</div>
 
 <button type="button" class="btn btn-link" id="backButton">Back</button>
 {% endblock %}
