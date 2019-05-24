@@ -25,9 +25,7 @@ app_vivs_modif_pret:
     path: /modifyPret
     controller: App\Controller\KeyringController::modifyPret
 
-app_vivs_delete_trousseau:
-    path: /deleteKey
-    controller: App\Controller\KeyringController:deleteKey
+
 
 app_vivs_delete_pret:
     path: /deletePret
@@ -113,6 +111,10 @@ key_list_ajax:
 key_modify:
     path: /key/modify
     controller: App\Controller\KeyringController::modifyKey
+
+key_delete:
+    path: /deleteKey
+    controller: App\Controller\KeyringController:deleteKey
 
 key_view:
     path: /key/view

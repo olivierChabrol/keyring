@@ -8,7 +8,7 @@
 {% block body %}
 <div class="table-responsive">
 	<table class="table table-hover table-sm" id="tableKeys">
-		<tr><th>#</th><th>Type</th><th>Modele</th><th>Site</th><th>Référence</th><th>Accés</th><th>Etat</th></tr>
+		<tr><th>#</th><th>Type</th><th>Modele</th><th>Site</th><th>Référence</th><th>Accès</th><th>Etat</th></tr>
 	{% for trousseau in trousseaux %}
 			<tr>
 				<th scope="row">{{ loop.index0 }}</th>
@@ -43,8 +43,8 @@
 						</a>
 					</td>
 					<td>
-						<button type="button" class="btn btn-outline-warning" id="modifyKey{{ trousseau.id }}" name={{ trousseau.id }}>Modifier</button>
-						<button type="button" class="btn btn-outline-danger" id="deleteKey{{ trousseau.id }}" name={{ trousseau.id }}>Supprimer</button>
+						<a href="{{ path("key_modify", {id: trousseau.id} ) }}"><button type="button" class="btn btn-outline-warning" id="modifyKey{{ trousseau.id }}" name={{ trousseau.id }} >Modifier</button></a>
+						<a href="{{ path("key_delete", {id: trousseau.id} ) }}"><button type="button" class="btn btn-outline-danger" id="deleteKey{{ trousseau.id }}" name={{ trousseau.id }} >Supprimer</button></a>
 					</td>
 				</tr>
 	{% endfor %}
