@@ -4,89 +4,71 @@
 
 {% block body %}
 
+<h1> Créer un utilisateur </h1>
+
 <form action="/adduser" id="saveUser" method="post">
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname">Nom</label>
-        <input type="text" class="form-control" id="name" name="name" placeholder="Nom" value="">
-  </div>
-  </div>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Nom" value="">
+    </div>
 
-  <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname">Prénom</label>
-        <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Prénom" value="">
+      <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Prénom" value="">
     </div>
-  </div>
 
-	<div class="form-row">
-    <div class="col-md-4 mb-3">
-      <label for="hostname">Origine</label>
-        <input type="text" class="form-control" id="origine" name="origine" placeholder="Origine" value="">
-    </div>
-  </div>
-
-<div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname"> Role </label>
-        <select  class="form-control" id="roles" name="roles" placeholder="Role" value="">
-			<option value="ROLE_USER"> Utilisateur</option>
-			<option value="ROLE_ADMIN"> Administrateur </option>
-			</select>
-    </div>
-  </div>
-
-
-  <div class="form-row">
-    <div class="col-md-4 mb-3">
-      <label for="hostname">Email</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="email" value="">
+      <select  class="form-control" id="roles" name="roles" placeholder="Role" value="">
+  			<option value="ROLE_USER"> Utilisateur</option>
+  			<option value="ROLE_ADMIN"> Administrateur </option>
+  		</select>
     </div>
   </div>
 
   <div class="form-row">
     <div class="col-md-4 mb-3">
-      <label for="hostname">Nom d'utilisateur</label>
-        <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="">
+      <label for="hostname">Origine</label>
+      <input type="text" class="form-control" id="origine" name="origine" placeholder="Origine" value="">
     </div>
-  </div>
 
-  <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname">Financement</label>
-        <input type="text" class="form-control" id="financement" name="financement" placeholder="Financement" value="">
+      <input type="text" class="form-control" id="financement" name="financement" placeholder="Financement" value="">
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Equipe</label>
+      <input type="text" class="form-control" id="equipe" name="equipe" placeholder="Equipe" value="">
     </div>
   </div>
 
   <div class="form-row">
-    <div class="col-md-4 mb-3">
-      <label for="hostname">Equipe</label>
-        <input type="text" class="form-control" id="equipe" name="equipe" placeholder="Equipe" value="">
+    <div class="col-md-12 mb-3">
+      <label for="hostname">Email</label>
+      <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="">
     </div>
   </div>
 
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname">Nom d'utilisateur</label>
-        <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="">
+      <input type="text" class="form-control" id="username" name="username" placeholder="Nom d'utilisateur" value="">
     </div>
-  </div>
 
-  <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname">Mot de passe</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" value="">
+      <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" value="">
     </div>
-  </div>
 
-  <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname">Confirmez votre Mot de passe</label>
-        <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Confirmez votre Mot de passe" value="">
+      <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Confirmez votre Mot de passe" value="">
     </div>
   </div>
 
-<button type="submit">Save</button>
+  <button type="submit" class="btn btn-success">Save</button>
 </form>
 
 {% endblock %}
