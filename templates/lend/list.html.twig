@@ -5,7 +5,7 @@
 {% block cssPretNavBarItem %}active{% endblock %}
 
 {% block body %}
-<h1> Liste des prets </h1>
+<h1> Liste des prets </h1><a href="#" class="btn btn-info" id="excel" ><span class="glyphicon glyphicon-file"></span> excel</a>
 <div class="table-responsive">
 	<table class="table table-hover table-sm">
 		<tr>
@@ -21,7 +21,8 @@
         <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{ params[pret.trousseau.state] }}</a></td>
         <td><a href="{{ path('user_view', {id: pret.user.id}) }}">{{ pret.user.firstName }} {{ pret.user.name }}</a></td>
         <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{ pret.end?pret.end|date('d/m/Y'):"" }}</a></td>
-        <td> <a href="#" class="btn btn-info" id="pdf{{ pret.id }}" name="{{ pret.id }}"><span class="glyphicon glyphicon-file"></span> pdf</a> <button type="button" class="btn btn-outline-danger" id="deletePret{{ pret.id }}" name={{ pret.id }}>Supprimer</button></td></tr>
+        <td> <a href="#" class="btn btn-info" id="pdf{{ pret.id }}" name="{{ pret.id }}"><span class="glyphicon glyphicon-file"></span> pdf</a> <button type="button" class="btn btn-outline-danger" id="deletePret{{ pret.id }}" name={{ pret.id }}>Supprimer</button>
+		  </td></tr>
 
 		{% endfor %}
 
@@ -76,6 +77,12 @@ $('#deleteModal').modal('show')
 
   $("a[id^='pdf']").click(function(){
     window.location.href = "{{ path('pdf_lend_view') }}?id=" + this.name;
+  });
+  
+  $('#excel').click(function(){
+	
+	  console.log("click sur excel");
+    window.location.href = "{{ path('excel_lend') }}";
   });
 
   $('#buttonConfirmDelete').click(function(){

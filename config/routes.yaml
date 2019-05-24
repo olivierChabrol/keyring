@@ -141,3 +141,7 @@ pdf_key_list:
 pdf_lend_view:
     path: /lend/view/pdf
     controller: App\Controller\KeyringController::lendPdf
+    
+excel_lend:
+    path: /lend/excel
+    controller: App\Controller\KeyringController::excel
