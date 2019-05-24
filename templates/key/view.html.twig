@@ -7,34 +7,36 @@
 {% block body %}
 
 <div class="row">
-    <div class="col-sm">
-        <h1 class="mt-5">{{ key.modele }} {{ key.ref }}</h1><a href="{{ path("key_modify", {id: key.id} ) }}">edit</a>
-        <h5>{{ params[key.type] }} :</h5>{{ key.access }} 
-        {% if key.ticketIn or key.ticketOut %}
-            Ticket d'activation : <b>{{ key.ticketIn }}</b> - ticket de désactivation : <b>{{ key.ticketOut }}</b>
-        {% endif %}
-    </div>
-    <div class="col-sm">
-        <h2 class="mt-5">Prêts en cours :</h2>
-        <div class="alert alert-success">
-        {% if prets == null %}
-            Aucun
-        {% endif %}
-		<br />
+  <div class="col-sm">
+      <h1 class="mt-5">{{ key.modele }} {{ key.ref }}</h1>
+
+      <h5>{{ params[key.type] }}</h5>{{ key.access }}
+      {% if key.ticketIn or key.ticketOut %}
+        Ticket d'activation : <b>{{ key.ticketIn }}</b> - ticket de désactivation : <b>{{ key.ticketOut }}</b>
+      {% endif %}
+  </div>
+  <div class="col-sm">
+    <h2 class="mt-5">Prêts en cours :</h2>
+    <div class="alert alert-success">
+      {% if prets == null %}
+        Aucun
+      {% endif %}
+		    <br />
 			{% for val in prets %}
 				<ul><h5>{{ val.user.firstName }} {{ val.user.name }}</h5></ul>
-                {% if ( val.end != null ) %}
+          {% if ( val.end != null ) %}
 				<ul>Depuis du {{ val.start|date('m/d/Y') }} au {{ val.end|date('m/d/Y') }}</ul><br>
-                {% endif %}
-                {% if ( val.end == null ) %}
+          {% endif %}
+          {% if ( val.end == null ) %}
 				<ul>Depuis le {{ val.start|date('m/d/Y') }}</ul><br>
-                {% endif %}
+          {% endif %}
 			{% endfor %}
-        </div>
     </div>
   </div>
+</div>
 
 <button type="button" class="btn btn-link" id="backButton">Back</button>
+<a href="{{ path("key_modify", {id: key.id} ) }}"><button class="btn btn-success">edit</button></a>
 
 {% endblock %}
 
