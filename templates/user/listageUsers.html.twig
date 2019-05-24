@@ -7,7 +7,10 @@
 
 {% block body %}
 
-<h1> Liste des utilisateurs </h1>
+<div class="row">
+  <h1> Liste des utilisateurs </h1>
+</div>
+	<a href="#" class="btn btn-xs btn-success" id="addUserButton"><span class="glyphicon glyphicon-plus"></span> Ajouter utilisateur</a>
 
 <div class="table-responsive">
 	<table class="table table-hover table-sm">
@@ -122,9 +125,13 @@ function deleteuser(){
 		window.location.href="{{ path('user_modify') }}?id="+this.name;
 	});
 
+	$("#addUserButton").click(function(){
+		window.location.href="/user";
+	});
+
 	$('[id^=deleteuser]').click(function(){
 		$('#buttonConfirmDelete').attr("name", this.name);
-		$('#deleteModal').modal('show')
+		$('#deleteModal').modal('show');
 	});
 
 	$('#buttonConfirmDelete').click(function(){

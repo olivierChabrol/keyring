@@ -68,12 +68,9 @@ function deletePret(){
 {% endblock %}
 
 {% block js_documentReady %}
-$(document).ready(function(){
-
-$('[id^=deletePret]').click(function(){
-//alert(this.name);
-$('#buttonConfirmDelete').attr("name", this.name);
-$('#deleteModal').modal('show')
+  $('[id^=deletePret]').click(function(){
+    $('#buttonConfirmDelete').attr("name", this.name);
+    $('#deleteModal').modal('show')
   });
 
   $("a[id^='pdf']").click(function(){
@@ -81,7 +78,6 @@ $('#deleteModal').modal('show')
   });
 
   $('#excel').click(function(){
-
 	  console.log("click sur excel");
     window.location.href = "{{ path('excel_lend') }}";
   });
@@ -92,5 +88,4 @@ $('#deleteModal').modal('show')
   $('#deleteModal').on('shown.bs.modal', function () {
       $('#myInput').trigger('focus')
   });
-});
 {% endblock %}

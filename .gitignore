@@ -54,3 +54,5 @@
 composer\.lock
 
 symfony\.lock
+
+symfony\.lock\.old

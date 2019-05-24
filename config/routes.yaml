@@ -55,9 +55,6 @@ app_vivs_login_page:
     path: /login
     controller: app\Controller\MainController::MainController
 
-user_list:
-    path: /listusers
-    controller: app\Controller\UserController::listUser
 
 app_vivs_expiration:
     path: /expiration
@@ -74,6 +71,14 @@ chart_key_site:
 chart_key_state:
     path: /listTrousseauPerStateAjax
     controller: App\Controller\KeyringController:listTrousseauPerStateAjax
+
+user_list:
+    path: /listusers
+    controller: app\Controller\UserController::listUser
+
+user_new:
+    path: /user/new
+    controller: App\Controller\UserController::createUser
 
 user_view:
     path: /user/view
