@@ -50,3 +50,7 @@
 \.env
 
 *.log
+
+composer\.lock
+
+symfony\.lock
