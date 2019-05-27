@@ -189,6 +189,15 @@ class KeyringController extends AbstractController
 
 		return $this->render('lend/list.html.twig', array('prets' => $prets, 'params' => $assocArrayParams));
 	}
+	
+	public function historyLend(Request $request) {
+
+		$entityManager = $this->getDoctrine()->getManager();
+		$prets = $this->getDoctrine()->getRepository(Pret::class)->findAll();
+		$assocArrayParams = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+
+		return $this->render('lend/history.html.twig', array('prets' => $prets, 'params' => $assocArrayParams));
+	}
 
 	public function modifyPret(Request $request)
 	{
