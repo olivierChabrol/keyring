@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Modifier un paramètre{% endblock %}
+{% block cssParamNavBarItem %} active {% endblock %}
+
+
+{% block body %}
+<h1> Modifier Paramètre</h1>
+
+<form action="{{ path('param_save') }}" id="saveUser" method="post">
+	<input type="hidden" name="paramId" value="{{ param.id }}"/>
+
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+        <label for="hostname">Type</label>
+        <select class="form-control" id="type" name="type">
+        {% for val in paramTypes %}
+            {% set selected = '' %}
+            {% if param.type == loop.index0 +1 %}
+                {% set selected = 'selected' %}
+            {% endif %}
+            <option value="{{ loop.index0 + 1}}" {{ selected }}>{{ val }}</option>
+        {% endfor %}
+        </select>
+        </div>
+
+
+        <div class="col-md-4 mb-3">
+        <label for="hostname">Valeur</label>
+        <input type="text" value="{{param.value}}" class="form-control" id="value" name="value" placeholder="Valeur">
+        </div>
+    </div>
+
+<button type="button" class="btn btn-link" id="backButton">Back</button>
+<button type="submit" class="btn btn-success" id="saveButton">Sauvegarder</button>
+</form>
+
+{% endblock %}
+
+{% block js_documentReady %}
+  $('#backButton').on('click', function(event) {
+    window.location = "{{ path('param_list') }}";
+  });
+{% endblock %}

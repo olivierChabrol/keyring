@@ -65,17 +65,6 @@ class KeyringController extends AbstractController
 		return new Response("Error : not and ajax request", 400);
 	}
 
-	public function getParamsAjax(Request $request)
-	{
-		if ($request->isXmlHttpRequest())
-		{
-			$assocArrayParams = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
-			return new JSonResponse(json_encode($assocArrayParams));
-		}
-		return new Response("Error : not and ajax request", 400);
-	}
-
-
 	public function listFreeKeyAjax(Request $request)
     {
       if ($request->isXmlHttpRequest())
@@ -146,7 +135,7 @@ class KeyringController extends AbstractController
 		$paramEtat  = $this->getDoctrine()->getRepository(Param::class)->getKeyState();
 		$trousseau  = $this->getDoctrine()->getRepository(Trousseau::class)->find($keyId);
 		
-        return $this->render('key/modify.html.twig', array('key' => $trousseau,'types' => $paramTypes, 'lieux' => $paramLieux, 'etats' => $paramEtat));
+    return $this->render('key/modify.html.twig', array('key' => $trousseau,'types' => $paramTypes, 'lieux' => $paramLieux, 'etats' => $paramEtat));
 	}
 
 	public function viewKey(Request $request)

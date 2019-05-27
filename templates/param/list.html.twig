@@ -1,0 +1,119 @@
+{# templates/dhcp/user/listageUsers #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Utilisateurs{% endblock %}
+{% block cssUserNavBarItem %} active {% endblock %}
+
+
+{% block body %}
+
+<div class="row">
+  <h1> Liste des paramètres</h1>
+</div>
+	<a href="#" class="btn btn-xs btn-success" id="addButton"><span class="glyphicon glyphicon-plus"></span> Ajouter Paramètre</a>
+
+<div class="table-responsive">
+	<table class="table table-hover table-sm">
+	<tr>
+		<th>
+			#
+		</th>
+		<th>
+			id
+		</th>
+		<th>
+			Type
+		</th>
+		<th>
+			Valeur
+		</th>
+		<th>
+			Action
+		</th>
+	</tr>
+
+	{% for param in params %}
+
+			<tr>
+				<td scope="row">{{ loop.index0 }}</td>
+					<td>
+						<a href="{{ path('user_view', {id: param.id}) }}">
+							{{ param.id }}
+						</a>
+					</td>
+					<td>
+						<a href="{{ path('user_view', {id: param.id}) }}">
+							{{ paramTypes[param.type] }}
+						</a>
+					</td>
+					<td>
+						<a href="{{ path('user_view', {id: param.id}) }}" >
+							{{ param.value }}
+						</a>
+					</td>
+					<td>
+						<button type="button" class="btn btn-outline-warning" id="modify{{ param.id }}" name="{{ param.id }}">Modifier</button>
+						<button type="button" class="btn btn-outline-danger" id="delete{{ param.id }}" name="{{ param.id }}">Supprimer</button>
+					</td>
+				</tr>
+	{% endfor %}
+	</table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Suppression</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Voulez vous vraiment supprimer ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+        <button type="button" class="btn btn-primary" id="buttonConfirmDelete">Oui</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+function deleteuser(){
+	if ( deleteuser = true ) {
+		var txt;
+		var r = window.confirm("si vous voulez supprimer cliquez sur  OK sinon sur Cancel.\n");
+		if (r == true) {
+			deleteuser;
+		} else {
+			txt = "You pressed Cancel!";
+		}
+	}
+}
+{% endblock %}
+
+{% block js_documentReady %}
+	$("[id^=modify]").click(function() {
+		window.location.href="{{ path('param_modify') }}?id="+this.name;
+	});
+
+	$("#addButton").click(function(){
+		window.location.href="{{ path('param_new') }}";
+	});
+
+	$('[id^=delete]').click(function(){
+		$('#buttonConfirmDelete').attr("name", this.name);
+		$('#deleteModal').modal('show');
+	});
+
+	$('#buttonConfirmDelete').click(function(){
+		window.location.href = "{{ path('param_delete') }}?id=" + this.name;
+	});
+	$('#deleteModal').on('shown.bs.modal', function () {
+		$('#myInput').trigger('focus')
+	});
+{% endblock %}

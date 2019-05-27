@@ -51,6 +51,13 @@
             </div>
           </li>
 
+        <li class="nav-item dropdown {% block cssParamNavBarItem %}{% endblock %}">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Paramètres</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{{ path('param_list') }}">Liste des parametres</a>
+          </div>
+        </li>
+
           <li class="nav-item {% block cssAccountNavBarItem %}{% endblock %}">
           {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             <a class= "nav-link" href="{{ path('user_profil') }}">Compte: {{ app.user.email }}</a>

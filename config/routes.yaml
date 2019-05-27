@@ -143,7 +143,27 @@ lend_history:
 
 param_list_ajax:
     path: /param/list/ajax
-    controller: App\Controller\KeyringController::getParamsAjax
+    controller: App\Controller\ParamController::getParamsAjax
+
+param_list:
+    path: /param/list/
+    controller: App\Controller\ParamController::list
+
+param_modify:
+    path: /param/modify/
+    controller: App\Controller\ParamController::modify
+
+param_new:
+    path: /param/new/
+    controller: App\Controller\ParamController::new
+
+param_save:
+    path: /param/save/
+    controller: App\Controller\ParamController::save
+
+param_delete:
+    path: /param/delete/
+    controller: App\Controller\ParamController::delete
 
 pdf_key_list:
     path: /key/list/pdf

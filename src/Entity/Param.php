@@ -57,4 +57,13 @@ class Param
 
         return $this;
     }
+
+    public static function getTypes()
+    {
+        $assoc =  array(
+        Param::TYPE  => "Type",
+        Param::SITE  => "Site",
+        Param::STATE => "State");
+        return $assoc;
+    }
 }
