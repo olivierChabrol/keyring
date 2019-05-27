@@ -44,8 +44,8 @@
 						</a>
 					</td>
 					<td>
-						<a href="{{ path("key_modify", {id: trousseau.id} ) }}"><button type="button" class="btn btn-outline-warning" id="modifyKey{{ trousseau.id }}" name={{ trousseau.id }} >Modifier</button></a>
-						<a href="{{ path("key_delete", {id: trousseau.id} ) }}"><button type="button" class="btn btn-outline-danger" id="deleteKey{{ trousseau.id }}" name={{ trousseau.id }} >Supprimer</button></a>
+						<button type="button" class="btn btn-outline-warning" id="modifyKey{{ trousseau.id }}" name={{ trousseau.id }} >Modifier</button>
+						<button type="button" class="btn btn-outline-danger" id="deleteKey{{ trousseau.id }}" name={{ trousseau.id }} >Supprimer</button>
 					</td>
 				</tr>
 	{% endfor %}
@@ -128,10 +128,6 @@ function deleteKey(){
 	}
 }
 
-function window.print () {
-	window.print();
-}
-
 function showModalDelete(id) {
 		$('#buttonConfirmDelete').attr("name", id);
 		$('#deleteModal').modal('show');
@@ -142,11 +138,12 @@ function showModalDelete(id) {
 		window.location.href="{{ path('key_modify') }}?id="+this.name;
 	});
 	$('[id^=deleteKey]').click(function(){
-		showModalDelete(this.name);
+		$('#buttonConfirmDelete').attr("name", this.name);
+		$('#deleteModal').modal('show');
 		});
 
 	$('#buttonConfirmDelete').click(function(){
-		window.location.href = "/deleteKey?id=" + this.name;
+		window.location.href = "{{ path("key_delete") }}?id=" + this.name;
 	});
 	$('#deleteModal').on('shown.bs.modal', function () {
 		$('#myInput').trigger('focus')

@@ -5,7 +5,7 @@
 {% block cssPretNavBarItem %}active{% endblock %}
 
 {% block body %}
-<h1> Liste des prets </h1> <a href="#" class="btn btn-info" id="excel" ><span class="glyphicon glyphicon-file"></span> excel</a>
+<h1> Historique </h1> <a href="#" class="btn btn-info" id="excel" ><span class="glyphicon glyphicon-file"></span> excel</a>
 
 <div class="table-responsive">
 	<table class="table table-hover table-sm">
@@ -68,9 +68,12 @@ function deletePret(){
 {% endblock %}
 
 {% block js_documentReady %}
-  $('[id^=deletePret]').click(function(){
-    $('#buttonConfirmDelete').attr("name", this.name);
-    $('#deleteModal').modal('show')
+$(document).ready(function(){
+
+$('[id^=deletePret]').click(function(){
+//alert(this.name);
+$('#buttonConfirmDelete').attr("name", this.name);
+$('#deleteModal').modal('show')
   });
 
   $("a[id^='pdf']").click(function(){
@@ -78,6 +81,7 @@ function deletePret(){
   });
 
   $('#excel').click(function(){
+
 	  console.log("click sur excel");
     window.location.href = "{{ path('excel_lend') }}";
   });
@@ -88,4 +92,5 @@ function deletePret(){
   $('#deleteModal').on('shown.bs.modal', function () {
       $('#myInput').trigger('focus')
   });
+});
 {% endblock %}
