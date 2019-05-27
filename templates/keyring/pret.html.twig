@@ -4,7 +4,6 @@
 {% block title %}Ajout d'un nouveau emprunteur{% endblock %}
 {% block cssPretNavBarItem %}active{% endblock %}
 {% block body %}
-<h1>Ajouter un pret</h1>
 
 <form action="/addPret" id="formSavePret" method="post">
 	<h1> Nouveau Pret </h1>
@@ -96,7 +95,7 @@ function searchKey()
 
 
 	$('#backButton').on('click', function(event) {
-		window.location = '/';
+		window.location = '/lend/list';
 	});
 
 	$('#expirationDate').on('change', function(event) {
