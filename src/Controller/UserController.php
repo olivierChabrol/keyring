@@ -36,12 +36,12 @@ class UserController extends AbstractController
 
     public function saveUser(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-		$entityManager = $this->getDoctrine()->getManager();       
+		$entityManager = $this->getDoctrine()->getManager();
 		$array = $request->request->all();
-      
+
 		$newUser = $request->request->get('userId') == NULL;
 		$User = NULL;
-		
+
 		if ($newUser) {
 			$User = new User();
 		}
@@ -56,6 +56,9 @@ class UserController extends AbstractController
     $User->setFirstName($array["firstname"]);
     $User->setEmail($array["email"]);
     $User->setUsername($array["username"]);
+    $User->setFinancement($array["financement"]);
+    $User->setEquipe($array["equipe"]);
+
     if (!empty($array["password"])) {
       $User->setPassword($passwordEncoder->encodePassword($User, $array["password"]));
     }
@@ -161,24 +164,24 @@ class UserController extends AbstractController
 
       $pdfOptions = new Options();
       $pdfOptions->set('defaultFont', 'Arial');
-      
+
       // Instantiate Dompdf with our options
       $dompdf = new Dompdf($pdfOptions);
-      
+
       // Retrieve the HTML generated in our twig file
       $html = $this->renderView('user/viewPdf.html.twig', [
           'user' => $user, "prets" => $prets, "params" => $params
       ]);
-  
+
       // Load HTML to Dompdf
       $dompdf->loadHtml($html);
-          
+
       // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
       $dompdf->setPaper('A4', 'portrait');
-  
+
       // Render the HTML as PDF
       $dompdf->render();
-  
+
       // Output the generated PDF to Browser (inline view)
       $dompdf->stream("mypdf.pdf", [
           "Attachment" => true
@@ -199,21 +202,21 @@ class UserController extends AbstractController
 
     }
 
-    public function autoComplete(Request $request) 
+    public function autoComplete(Request $request)
     {
       $q = $request->query->get('q');
-      
+
       $users = $this->getDoctrine()->getRepository(User::class)->getUserByName($q);
-        
+
       $json=array();
-      foreach ($users as $user) 
+      foreach ($users as $user)
       {
           array_push($json, array("id" => $user->getId(), "name" => $user->getFirstName()." ".$user->getName()));
       }
-        
+
       $retour = array();
       $retour["query" ] = $q;
       $retour["data"] = $json;
-      return new JSonResponse(json_encode($retour));	
+      return new JSonResponse(json_encode($retour));
     }
 }
