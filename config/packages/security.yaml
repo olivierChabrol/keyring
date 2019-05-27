@@ -59,3 +59,4 @@ security:
       - { path: ^/adduser$, roles: ROLE_ADMIN }
       - { path: ^/user/profil$, roles: IS_AUTHENTICATED_FULLY }
       - { path: ^/user/*, roles: ROLE_ADMIN }
+      - { path: ^/param/*, roles: ROLE_ADMIN }
