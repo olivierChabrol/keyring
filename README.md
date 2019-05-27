@@ -83,8 +83,6 @@ CREATE TABLE `pret` (
 INSERT INTO `pret` (`id`, `trousseau_id`, `start`, `end`, `description`, `user_id`) VALUES
 (8, 64, '2021-02-25 07:16:34', '2019-05-31 07:16:34', 'Lend description', 16);
 
--- --------------------------------------------------------
-
 CREATE TABLE `trousseau` (
   `id` int(11) NOT NULL,
   `type` int(11) NOT NULL,
