@@ -21,8 +21,8 @@ In the keyring directory, create a *.env* file
 ###> symfony/framework-bundle ###
 APP_ENV=dev
 APP_SECRET=0498cbd96ebd391bec0eb196a756bda1
-DATABASE_URL="mysql://[dbuserName]:[dbPassword]!@[ipAddress]:[port]/[dbName]"
-# example : DATABASE_URL="mysql://doe:pass!@localhost:3306/keyringDb"
+DATABASE_URL="mysql://[dbuserName]:[dbPassword]@[ipAddress]:[port]/[dbName]"
+# example : DATABASE_URL="mysql://doe:pass@localhost:3306/keyringDb"
 
 #TRUSTED_PROXIES=127.0.0.1,127.0.0.2
 #TRUSTED_HOSTS=localhost,example.com
@@ -118,7 +118,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `user` (`id`, `email`, `username`, `password`, `name`, `first_name`, `note`, `roles`, `origine`, `financement`, `equipe`) VALUES
-(16, 'admin@domain.com', 'admin', '$2y$13$e6AUOA7ciHpSBq1Cb76FZuGzxnU3GsufAXdEJbp8i1wTvwvEuJeDy', 'admin', 'admin', NULL, '[\"ROLE_ADMIN\"]', '', NULL, NULL);
+(16, 'admin@domain.com', 'admin', '$2y$13$Umx6A8eN.7BSu4tnXMfnr.Zt9MOPGd73v9IKzkqdxqjNLQa6UXy26', 'admin', 'admin', NULL, '[\"ROLE_ADMIN\"]', '', NULL, NULL);
 
 ALTER TABLE `migration_versions`
   ADD PRIMARY KEY (`version`);

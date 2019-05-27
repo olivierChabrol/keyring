@@ -31,6 +31,14 @@ use \Datetime;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+/**
+ * Controller keyring.
+ *
+ * @author Hugo BLACHERE <hugo.blachere@etu.univ-amu.fr>
+ * @author Olivier CHABROL <olivier.chabrol@univ-amu.fr>
+ * @author Maximilien GUERRERO <maximilien.guerrero@etu.univ-amu.fr>
+ */
+
 class KeyringController extends AbstractController
 {
 	public function listKeyAjax(Request $request)
