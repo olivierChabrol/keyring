@@ -22,7 +22,7 @@
         <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{ params[pret.trousseau.state] }}</a></td>
         <td><a href="{{ path('user_view', {id: pret.user.id}) }}">{{ pret.user.firstName }} {{ pret.user.name }}</a></td>
         <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{ pret.end?pret.end|date('d/m/Y'):"" }}</a></td>
-        <td> <a href="#" class="btn btn-info" id="pdf{{ pret.id }}" name="{{ pret.id }}"><span class="glyphicon glyphicon-file"></span> pdf</a> <button type="button" class="btn btn-outline-danger" id="deletePret{{ pret.id }}" name={{ pret.id }}>Supprimer</button>
+        <td> <a href="#" class="btn btn-info" id="pdf{{ pret.id }}" name="{{ pret.id }}"><span class="glyphicon glyphicon-file"></span> PDF </a> <button type="button" class="btn btn-outline-danger" id="deletePret{{ pret.id }}" name={{ pret.id }}>Supprimer</button>
 		  </td></tr>
 
 		{% endfor %}

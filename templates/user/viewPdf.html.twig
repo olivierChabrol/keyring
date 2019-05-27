@@ -1,18 +1,18 @@
 {% extends 'basepdf.html.twig' %}
 
-{% block title %}Fiche de prêt {{ user.firstName }} {{ user.name }}{% endblock %}
+{% block title %}Fiche de prêt, {{ user.firstName }} {{ user.name }}{% endblock %}
 
 {% block body %}
-
 
 <div class="row">
     <div class="col-sm">
         {{ user.email }}
     </div>
+    <br />
 </div>
 <div class="row">
     <div class="col-sm">
-        je soussigné {{ user.firstName }} {{ user.name }}, reconnais avoir reçu le {{ prets[0].start|date('d/m/Y') }} l'ensemble des biens suivants :
+        Je soussigné {{ user.firstName }} {{ user.name }}, reconnais avoir reçu le {{ prets[0].start|date('d/m/Y') }} l'ensemble des biens suivants :
         <div class="alert alert-success">
         {% if prets == null %}
             Aucun
@@ -24,10 +24,40 @@
         </div>
         Je m'engage à les restituer ou à rembourser au prix du neuf lors de mon départ de l'I2M.
     </div>
+    <br />
   </div>
+
   <div class="row">
     <div class="col-sm">
       <h4>Signature : </h4>
+      <br />
+      <br />
     </div>
   </div>
+  <hr />
+
+  <div class="row">
+      <div class="col-sm">
+          Je soussigné {{ user.firstName }} {{ user.name }}, reconnais avoir rendu le {{ prets[0].end|date('d/m/Y') }} l'ensemble des biens suivants :
+          <div class="alert alert-success">
+          {% if prets == null %}
+              Aucun
+          {% endif %}
+  		<br />
+  			{% for val in prets %}
+  				<ul><h5>{{ params[val.trousseau.type] }} :</h5>{{ val.trousseau.modele }}, {{ val.trousseau.ref }}</ul>
+  			{% endfor %}
+          </div>
+      </div>
+      <br />
+    </div>
+
+    <div class="row">
+      <div class="col-sm">
+        <h4>Signature : </h4>
+        <br />
+        <br />
+      </div>
+    </div>
+
 {% endblock %}
