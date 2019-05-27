@@ -137,6 +137,10 @@ lend_list:
     path: /lend/list
     controller: App\Controller\KeyringController::listLend
 
+lend_history:
+    path: /lend/history
+    controller: App\Controller\KeyringController::historyLend
+
 param_list_ajax:
     path: /param/list/ajax
     controller: App\Controller\KeyringController::getParamsAjax
