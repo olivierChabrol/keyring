@@ -2,7 +2,64 @@
 
 {% block title %}Ajouter un utilisateur{% endblock %}
 
+
+
 {% block body %}
+
+<style>
+/* Popup container */
+.popup {
+ position: relative;
+ display: inline-block;
+ cursor: pointer;
+}
+
+/* The actual popup (appears on top) */
+.popup .popuptext {
+ visibility: hidden;
+ width: 160px;
+ background-color: #555;
+ color: #fff;
+ text-align: center;
+ border-radius: 6px;
+ padding: 8px 0;
+ position: absolute;
+ z-index: 1;
+ bottom: 125%;
+ left: 50%;
+ margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+ content: "";
+ position: absolute;
+ top: 100%;
+ left: 50%;
+ margin-left: -5px;
+ border-width: 5px;
+ border-style: solid;
+ border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.popup .show {
+ visibility: visible;
+ -webkit-animation: fadeIn 1s;
+ animation: fadeIn 1s
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+ from {opacity: 0;}
+ to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+ from {opacity: 0;}
+ to {opacity:1 ;}
+}
+</style>
 
 <h1> Créer un utilisateur </h1>
 
@@ -64,12 +121,15 @@
     </div>
 
     <div class="col-md-4 mb-3">
-      <label for="hostname">Confirmez votre Mot de passe</label>
-      <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Confirmez votre Mot de passe" value="">
-    </div>
+			<div class="popup">
+	      <label for="hostname">Confirmez votre Mot de passe</label>
+	      <input type="password" onblur="validate()" class="form-control" id="password_confirm" name="password_confirm" placeholder="Confirmez votre Mot de passe" value="">
+				<span class="popuptext" id="myPopup">Les mot de passe ne correspondent pas !</span>
+			</div>
+		</div>
   </div>
 
-  <button type="submit" class="btn btn-success">Save</button>
+  <button type="submit" id="btn" class="btn btn-success">Save</button>
 </form>
 
 {% endblock %}
@@ -78,12 +138,15 @@
     var a = document.getElementById("password").value;
     var b = document.getElementById("password_confirm").value;
 
-    if (a!=b) {
-      alert("Les mots de passe ne correspondent pas.");
+    if (a!=b && b!=a) {
+
+			var popup = document.getElementById("myPopup");
+		  popup.classList.toggle("show");
+			document.getElementById("btn").disabled = true;
       return false;
     }
     else {
-      alert("Les mots de passe correspondent.");
+			document.getElementById("btn").disabled = false;
       return false;
     }
   }
