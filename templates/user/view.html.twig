@@ -24,7 +24,7 @@
       {% endif %}
   		<br />
 			{% for val in prets %}
-				<ul><h5>{{ params[val.trousseau.type] }} :</h5>{{ val.trousseau.modele }}, {{ val.trousseau.ref }}</ul>
+				<ul><h5>{{ params[val.trousseau.type] }} :</h5>{{ val.trousseau.modele }} {% if val.trousseau.modele != NULL or val.trousseau.modele != "" %},{% endif %} {{ val.trousseau.ref }}</ul>
 			{% endfor %}
     </div>
   </div>
