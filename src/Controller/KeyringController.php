@@ -435,18 +435,26 @@ class KeyringController extends AbstractController
 	}
 	
 	
-	 public function excel(Request $request)
-    {
-        $spreadsheet = new Spreadsheet();
+	public function excel(Request $request)
+  {
+    $spreadsheet = new Spreadsheet();
         
 		$entityManager = $this->getDoctrine()->getManager();
 		$lends = $this->getDoctrine()->getRepository(Pret::class)->findAll();
 		$assocArrayParams = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
         
-        // @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet 
-        $sheet = $spreadsheet->getActiveSheet();
-        $line = 1;
-        foreach ($lends as $lend ) {
+		// @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet 
+		$sheet = $spreadsheet->getActiveSheet();
+		$line = 2;
+		$sheet->setCellValue("A1", "Identifiant");
+		$sheet->setCellValue("B1", "Référence");
+		$sheet->setCellValue("C1", "Accès");
+		$sheet->setCellValue("D1", "Modèle");
+		$sheet->setCellValue("E1", "Type");
+		$sheet->setCellValue("F1", "Site");
+		$sheet->setCellValue("G1", "Nom");
+		$sheet->setCellValue("H1", "Prénom");
+		foreach ($lends as $lend ) {
 			//dump($lend);die();
 			$column = 'A';
 			$sheet->setCellValue($column . strval($line), $lend->getId());
@@ -467,22 +475,22 @@ class KeyringController extends AbstractController
 			$column++;
 			$line++;
 		}
-        $sheet->setTitle("My First Worksheet");
-        
-        // Create your Office 2007 Excel (XLSX Format)
-        $writer = new Xlsx($spreadsheet);
-        
-        // In this case, we want to write the file in the public directory
-        //$publicDirectory =  $this->getDoctrine()->getRepository(Pret::class); //$this->get('kernel')->getProjectDir() . '/public';
-        // e.g /var/www/project/public/my_first_excel_symfony4.xlsx
-        $fileName = 'my_first_excel_symfony4.xlsx';
-        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
-        $writer->save($temp_file);
-        //dump($temp_file);die();
-        
-        // Return the excel file as an attachment
-        return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
-    }
+		$sheet->setTitle("My First Worksheet");
+		
+		// Create your Office 2007 Excel (XLSX Format)
+		$writer = new Xlsx($spreadsheet);
+		
+		// In this case, we want to write the file in the public directory
+		//$publicDirectory =  $this->getDoctrine()->getRepository(Pret::class); //$this->get('kernel')->getProjectDir() . '/public';
+		// e.g /var/www/project/public/my_first_excel_symfony4.xlsx
+		$fileName = 'my_first_excel_symfony4.xlsx';
+		$temp_file = tempnam(sys_get_temp_dir(), $fileName);
+		$writer->save($temp_file);
+		//dump($temp_file);die();
+		
+		// Return the excel file as an attachment
+		return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
+	}
 
     
 }

@@ -10,18 +10,19 @@
 <div class="table-responsive">
 	<table class="table table-hover table-sm">
 		<tr>
-			<th>#</th><th>Modele</th><th>Site</th><th>Référence</th><th>Type</th><th>Etat</th><th>Emprunteur</th><th>Expire</th><th>Action</th>
+			<th>#</th><th>Site</th><th>Type</th><th>Référence</th><th>Emprunteur</th><th>Bureau</th><th>Expire</th><th>Etat</th><th>Action</th>
 		</tr>
 
 		{% for pret in prets %}
 
-		<tr><th scope="row">{{ loop.index0 }}</th><td><a href="/modifyPret?id={{ pret.id }}">{{ pret.trousseau.modele }}</a></td>
+		<tr><td scope="row">{{ loop.index0 }}</td>
         <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{ params[pret.trousseau.site] }} </a></td>
-        <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{pret.trousseau.ref }}</a></td>
         <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{ params[pret.trousseau.type] }}</a></td>
-        <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{ params[pret.trousseau.state] }}</a></td>
+        <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{pret.trousseau.ref }}</a></td>
         <td><a href="{{ path('user_view', {id: pret.user.id}) }}">{{ pret.user.firstName }} {{ pret.user.name }}</a></td>
+        <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{pret.trousseau.access }}</a></td>
         <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{ pret.end?pret.end|date('d/m/Y'):"" }}</a></td>
+        <td><a href="{{ path('lend_modify', {id: pret.id}) }}">{{ params[pret.trousseau.state] }}</a></td>
         <td> <a href="#" class="btn btn-info" id="pdf{{ pret.id }}" name="{{ pret.id }}"><span class="glyphicon glyphicon-file"></span> PDF </a> <button type="button" class="btn btn-outline-danger" id="deletePret{{ pret.id }}" name={{ pret.id }}>Supprimer</button>
 		  </td></tr>
 
