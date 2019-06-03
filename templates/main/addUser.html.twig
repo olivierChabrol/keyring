@@ -98,7 +98,11 @@
 
     <div class="col-md-4 mb-3">
       <label for="hostname">Equipe</label>
-      <input type="text" class="form-control" id="equipe" name="equipe" placeholder="Equipe" value="">
+        <select class="form-control" id="equipe" name="equipe">
+        {% for val in department %}
+          <option value="{{val.id}}">{{ val.value }}</option>
+        {% endfor %}
+        </select>
     </div>
   </div>
 

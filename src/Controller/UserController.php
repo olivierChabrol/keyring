@@ -27,7 +27,8 @@ class UserController extends AbstractController
 
     public function index()
     {
-        return $this->render('main/addUser.html.twig');
+      $paramDepartment = $this->getDoctrine()->getRepository(Param::class)->getDepartment();
+      return $this->render('main/addUser.html.twig', array('department' => $paramDepartment));
     }
 
     public function addUserAjax(Request $request, UserPasswordEncoderInterface $passwordEncoder)
