@@ -88,7 +88,10 @@ user_view_pdf:
     path: /user/view/pdf
     controller: App\Controller\UserController::viewPdf
 
-
+user_add_ajax:
+    path: /user/add/ajax
+    controller: App\Controller\UserController::addUserAjax
+        
 user_modify:
     path: /user/modify
     controller: App\Controller\UserController::modifyUser

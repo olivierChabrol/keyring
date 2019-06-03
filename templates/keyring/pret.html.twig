@@ -5,46 +5,51 @@
 {% block cssPretNavBarItem %}active{% endblock %}
 {% block body %}
 
-<form action="/addPret" id="formSavePret" method="post">
+<form action="/addPret" id="formSavePret" method="post" >
 	<h1> Nouveau Pret </h1>
 <input type="hidden" name="userId" id="userId">
-<div class="row">
-    <div class="col-sm">
-	<label for="hostname">Type</label>
-    <select class="form-control" id="type" name="type">
-
-    {% for val in types %}
-      <option value="{{val.id}}">{{ val.value }}</option>
-    {% endfor %}
-    </select>
-    </div>
-    <div class="col-sm">
-
-	<label for="hostname">Site</label>
-        <select class="form-control" id="lieu" name="lieu">
-    {% for val in lieux %}
-      <option value="{{val.id}}">{{ val.value }}</option>
-    {% endfor %}
-    </select>
+<div class="form-group row">
+		<div class="form-group col">
+			<label for="type"  class="col-sm-2 col-form-label">Type</label>
+			<div class="col-sm-10">
+				<select class="form-control" id="type" name="type">
+				{% for val in types %}
+					<option value="{{val.id}}">{{ val.value }}</option>
+				{% endfor %}
+				</select>
+			</div>
+		</div>
+	<div class="form-group col">
+		<label for="lieu"  class="col-sm-2 col-form-label">Site</label>
+		<div class="col-sm-10">
+			<select class="form-control" id="lieu" name="lieu">
+			{% for val in lieux %}
+				<option value="{{val.id}}">{{ val.value }}</option>
+			{% endfor %}
+			</select>
+		</div>
   </div>
 </div>
-<div class="row">
-    <div class="col-sm">
-		<label for="hostname">Clef</label>
+<div class="form-group row">
+		<label for="trousseauId" class="col-sm-2 col-form-label">Clef</label>
+			<div class="col-sm-10">
         <select class="form-control" id="trousseauId" name="trousseauId"></select>
-	</div>
+			</div>
 </div>
 
-<div class="row">
-    <div class="col-sm">
-		<label for="hostname">Utilisateur</label>
-		<input class="form-control" type="text" id="searchId" name="searchId"/>
-	</div>
+<div class="form-group row">
+		<label for="hostname" class="col-sm-2 col-form-label">Utilisateur</label>
+		<div class="col-sm-10">
+			<input class="form-control" type="text" id="searchId" name="searchId"/>
+		</div>
+		<div class="col-sm-2">
+			<a id="newUserButton" href="#">Nouvel utilisateur</a>
+		</div>
 </div>
 
-<div class="row">
+<div class="form-group row">
     <div class="col-sm">
-		  <label for="dateModif">Date</label>
+		  <label for="dateStart" class="col-sm-2 col-form-label">Date</label>
 		  <input type="text" class="form-control" id="dateStart" name="dateStart" placeholder="" value="">
 	 </div>
      <div class="col-sm">
@@ -67,32 +72,117 @@
 	L'hote <b><span id="hostExist_hostname"></span></b> Existe deja en base.
   <button type="button" class="btn btn-success" id="hostExist_load">Charger</button>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalNewUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ajouter un nouvel utilisateur</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+				<form action="/adduser" id="saveUser" method="post">
+					<h1>Ajout d'un utilisateur</h1>
+					<div class="form-row">
+						<div class="col-md-4 mb-3">
+							<label for="hostname">Nom</label>
+							<input type="text" class="form-control" id="name" name="name" placeholder="Nom" value="">
+						</div>
+
+						<div class="col-md-4 mb-3">
+							<label for="hostname">Prénom</label>
+							<input type="text" class="form-control" id="firstname" name="firstname" placeholder="Prénom" value="">
+						</div>
+						<input type="hidden" name="roles" id="roles" value="ROLE_USER"/>
+					</div>
+
+					<div class="form-row">
+						<div class="col-md-4 mb-3">
+							<label for="hostname">Origine</label>
+							<input type="text" class="form-control" id="origine" name="origine" placeholder="Origine" value="">
+						</div>
+
+						<div class="col-md-4 mb-3">
+							<label for="hostname">Financement</label>
+							<input type="text" class="form-control" id="financement" name="financement" placeholder="Financement" value="">
+						</div>
+
+						<div class="col-md-4 mb-3">
+							<label for="hostname">Equipe</label>
+							<input type="text" class="form-control" id="equipe" name="equipe" placeholder="Equipe" value="">
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="col-md-12 mb-3">
+							<label for="hostname">Email</label>
+							<input type="email" class="form-control" id="email" name="email" placeholder="Email" value="">
+						</div>
+					</div>
+				</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+        <button type="button" class="btn btn-primary" id="addUser">Sauver</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block js %}
 function searchKey()
-	{
-	    $.ajax({
-        url:"/listFreeKeyAjax",
+{
+    $.ajax({
+      url:"/listFreeKeyAjax",
+			method: "post",
+			data: {type: $("#type").val(), site: $("#lieu").val()},
+			dataType: 'json',
+			success: function (data) {
+				$("#trousseauId").find("option").remove();
+				$js = JSON.parse(data);
+				$.each($js["data"], function(index, element) {
+					var classCss = "";
+					$('#trousseauId').append(new Option(element.modele + " " + element.ref, element.id));
+				});
+	    }
+	});
+}
+
+function saveUser()
+{
+	$.ajax({
+		url:"{{ path("user_add_ajax") }}",
 		method: "post",
-		data: {type: $("#type").val(), site: $("#lieu").val()},
+		data: {name: $("#name").val(), firstname: $("#firstname").val(), roles: $("#roles").val(), origine: $("#origine").val(), financement: $("#financement").val(), equipe: $("#equipe").val(), email: $("#email").val()},
 		dataType: 'json',
 		success: function (data) {
-			 $("#trousseauId").find("option").remove();
-			 $js = JSON.parse(data);
-			$.each($js["data"], function(index, element) {
-				var classCss = "";
-				$('#trousseauId').append(new Option(element.modele + " " + element.ref, element.id));
-		});
-	    }
+				js = JSON.parse(data);
+				$("#userId").val(js["id"]);
+				$("#searchId").val(js["firstName"] + " " + js["name"]);
+			$('#modalNewUser').modal('hide');
+		}
 	});
 }
 {% endblock %}
 {% block js_documentReady %}
-	$.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
 
-	$("#dateStart").datepicker().datepicker("setDate", new Date());
+	$("#dateStart").datepicker({
+        dateFormat: "dd/mm/yy"
+	});
 
+	$("#addUser").on("click", function(event) {
+		saveUser();
+	});
+
+	$("#dateStart").datepicker("setDate", new Date());
+
+	$("#newUserButton").on("click", function(event) {
+		$('#modalNewUser').modal('show');
+	});
 
 	$('#backButton').on('click', function(event) {
 		window.location = '/lend/list';

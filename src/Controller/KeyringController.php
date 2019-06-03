@@ -331,11 +331,11 @@ class KeyringController extends AbstractController
            $pret = $entityManager->getRepository(Pret::class)->find($pretId);
 	   }
 
-		$pret->setStart(DateTime::createFromFormat('m/d/Y', $array["dateStart"]));
+		$pret->setStart(DateTime::createFromFormat('d/m/Y', $array["dateStart"]));
 		$pret->setDescription($array["description"]);
 
 		if ($request->request->get("dateEnd") != NULL) {
-		   $pret->setEnd(DateTime::createFromFormat('m/d/Y', $array["dateEnd"]));
+		   $pret->setEnd(DateTime::createFromFormat('d/m/Y', $array["dateEnd"]));
 	    }
 	    else {
 			$pret->setEnd(NULL);

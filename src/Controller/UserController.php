@@ -30,48 +30,71 @@ class UserController extends AbstractController
         return $this->render('main/addUser.html.twig');
     }
 
-    /**
-     * @Route("/adduser", name="adduser")
-     */
+    public function addUserAjax(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+      $array = $request->request->all();
+      $username = strtolower($array["firstname"]).".".strtolower($array["name"]);
+      $password = $this->randomPassword(17);
+      $user = $this->saveUserInDb(NULL, $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], $username, $array["financement"], $array["equipe"], $password, true, $passwordEncoder);
+			return new JSonResponse(json_encode($user));
+    }
 
     public function saveUser(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-		$entityManager = $this->getDoctrine()->getManager();
-		$array = $request->request->all();
+      $entityManager = $this->getDoctrine()->getManager();
+      $array = $request->request->all();
+      
+      $newUser = $request->request->get('userId') == NULL;
+      $this->saveUserInDb($request->request->get('userId'), $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], $array["username"], $array["financement"], $array["equipe"], $array["password"], $newUser, $passwordEncoder);
 
-		$newUser = $request->request->get('userId') == NULL;
-		$User = NULL;
-
-		if ($newUser) {
-			$User = new User();
-		}
-		else
-		{
-			$userId = $array["userId"];
-			$User = $entityManager->getRepository(User::class)->find($userId);
-		}
-    $User->setRoles(array($array["roles"]));
-    $User->setOrigine($array["origine"]);
-    $User->setName($array["name"]);
-    $User->setFirstName($array["firstname"]);
-    $User->setEmail($array["email"]);
-    $User->setUsername($array["username"]);
-    $User->setFinancement($array["financement"]);
-    $User->setEquipe($array["equipe"]);
-
-    if (!empty($array["password"])) {
-      $User->setPassword($passwordEncoder->encodePassword($User, $array["password"]));
+      return $this->listUser($request);
     }
 
-              // tell Doctrine you want to (eventually) save the Product (no queries yet)
-		if ($newUser) {
-              $entityManager->persist($User);
-		  }
+    private function randomPassword($size) {
+      $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890&é"\'(-è_çà)=}]@^`|[{#~';
+      $pass = array(); //remember to declare $pass as an array
+      $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+      for ($i = 0; $i < $size; $i++) {
+          $n = rand(0, $alphaLength);
+          $pass[] = $alphabet[$n];
+      }
+      return implode($pass); //turn the array into a string
+  }
 
-              // actually executes the queries (i.e. the INSERT query)
-              $entityManager->flush();
+    private function saveUserInDb($userId, $role, $origine, $name, $firstname, $email, $username, $financement, $equipe, $password, $newUser, UserPasswordEncoderInterface $passwordEncoder)
+    {
+      $entityManager = $this->getDoctrine()->getManager();
+      $User = NULL;
 
-              return $this->listUser($request);
+      if ($newUser) {
+        $User = new User();
+      }
+      else
+      {
+        $User = $entityManager->getRepository(User::class)->find($userId);
+      }
+      $User->setRoles(array($role));
+      $User->setOrigine($origine);
+      $User->setName($name);
+      $User->setFirstName($firstname);
+      $User->setEmail($email);
+      $User->setUsername($username);
+      $User->setFinancement($financement);
+      $User->setEquipe($equipe);
+  
+      if (!empty($password)) {
+        $User->setPassword($passwordEncoder->encodePassword($User, $password));
+      }
+  
+      // tell Doctrine you want to (eventually) save the Product (no queries yet)
+      if ($newUser) {
+        $entityManager->persist($User);
+      }
+  
+      // actually executes the queries (i.e. the INSERT query)
+      $entityManager->flush();
+
+      return $User;
     }
 
     /**
