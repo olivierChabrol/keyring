@@ -24,9 +24,7 @@ app_dhcp_vivs_listtrousseau:
 app_vivs_modif_pret:
     path: /modifyPret
     controller: App\Controller\KeyringController::modifyPret
-
-
-
+    
 app_vivs_delete_pret:
     path: /deletePret
     controller: App\Controller\KeyringController:deletePret
@@ -91,7 +89,7 @@ user_view_pdf:
 user_add_ajax:
     path: /user/add/ajax
     controller: App\Controller\UserController::addUserAjax
-        
+
 user_modify:
     path: /user/modify
     controller: App\Controller\UserController::modifyUser

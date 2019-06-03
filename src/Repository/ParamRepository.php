@@ -29,12 +29,17 @@ class ParamRepository extends ServiceEntityRepository
 
         return $qb->execute();
 
-	}
+    }
+    
+    public function getDepartment()
+    {
+        return $this->getParamByType(Param::DEPARTMENT);
+    }
 
-  public function getKeyState()
-  {
-   return $this->getParamByType(3);
-  }
+    public function getKeyState()
+    {
+    return $this->getParamByType(3);
+    }
     public function getKeyType()
     {
 		 return $this->getParamByType(1);

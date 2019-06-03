@@ -94,7 +94,7 @@ private $roles = [];
 private $financement;
 
 /**
- * @ORM\Column(type="string", length=255, nullable=true)
+ * @ORM\Column(type="integer")
  */
 private $equipe;
 

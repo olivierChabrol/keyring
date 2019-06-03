@@ -254,8 +254,9 @@ class KeyringController extends AbstractController
 		$paramTypes = $this->getDoctrine()->getRepository(Param::class)->getKeyType();
 		$paramLieux = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
 		$paramMails = $this->getDoctrine()->getRepository(User::class)->getUserEmail();
+		$paramDepartment = $this->getDoctrine()->getRepository(Param::class)->getDepartment();
 
-		return $this->render('keyring/pret.html.twig', array('types' => $paramTypes, 'lieux' => $paramLieux, 'mails' => $paramMails));
+		return $this->render('keyring/pret.html.twig', array('types' => $paramTypes, 'lieux' => $paramLieux, 'mails' => $paramMails,'department' => $paramDepartment));
 
 	}
 

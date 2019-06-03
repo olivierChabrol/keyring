@@ -12,6 +12,7 @@ class Param
     const TYPE  = 1;
     const SITE  = 2;
     const STATE = 3;
+    const DEPARTMENT = 4;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -63,7 +64,8 @@ class Param
         $assoc =  array(
         Param::TYPE  => "Type",
         Param::SITE  => "Site",
-        Param::STATE => "State");
+        Param::STATE => "State",
+        Param::DEPARTMENT => "DEPARTMENT");
         return $assoc;
     }
 }
