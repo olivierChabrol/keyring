@@ -29,6 +29,8 @@
 <h1> Modifier Utilisateur</h1>
 
 <form action="{{ path('user_add') }}" id="saveUser" method="post">
+  <input type="hidden" id="userId" name="userId" value="{{user.id}}">
+  <input type="hidden" id="host" name="host" value="{{user.host}}">
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <input type="text" class="form-control" id="name" name="name" placeholder="Nom" value="{{user.name}}">
@@ -55,18 +57,15 @@
         </select>
     </div>
     <div class="col-md-4 mb-3">
-      <div class="form-check form-check-inline">
-        <label class="form-check-label" for="invite">Invité</label>
-        <input type="checkbox" value="" class="form-check-input" id="invite" name="invite">
-      </div>
-      <input type="text" class="form-control" id="host" name="host" placeholder="Responsable" value="">
+        <label class="form-label" for="hostName">Responsable</label>
+      <input type="text" class="form-control" id="hostName" placeholder="Responsable" value="">
     </div>
   </div>
 
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="origine">Origine</label>
-      <input type="text" class="form-control" id="origine" name="origine" placeholder="Origine" value="">
+      <input type="text" class="form-control" id="origine" name="origine" placeholder="Origine" value="{{user.origine}}">
     </div>
     <div class="col-md-4 mb-3">
       <label for="nationality">Nationalité</label>
@@ -83,7 +82,7 @@
 
     <div class="col-md-4 mb-3">
       <label for="hostname">Financement</label>
-      <input type="text" class="form-control" id="financement" name="financement" placeholder="Financement" value="">
+      <input type="text" class="form-control" id="financement" name="financement" placeholder="Financement" value="{{user.financement}}">
     </div>
   </div>
 
@@ -102,18 +101,18 @@
     </div>
     <div class="col-md-4 mb-3">
       <label for="arrival">Date d'arrivée</label>
-      <input type="text" class="form-control" id="arrival" name="arrival" placeholder="Date d'arrivée" value="">
+      <input type="text" class="form-control" id="arrival" name="arrival" placeholder="Date d'arrivée" value="{{ user.arrival|date('d/m/Y') }}">
     </div>
     <div class="col-md-4 mb-3">
       <label for="departure">Date de fin</label>
-      <input type="text" class="form-control" id="departure" name="departure" placeholder="Date de départ" value="">
+      <input type="text" class="form-control" id="departure" name="departure" placeholder="Date de départ" value="{{ user.departure|date('d/m/Y') }}">
     </div>
   </div>
   <hr/>
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname">Nom d'utilisateur</label>
-      <input type="text" class="form-control" id="username" name="username" placeholder="Nom d'utilisateur" value="">
+      <input type="text" class="form-control" id="username" name="username" placeholder="Nom d'utilisateur" value="{{user.username}}">
     </div>
 
     <div class="col-md-4 mb-3">
@@ -131,8 +130,8 @@
     <div class="col-md-4 mb-3">
       <label for="hostname"> Role </label>
       <select  class="form-control" id="roles" name="roles" placeholder="Role" value="">
-  			<option value="ROLE_USER"> Utilisateur</option>
-  			<option value="ROLE_ADMIN"> Administrateur </option>
+  			<option value="ROLE_USER" {{user.roles[0]=="ROLE_USER"?"selected":""}}> Utilisateur</option>
+  			<option value="ROLE_ADMIN" {{user.roles[0]=="ROLE_ADMIN"?"selected":""}}> Administrateur </option>
   		</select>
     </div>
   </div>

@@ -78,6 +78,7 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator
     {
         //dump($user);dump($credentials["password"]);dump($this->passwordEncoder->encodePassword($user, $credentials["password"]));die;
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+        //return true;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

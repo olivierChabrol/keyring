@@ -50,6 +50,7 @@ class UserController extends AbstractController
       $array = $request->request->all();
       
       $newUser = $request->request->get('userId') == NULL;
+      //dump($newUser);die();
       $this->saveUserInDb($request->request->get('userId'), $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], $array["username"], $array["financement"], $array["equipe"], $array["password"], $array["position"], $array["nationality"], $array["host"], $array["arrival"], $array["departure"], $newUser, $passwordEncoder);
 
       return $this->listUser($request);
@@ -120,9 +121,6 @@ class UserController extends AbstractController
       if ($password != NULL && !empty($password)) {
         $User->setPassword($passwordEncoder->encodePassword($User, $password));
       }
-      else {
-        $User->setPassword($passwordEncoder->encodePassword($User, $this->randomPassword(17)));
-      }
   
       // tell Doctrine you want to (eventually) save the Product (no queries yet)
       if ($newUser) {
@@ -141,8 +139,9 @@ class UserController extends AbstractController
     public function listUser(Request $request)
     {
       $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+      $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
 
-      return $this->render('user/listageUsers.html.twig', array('users' => $users));
+      return $this->render('user/listageUsers.html.twig', array('users' => $users, 'params' => $params));
     }
 
     /**
