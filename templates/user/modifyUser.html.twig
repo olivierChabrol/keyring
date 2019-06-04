@@ -164,4 +164,20 @@
   $('#backButton').on('click', function(event) {
     window.location = '/listusers';
   });
+	$("#arrival").datepicker({
+        dateFormat: "dd/mm/yy",
+        onSelect: function() {
+          var date = $(this).datepicker('getDate');
+          if (date)
+          {
+            date.setDate(date.getDate() + 1);
+            console.log(date);
+            //$("#departure").datepicker( "option", "minDate", date );
+            $("#departure").val( $.datepicker.formatDate('dd/mm/yy', date));
+          }
+        }
+  });
+	$("#departure").datepicker({
+        dateFormat: "dd/mm/yy"
+	});
 {% endblock %}

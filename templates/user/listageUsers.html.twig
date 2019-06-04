@@ -34,10 +34,13 @@
 			Role
 		</th>
 		<th>
-			Origine
+			Position
 		</th>
 		<th>
-			Suppression
+			Equipe
+		</th>
+		<th>
+			Action
 		</th>
 	</tr>
 
@@ -72,12 +75,12 @@
 					</td>
 					<td>
 						<a href="{{ path('user_view', {id: user.id}) }}" >
-							{{ user.origine }}
+							{{ params[user.position] }} 
 						</a>
 					</td>
 					<td>
 						<a href="{{ path('user_view', {id: user.id}) }}" >
-							{{ user.position }}
+							{{ params[user.equipe] }}
 						</a>
 					</td>
 					<td>

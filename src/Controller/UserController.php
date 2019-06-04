@@ -16,6 +16,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Security\Core\Security;
 
+use \Datetime;
+
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
