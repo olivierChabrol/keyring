@@ -70,6 +70,10 @@ chart_key_state:
     path: /listTrousseauPerStateAjax
     controller: App\Controller\KeyringController:listTrousseauPerStateAjax
 
+user_add:
+    path: /user/add/
+    controller: App\Controller\UserController::saveUser
+
 user_list:
     path: /listusers
     controller: app\Controller\UserController::listUser

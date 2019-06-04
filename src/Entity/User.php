@@ -98,6 +98,31 @@ private $financement;
  */
 private $equipe;
 
+/**
+ * @ORM\Column(type="integer", nullable=true)
+ */
+private $position;
+
+/**
+ * @ORM\Column(type="string", length=5, nullable=true)
+ */
+private $nationality;
+
+/**
+ * @ORM\ManyToOne(targetEntity="App\Entity\User")
+ */
+private $host;
+
+/**
+ * @ORM\Column(type="datetime", nullable=true)
+ */
+private $arrival;
+
+/**
+ * @ORM\Column(type="datetime", nullable=true)
+ */
+private $departure;
+
 
 public function __construct()
 {
@@ -315,6 +340,66 @@ public function setRoles(array $roles): void
     public function setEquipe(?string $equipe): self
     {
         $this->equipe = $equipe;
+
+        return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    public function getNationality(): ?string
+    {
+        return $this->nationality;
+    }
+
+    public function setNationality(?string $nationality): self
+    {
+        $this->nationality = $nationality;
+
+        return $this;
+    }
+
+    public function getHost(): ?self
+    {
+        return $this->host;
+    }
+
+    public function setHost(?self $host): self
+    {
+        $this->host = $host;
+
+        return $this;
+    }
+
+    public function getArrival(): ?\DateTimeInterface
+    {
+        return $this->arrival;
+    }
+
+    public function setArrival(?\DateTimeInterface $arrival): self
+    {
+        $this->arrival = $arrival;
+
+        return $this;
+    }
+
+    public function getDeparture(): ?\DateTimeInterface
+    {
+        return $this->departure;
+    }
+
+    public function setDeparture(?\DateTimeInterface $departure): self
+    {
+        $this->departure = $departure;
 
         return $this;
     }

@@ -28,15 +28,19 @@ class UserController extends AbstractController
     public function index()
     {
       $paramDepartment = $this->getDoctrine()->getRepository(Param::class)->getDepartment();
-      return $this->render('main/addUser.html.twig', array('department' => $paramDepartment));
+      $paramPositions  = $this->getDoctrine()->getRepository(Param::class)->getPositions();
+      $nationalities   = Param::getNationality();
+      return $this->render('main/addUser.html.twig', array('departments' => $paramDepartment, 'positions' => $paramPositions, "nationalities" => $nationalities));
     }
 
     public function addUserAjax(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
       $array = $request->request->all();
-      $username = strtolower($array["firstname"]).".".strtolower($array["name"]);
-      $password = $this->randomPassword(17);
-      $user = $this->saveUserInDb(NULL, $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], $username, $array["financement"], $array["equipe"], $password, true, $passwordEncoder);
+      $nationality = "FR";
+      $host = NULL;
+      $arrival = NULL;
+      $departure = NULL;
+      $user = $this->saveUserInDb(NULL, $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], NULL, $array["financement"], $array["equipe"], NULL, $nationality, $host, $arrival, $departure, true, $passwordEncoder);
 			return new JSonResponse(json_encode($user));
     }
 
@@ -46,7 +50,7 @@ class UserController extends AbstractController
       $array = $request->request->all();
       
       $newUser = $request->request->get('userId') == NULL;
-      $this->saveUserInDb($request->request->get('userId'), $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], $array["username"], $array["financement"], $array["equipe"], $array["password"], $newUser, $passwordEncoder);
+      $this->saveUserInDb($request->request->get('userId'), $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], $array["username"], $array["financement"], $array["equipe"], $array["password"], $array["nationality"], $array["host"], $array["arrival"], $array["departure"], $newUser, $passwordEncoder);
 
       return $this->listUser($request);
     }
@@ -62,7 +66,7 @@ class UserController extends AbstractController
       return implode($pass); //turn the array into a string
   }
 
-    private function saveUserInDb($userId, $role, $origine, $name, $firstname, $email, $username, $financement, $equipe, $password, $newUser, UserPasswordEncoderInterface $passwordEncoder)
+    private function saveUserInDb($userId, $role, $origine, $name, $firstname, $email, $username, $financement, $equipe, $password, $nationality, $host, $arrival, $departure, $newUser, UserPasswordEncoderInterface $passwordEncoder)
     {
       $entityManager = $this->getDoctrine()->getManager();
       $User = NULL;
@@ -74,6 +78,25 @@ class UserController extends AbstractController
       {
         $User = $entityManager->getRepository(User::class)->find($userId);
       }
+
+
+      $host = empty($array["host"])?NULL:NULL;
+      if ($arrival != NULL && !empty($arrival)) {
+        $arrival = DateTime::createFromFormat('d/m/Y', $arrival);
+      }
+      else {
+        $arrival = NULL;
+      }
+      if ($departure != NULL && !empty($departure)) {
+        $departure = DateTime::createFromFormat('d/m/Y', $departure);
+      }
+      else {
+        $departure = NULL;
+      }
+      if ($username == NULL || empty($username)) {
+        $username = strtolower($firstname).".".strtolower($name);
+      }
+
       $User->setRoles(array($role));
       $User->setOrigine($origine);
       $User->setName($name);
@@ -82,9 +105,17 @@ class UserController extends AbstractController
       $User->setUsername($username);
       $User->setFinancement($financement);
       $User->setEquipe($equipe);
+      $User->setNationality($nationality);
+      $User->setHost($host);
+      
+      $User->setArrival($arrival);
+      $User->setDeparture($departure);
   
-      if (!empty($password)) {
+      if ($password != NULL && !empty($password)) {
         $User->setPassword($passwordEncoder->encodePassword($User, $password));
+      }
+      else {
+        $User->setPassword($passwordEncoder->encodePassword($User, $this->randomPassword(17)));
       }
   
       // tell Doctrine you want to (eventually) save the Product (no queries yet)

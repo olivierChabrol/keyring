@@ -14,8 +14,8 @@
         <div class="col-md-4 mb-3">
         <label for="hostname">Type</label>
         <select class="form-control" id="type" name="type">
-        {% for val in paramTypes %}
-            <option value="{{ loop.index0 + 1}}" >{{ val }}</option>
+        {% for k,v in paramTypes %}
+            <option value="{{ k}}" >{{ v }}</option>
         {% endfor %}
         </select>
         </div>

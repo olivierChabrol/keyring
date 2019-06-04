@@ -35,6 +35,10 @@ class ParamRepository extends ServiceEntityRepository
     {
         return $this->getParamByType(Param::DEPARTMENT);
     }
+    public function getPositions()
+    {
+        return $this->getParamByType(Param::POSITION);
+    }
 
     public function getKeyState()
     {

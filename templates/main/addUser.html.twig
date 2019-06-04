@@ -63,56 +63,76 @@
 
 <h1> Créer un utilisateur </h1>
 
-<form action="/adduser" id="saveUser" method="post">
-	<h1>Ajout d'un utilisateur</h1>
+<form action="{{ path('user_add') }}" id="saveUser" method="post">
   <div class="form-row">
     <div class="col-md-4 mb-3">
-      <label for="hostname">Nom</label>
       <input type="text" class="form-control" id="name" name="name" placeholder="Nom" value="">
     </div>
 
     <div class="col-md-4 mb-3">
-      <label for="hostname">Prénom</label>
       <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Prénom" value="">
     </div>
-
     <div class="col-md-4 mb-3">
-      <label for="hostname"> Role </label>
-      <select  class="form-control" id="roles" name="roles" placeholder="Role" value="">
-  			<option value="ROLE_USER"> Utilisateur</option>
-  			<option value="ROLE_ADMIN"> Administrateur </option>
-  		</select>
+      <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="position">Position</label>
+        <select class="form-control" id="position" name="position">
+        {% for val in positions %}
+          <option value="{{val.id}}">{{ val.value }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="form-check form-check-inline">
+        <label class="form-check-label" for="invite">Invité</label>
+        <input type="checkbox" value="" class="form-check-input" id="invite" name="invite">
+      </div>
+      <input type="text" class="form-control" id="host" name="host" placeholder="Responsable" value="">
     </div>
   </div>
 
   <div class="form-row">
     <div class="col-md-4 mb-3">
-      <label for="hostname">Origine</label>
+      <label for="origine">Origine</label>
       <input type="text" class="form-control" id="origine" name="origine" placeholder="Origine" value="">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="nationality">Nationalité</label>
+        <select class="form-control" id="nationality" name="nationality">
+        {% for k,v in nationalities %}
+          <option value="{{k}}">{{ v}}</option>
+        {% endfor %}
+        </select>
     </div>
 
     <div class="col-md-4 mb-3">
       <label for="hostname">Financement</label>
       <input type="text" class="form-control" id="financement" name="financement" placeholder="Financement" value="">
     </div>
+  </div>
 
+  <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname">Equipe</label>
         <select class="form-control" id="equipe" name="equipe">
-        {% for val in department %}
+        {% for val in departments %}
           <option value="{{val.id}}">{{ val.value }}</option>
         {% endfor %}
         </select>
     </div>
-  </div>
-
-  <div class="form-row">
-    <div class="col-md-12 mb-3">
-      <label for="hostname">Email</label>
-      <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="">
+    <div class="col-md-4 mb-3">
+      <label for="arrival">Date d'arrivée</label>
+      <input type="text" class="form-control" id="arrival" name="arrival" placeholder="Date d'arrivée" value="">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="departure">Date de fin</label>
+      <input type="text" class="form-control" id="departure" name="departure" placeholder="Date de départ" value="">
     </div>
   </div>
-
+  <hr/>
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname">Nom d'utilisateur</label>
@@ -131,6 +151,13 @@
 				<span class="popuptext" id="myPopup">Les mot de passe ne correspondent pas !</span>
 			</div>
 		</div>
+    <div class="col-md-4 mb-3">
+      <label for="hostname"> Role </label>
+      <select  class="form-control" id="roles" name="roles" placeholder="Role" value="">
+  			<option value="ROLE_USER"> Utilisateur</option>
+  			<option value="ROLE_ADMIN"> Administrateur </option>
+  		</select>
+    </div>
   </div>
 
   <button type="submit" id="btn" class="btn btn-success">Save</button>
@@ -155,4 +182,22 @@
     }
   }
 
+{% endblock %}
+{% block js_documentReady %}
+	$("#arrival").datepicker({
+        dateFormat: "dd/mm/yy",
+        onSelect: function() {
+          var date = $(this).datepicker('getDate');
+          if (date)
+          {
+            date.setDate(date.getDate() + 1);
+            console.log(date);
+            //$("#departure").datepicker( "option", "minDate", date );
+            $("#departure").val( $.datepicker.formatDate('dd/mm/yy', date));
+          }
+        }
+  });
+	$("#departure").datepicker({
+        dateFormat: "dd/mm/yy"
+	});
 {% endblock %}
