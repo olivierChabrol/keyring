@@ -28,73 +28,116 @@
 {% block body %}
 <h1> Modifier Utilisateur</h1>
 
-<form action="/adduser" id="saveUser" method="post">
-	<input type="hidden" name="userId" value="{{ user.id }}"/>
-
+<form action="{{ path('user_add') }}" id="saveUser" method="post">
   <div class="form-row">
     <div class="col-md-4 mb-3">
-      <label for="hostname">Nom</label>
-      <input type="text" value="{{user.name}}" class="form-control" id="name" name="name" placeholder="Nom">
-    </div>
-
-
-    <div class="col-md-4 mb-3">
-      <label for="hostname">Prénom</label>
-      <input type="text" value="{{user.firstname}}" class="form-control" id="firstname" name="firstname" placeholder="Prénom">
+      <input type="text" class="form-control" id="name" name="name" placeholder="Nom" value="{{user.name}}">
     </div>
 
     <div class="col-md-4 mb-3">
-      <label for="hostname"> Role  {{ user.roles[0] }}</label>
-      <select  class="form-control" id="roles" name="roles" placeholder="Role">
-        <option value="ROLE_ADMIN" {{ user.roles[0] == "ROLE_ADMIN" ? "selected" :"" }}>admin</option>
-        <option value="ROLE_USER" {{ user.roles[0] == "ROLE_USER" ? "selected" :"" }}>default</option>
-      </select>
+      <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Prénom" value="{{user.firstname}}">
+    </div>
+    <div class="col-md-4 mb-3">
+      <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{user.email}}">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="position">Position</label>
+        <select class="form-control" id="position" name="position">
+        {% for val in positions %}
+          {% set selected = '' %}
+          {% if (val.id == user.position) %}
+          {% set selected = 'selected' %}
+          {% endif %}
+          <option value="{{val.id}}" {{selected}}>{{ val.value }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="form-check form-check-inline">
+        <label class="form-check-label" for="invite">Invité</label>
+        <input type="checkbox" value="" class="form-check-input" id="invite" name="invite">
+      </div>
+      <input type="text" class="form-control" id="host" name="host" placeholder="Responsable" value="">
     </div>
   </div>
 
   <div class="form-row">
     <div class="col-md-4 mb-3">
-      <label for="hostname">Origine</label>
-      <input type="text" value="{{user.origine}}" class="form-control" id="origine" name="origine" placeholder="Origine">
+      <label for="origine">Origine</label>
+      <input type="text" class="form-control" id="origine" name="origine" placeholder="Origine" value="">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="nationality">Nationalité</label>
+        <select class="form-control" id="nationality" name="nationality">
+        {% for k,v in nationalities %}
+          {% set selected = '' %}
+          {% if (k == user.nationality) %}
+          {% set selected = 'selected' %}
+          {% endif %}
+          <option value="{{k}}" {{selected}}>{{ v}}</option>
+        {% endfor %}
+        </select>
     </div>
 
     <div class="col-md-4 mb-3">
       <label for="hostname">Financement</label>
-      <input type="text" class="form-control" id="financement" name="financement" placeholder="Financement" value="{{user.financement}}">
-    </div>
-
-    <div class="col-md-4 mb-3">
-      <label for="hostname">Equipe</label>
-      <input type="text" class="form-control" id="equipe" name="equipe" placeholder="Equipe" value="{{user.equipe}}">
+      <input type="text" class="form-control" id="financement" name="financement" placeholder="Financement" value="">
     </div>
   </div>
 
   <div class="form-row">
-    <div class="col-md-12 mb-3">
-      <label for="hostname">Email</label>
-        <input type="email" value="{{user.email}}" class="form-control" id="email" name="email" placeholder="email">
+    <div class="col-md-4 mb-3">
+      <label for="hostname">Equipe</label>
+        <select class="form-control" id="equipe" name="equipe">
+        {% for val in departments %}
+          {% set selected = '' %}
+          {% if (val.id == user.equipe) %}
+          {% set selected = 'selected' %}
+          {% endif %}
+          <option value="{{val.id}}" {{selected}}>{{ val.value }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="arrival">Date d'arrivée</label>
+      <input type="text" class="form-control" id="arrival" name="arrival" placeholder="Date d'arrivée" value="">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="departure">Date de fin</label>
+      <input type="text" class="form-control" id="departure" name="departure" placeholder="Date de départ" value="">
     </div>
   </div>
-
+  <hr/>
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="hostname">Nom d'utilisateur</label>
-        <input type="text" value="{{user.username}}" class="form-control" id="username" name="username" placeholder="Nom d'utilisateur">
+      <input type="text" class="form-control" id="username" name="username" placeholder="Nom d'utilisateur" value="">
     </div>
 
     <div class="col-md-4 mb-3">
       <label for="hostname">Mot de passe</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" value="">
+      <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" value="">
     </div>
 
     <div class="col-md-4 mb-3">
-      <label for="hostname">Confirmez votre Mot de passe</label>
-      <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Confirmez votre Mot de passe" value="">
+			<div class="popup">
+	      <label for="hostname">Confirmez votre Mot de passe</label>
+	      <input type="password" onblur="validate()" class="form-control" id="password_confirm" name="password_confirm" placeholder="Confirmez votre Mot de passe" value="">
+				<span class="popuptext" id="myPopup">Les mot de passe ne correspondent pas !</span>
+			</div>
+		</div>
+    <div class="col-md-4 mb-3">
+      <label for="hostname"> Role </label>
+      <select  class="form-control" id="roles" name="roles" placeholder="Role" value="">
+  			<option value="ROLE_USER"> Utilisateur</option>
+  			<option value="ROLE_ADMIN"> Administrateur </option>
+  		</select>
     </div>
   </div>
 
-<button type="button" class="btn btn-link" id="backButton">Back</button>
-<button type="submit" class="btn btn-success" id="saveButton">Sauvegarder</button>
+  <button type="submit" id="btn" class="btn btn-success">Save</button>
 </form>
 
 {% endblock %}
@@ -102,13 +145,20 @@
   function validate() {
     var a = document.getElementById("password").value;
     var b = document.getElementById("password_confirm").value;
-    if (a!=b) {
-      alert("Les mots de passe ne correspondent pas.");
-      return false; }
+
+    if (a!=b && b!=a) {
+
+			var popup = document.getElementById("myPopup");
+		  popup.classList.toggle("show");
+			document.getElementById("btn").disabled = true;
+      return false;
+    }
     else {
-      alert("Les mots de passe correspondent.");
-      return false; }
+			document.getElementById("btn").disabled = false;
+      return false;
+    }
   }
+
 {% endblock %}
 
 {% block js_documentReady %}

@@ -40,7 +40,7 @@ class UserController extends AbstractController
       $host = NULL;
       $arrival = NULL;
       $departure = NULL;
-      $user = $this->saveUserInDb(NULL, $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], NULL, $array["financement"], $array["equipe"], NULL, $nationality, $host, $arrival, $departure, true, $passwordEncoder);
+      $user = $this->saveUserInDb(NULL, $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], NULL, $array["financement"], $array["equipe"], NULL, $array["position"], $nationality, $host, $arrival, $departure, true, $passwordEncoder);
 			return new JSonResponse(json_encode($user));
     }
 
@@ -50,7 +50,7 @@ class UserController extends AbstractController
       $array = $request->request->all();
       
       $newUser = $request->request->get('userId') == NULL;
-      $this->saveUserInDb($request->request->get('userId'), $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], $array["username"], $array["financement"], $array["equipe"], $array["password"], $array["nationality"], $array["host"], $array["arrival"], $array["departure"], $newUser, $passwordEncoder);
+      $this->saveUserInDb($request->request->get('userId'), $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], $array["username"], $array["financement"], $array["equipe"], $array["password"], $array["position"], $array["nationality"], $array["host"], $array["arrival"], $array["departure"], $newUser, $passwordEncoder);
 
       return $this->listUser($request);
     }
@@ -66,7 +66,7 @@ class UserController extends AbstractController
       return implode($pass); //turn the array into a string
   }
 
-    private function saveUserInDb($userId, $role, $origine, $name, $firstname, $email, $username, $financement, $equipe, $password, $nationality, $host, $arrival, $departure, $newUser, UserPasswordEncoderInterface $passwordEncoder)
+    private function saveUserInDb($userId, $role, $origine, $name, $firstname, $email, $username, $financement, $equipe, $password, $position, $nationality, $host, $arrival, $departure, $newUser, UserPasswordEncoderInterface $passwordEncoder)
     {
       $entityManager = $this->getDoctrine()->getManager();
       $User = NULL;
@@ -87,14 +87,19 @@ class UserController extends AbstractController
       else {
         $arrival = NULL;
       }
+
       if ($departure != NULL && !empty($departure)) {
         $departure = DateTime::createFromFormat('d/m/Y', $departure);
       }
       else {
         $departure = NULL;
       }
+
       if ($username == NULL || empty($username)) {
         $username = strtolower($firstname).".".strtolower($name);
+      }
+      if ($position == NULL || empty($position)) {
+        $position = NULL;
       }
 
       $User->setRoles(array($role));
@@ -107,6 +112,7 @@ class UserController extends AbstractController
       $User->setEquipe($equipe);
       $User->setNationality($nationality);
       $User->setHost($host);
+      $User->setPosition($position);
       
       $User->setArrival($arrival);
       $User->setDeparture($departure);
@@ -251,9 +257,12 @@ class UserController extends AbstractController
 
      $array = $request->request->all();
      $id = $this->getDoctrine()->getRepository(User::class)->find($id);
+     $paramDepartment = $this->getDoctrine()->getRepository(Param::class)->getDepartment();
+     $paramPositions  = $this->getDoctrine()->getRepository(Param::class)->getPositions();
+     $nationalities   = Param::getNationality();
 
 
-      return $this->render('user/modifyUser.html.twig', array('user' => $id)); //'name' => $name, 'firstname' => $firstname, 'username' => $username, 'email' => $email));
+      return $this->render('user/modifyUser.html.twig', array('user' => $id, 'departments' => $paramDepartment, 'positions' => $paramPositions, "nationalities" => $nationalities)); //'name' => $name, 'firstname' => $firstname, 'username' => $username, 'email' => $email));
 
     }
 
