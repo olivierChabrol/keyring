@@ -139,10 +139,7 @@ class UserController extends AbstractController
       return $User;
     }
 
-    /**
-     * @Route("/listusers", name="listusers")
-     */
-    public function listUser(Request $request)
+    private function getListUserFilters(Request $request)
     {
       $position   = $request->query->get('position') == NULL?NULL:$request->query->get('position');
       $deptarment = $request->query->get('equipe') == NULL?NULL:$request->query->get('equipe');
@@ -158,7 +155,15 @@ class UserController extends AbstractController
       if ($year != NULL && !empty($year)) {
         $filters["year"] = $year;
       }
+      return $filters;
+    }
 
+    /**
+     * @Route("/listusers", name="listusers")
+     */
+    public function listUser(Request $request)
+    {
+      $filters = $this->getListUserFilters($request);
       $users = $this->getDoctrine()->getRepository(User::class)->getUsers($filters);
       $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
       $paramPositions  = $this->getDoctrine()->getRepository(Param::class)->getPositions();
@@ -316,16 +321,7 @@ class UserController extends AbstractController
         
     $entityManager = $this->getDoctrine()->getManager();
     
-    $position   = $request->query->get('position') == NULL?NULL:$request->query->get('position');
-    $deptarment = $request->query->get('equipe') == NULL?NULL:$request->query->get('equipe');;
-
-    $filters = array();
-    if ($position != NULL && !empty($position)) {
-      $filters["position"] = $position;
-    }
-    if ($deptarment != NULL && !empty($deptarment)) {
-      $filters["equipe"] = $deptarment;
-    }
+    $filters = $this->getListUserFilters($request);
 
     $users = $this->getDoctrine()->getRepository(User::class)->getUsers($filters);
     $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
