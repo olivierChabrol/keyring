@@ -7,94 +7,155 @@
 
 {% block body %}
 
+<div class="py-5 text-center">
+	<h1>Liste des utilisateurs</h1>
+		<a href="#" class="btn btn-xs btn-success" id="addUserButton"><span class="glyphicon glyphicon-plus"></span> Ajouter utilisateur</a>
+		<a href="#" class="btn btn-xs btn-success" id="excelButton"><span class="glyphicon glyphicon-plus"></span> Excel</a>
+</div>
 <div class="row">
-  <h1> Liste des utilisateurs </h1>
-</div>
-	<a href="#" class="btn btn-xs btn-success" id="addUserButton"><span class="glyphicon glyphicon-plus"></span> Ajouter utilisateur</a>
 
-<div class="table-responsive">
-	<table class="table table-hover table-sm">
-	<tr>
-		<th>
-			#
-		</th>
-		<th>
-			Nom
-		</th>
-		<th>
-			Prenom
-		</th>
-		<th>
-			Email
-		</th>
-		<th>
-			Position
-		</th>
-		<th>
-			Equipe
-		</th>
-		<th>
-			Action
-		</th>
-	</tr>
-
-	{% for user in users %}
-
-			<tr>
-				<th scope="row">{{ loop.index0 }}</th>
-					<td>
-						<a href="{{ path('user_view', {id: user.id}) }}">	
-							{{ user.name }}
-						</a>
-					</td>
-					<td>
-						<a href="{{ path('user_view', {id: user.id}) }}">
-							{{ user.firstname }}
-						</a>
-					</td>
-					<td>
-						<a href="{{ path('user_view', {id: user.id}) }}" >
-							{{ user.email }}
-						</a>
-					</td>
-					<td>
-						<a href="{{ path('user_view', {id: user.id}) }}" >
-							{{ params[user.position] }} 
-						</a>
-					</td>
-					<td>
-						<a href="{{ path('user_view', {id: user.id}) }}" >
-							{{ params[user.equipe] }}
-						</a>
-					</td>
-					<td>
-						<button type="button" class="btn btn-outline-warning" id="modifyUser{{ user.id }}" name={{ user.id }}>Modifier</button>
-						<button type="button" class="btn btn-outline-danger" id="deleteuser{{ user.id }}" name={{ user.id }}>Supprimer</button>
-					</td>
-				</tr>
-	{% endfor %}
-	</table>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Suppression</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        Voulez vous vraiment supprimer ?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
-        <button type="button" class="btn btn-primary" id="buttonConfirmDelete">Oui</button>
-      </div>
+    <div class="col-md-3 order-md-2 mb-3">
+      <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Filtres	</span>
+        <a href="#" id="filterReset"><span class="badge badge-secondary badge-pill">Reset</span></a>
+      </h4>
+      <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+      		<label for="position">Position</label>
+					<select class="form-control" id="position" name="position">
+						<option value="">--</option>
+					{% for val in positions %}
+						{% set selected = '' %}
+					  {% if filters.position is defined %}
+							{% if (filters["position"] and val.id == filters["position"]) %}
+								{% set selected = 'selected' %}
+							{% endif %}
+						{% endif %}
+						<option value="{{val.id}}" {{selected}}>{{ val.value }}</option>
+					{% endfor %}
+					</select>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+      		<label for="equipe">Equipe</label>
+					<select class="form-control" id="equipe" name="equipe">
+						<option value="">--</option>
+						{% for val in departments %}
+						{% set selected = '' %}
+					  {% if filters.equipe is defined %}
+							{% if (filters["equipe"] and val.id == filters["equipe"]) %}
+								{% set selected = 'selected' %}
+							{% endif %}
+						{% endif %}
+						<option value="{{val.id}}" {{selected}}>{{ val.value }}</option>
+					{% endfor %}
+					</select>
+        </li>
+				<!--
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+      		<label for="year">Année</label>
+					<select class="form-control" id="year" name="year">
+						<option value="">--</option>
+						{% for val in departments %}
+						{% set selected = '' %}
+					  {% if filters.equipe is defined %}
+							{% if (filters["equipe"] and val.id == filters["equipe"]) %}
+								{% set selected = 'selected' %}
+							{% endif %}
+						{% endif %}
+						<option value="{{val.id}}" {{selected}}>{{ val.value }}</option>
+					{% endfor %}
+					</select>
+        </li>
+				-->
+      </ul>
     </div>
-  </div>
+
+    <div class="col-md-9 order-md-1">
+
+	<div class="table-responsive">
+		<table class="table table-hover table-sm">
+		<tr>
+			<th>
+				#
+			</th>
+			<th>
+				Nom
+			</th>
+			<th>
+				Prenom
+			</th>
+			<th>
+				Email
+			</th>
+			<th>
+				Position
+			</th>
+			<th>
+				Equipe
+			</th>
+			<th>
+				Action
+			</th>
+		</tr>
+
+		{% for user in users %}
+
+				<tr>
+					<th scope="row">{{ loop.index0 }}</th>
+						<td>
+							<a href="{{ path('user_view', {id: user.id}) }}">	
+								{{ user.name }}
+							</a>
+						</td>
+						<td>
+							<a href="{{ path('user_view', {id: user.id}) }}">
+								{{ user.firstname }}
+							</a>
+						</td>
+						<td>
+							<a href="{{ path('user_view', {id: user.id}) }}" >
+								{{ user.email }}
+							</a>
+						</td>
+						<td>
+							<a href="{{ path('user_view', {id: user.id}) }}" >
+								{{ params[user.position] }} 
+							</a>
+						</td>
+						<td>
+							<a href="{{ path('user_view', {id: user.id}) }}" >
+								{{ params[user.equipe] }}
+							</a>
+						</td>
+						<td>
+							<button type="button" class="btn btn-outline-warning" id="modifyUser{{ user.id }}" name={{ user.id }}>Modifier</button>
+							<button type="button" class="btn btn-outline-danger" id="deleteuser{{ user.id }}" name={{ user.id }}>Supprimer</button>
+						</td>
+					</tr>
+		{% endfor %}
+		</table>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Suppression</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Voulez vous vraiment supprimer ?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+					<button type="button" class="btn btn-primary" id="buttonConfirmDelete">Oui</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}
 
@@ -110,6 +171,31 @@ function deleteuser(){
 		}
 	}
 }
+
+function getFilters() 
+{
+	var filters = "";
+	if ($("#position").val() != "") {
+		filters += "?position=" + $("#position").val();
+	}
+	if ($("#equipe").val() != "") {
+		if ($("#position").val() != "") {
+			filters += "&";
+		}
+		else{
+			filters += "?";
+		}
+		filters += "equipe=" + $("#equipe").val();
+	}
+	return filters;
+}
+
+function loadList()
+{
+
+	window.location.href = "{{ path('user_list') }}" + getFilters();
+}
+
 {% endblock %}
 
 {% block js_documentReady %}
@@ -125,11 +211,23 @@ function deleteuser(){
 		$('#buttonConfirmDelete').attr("name", this.name);
 		$('#deleteModal').modal('show');
 	});
-
+	$("#filterReset").click(function () {
+		window.location.href = "{{ path('user_list') }}";
+	});
 	$('#buttonConfirmDelete').click(function(){
 		window.location.href = "/deleteuser?id=" + this.name;
 	});
 	$('#deleteModal').on('shown.bs.modal', function () {
 		$('#myInput').trigger('focus')
+	});
+	$("#position").on('change', function (e) {
+		loadList();
+	});
+	$("#equipe").on('change', function (e) {
+		loadList();
+	});
+
+	$("#excelButton").click(function () {
+		window.location.href = "{{ path('user_list_excel') }}" + getFilters();
 	});
 {% endblock %}

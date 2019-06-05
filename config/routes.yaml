@@ -75,8 +75,12 @@ user_add:
     controller: App\Controller\UserController::saveUser
 
 user_list:
-    path: /listusers
-    controller: app\Controller\UserController::listUser
+    path: /user/list
+    controller: App\Controller\UserController::listUser
+
+user_list_excel:
+    path : /user/list/excel
+    controller: App\Controller\UserController::excel
 
 user_new:
     path: /user/new

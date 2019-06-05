@@ -19,7 +19,26 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
     
-     public function getUserEmail()
+    /**
+     * @param $filters : associative array (table column name, value)
+     */
+    public function getUsers($filters) {
+        $qb = $this->createQueryBuilder('u');
+        
+        if ($filters != NULL) {
+            foreach ($filters as $k => $v) {
+                $qb = $qb->andWhere('u.'.$k.' = :'.$k);
+                $qb = $qb->setParameter($k,$v);
+            }
+        }
+        $qb->orderBy('u.name', 'ASC');
+        //dump($qb);die();
+        $qb = $qb->getQuery();
+        
+        return $qb->execute();
+    }
+
+    public function getUserEmail()
     {
 		$fields = array('u.id', 'u.email');
 		 $qb = $this->createQueryBuilder('u')

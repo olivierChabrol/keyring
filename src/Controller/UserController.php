@@ -9,6 +9,7 @@ use App\Entity\Trousseau;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,6 +21,9 @@ use \Datetime;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class UserController extends AbstractController
 {
@@ -140,10 +144,24 @@ class UserController extends AbstractController
      */
     public function listUser(Request $request)
     {
-      $users = $this->getDoctrine()->getRepository(User::class)->findAll();
-      $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+      $position   = $request->query->get('position') == NULL?NULL:$request->query->get('position');
+      $deptarment = $request->query->get('equipe') == NULL?NULL:$request->query->get('equipe');;
 
-      return $this->render('user/listageUsers.html.twig', array('users' => $users, 'params' => $params));
+      $filters = array();
+      if ($position != NULL && !empty($position)) {
+        $filters["position"] = $position;
+      }
+      if ($deptarment != NULL && !empty($deptarment)) {
+        $filters["equipe"] = $deptarment;
+      }
+
+      $users = $this->getDoctrine()->getRepository(User::class)->getUsers($filters);
+      $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+      $paramPositions  = $this->getDoctrine()->getRepository(Param::class)->getPositions();
+      $paramDepartment = $this->getDoctrine()->getRepository(Param::class)->getDepartment();
+
+
+      return $this->render('user/listageUsers.html.twig', array('users' => $users, 'params' => $params, 'positions' => $paramPositions, 'departments' => $paramDepartment, 'filters' => $filters));
     }
 
     /**
@@ -284,4 +302,82 @@ class UserController extends AbstractController
       $retour["data"] = $json;
       return new JSonResponse(json_encode($retour));
     }
+
+
+	
+	public function excel(Request $request)
+  {
+    $spreadsheet = new Spreadsheet();
+        
+    $entityManager = $this->getDoctrine()->getManager();
+    
+    $position   = $request->query->get('position') == NULL?NULL:$request->query->get('position');
+    $deptarment = $request->query->get('equipe') == NULL?NULL:$request->query->get('equipe');;
+
+    $filters = array();
+    if ($position != NULL && !empty($position)) {
+      $filters["position"] = $position;
+    }
+    if ($deptarment != NULL && !empty($deptarment)) {
+      $filters["equipe"] = $deptarment;
+    }
+
+    $users = $this->getDoctrine()->getRepository(User::class)->getUsers($filters);
+    $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+        
+		// @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet 
+		$sheet = $spreadsheet->getActiveSheet();
+		$line = 2;
+		$sheet->setCellValue("A1", "Nom & Prénom");
+		$sheet->setCellValue("B1", "Position");
+		$sheet->setCellValue("C1", "Etablissement d'origine");
+		$sheet->setCellValue("D1", "Nationalité");
+		$sheet->setCellValue("E1", "Responsable scientifique de l'acceuil");
+		$sheet->setCellValue("F1", "Début");
+		$sheet->setCellValue("G1", "Fin");
+		$sheet->setCellValue("H1", "Financement");
+		$sheet->setCellValue("I1", "Site");
+    $sheet->setCellValue("J1", "Equipe");
+    $nationalities = Param::getNationality();
+		foreach ($users as $user ) {
+			//dump($lend);die();
+			$column = 'A';
+			$sheet->setCellValue($column . strval($line), $user->getFirstName() . " " . $user->getName());
+			$column++;
+			$sheet->setCellValue($column . strval($line), $params[$user->getPosition()]);
+			$column++;
+			$sheet->setCellValue($column . strval($line), $user->getOrigine());
+			$column++;
+			$sheet->setCellValue($column . strval($line), $nationalities[$user->getNationality()]);
+			$column++;
+			$sheet->setCellValue($column . strval($line), $user->getHost());
+			$column++;
+			$sheet->setCellValue($column . strval($line), $user->getArrival()==NULL?"":$user->getArrival()->format('d/m/Y'));
+			$column++;
+			$sheet->setCellValue($column . strval($line), $user->getDeparture()==NULL?"":$user->getDeparture()->format('d/m/Y'));
+			$column++;
+			$sheet->setCellValue($column . strval($line), $user->getFinancement());
+			$column++;
+			$sheet->setCellValue($column . strval($line), "");
+			$column++;
+			$sheet->setCellValue($column . strval($line), $params[$user->getEquipe()]);
+			$column++;
+			$line++;
+		}
+		$sheet->setTitle("My First Worksheet");
+		
+		// Create your Office 2007 Excel (XLSX Format)
+		$writer = new Xlsx($spreadsheet);
+		
+		// In this case, we want to write the file in the public directory
+		//$publicDirectory =  $this->getDoctrine()->getRepository(Pret::class); //$this->get('kernel')->getProjectDir() . '/public';
+		// e.g /var/www/project/public/my_first_excel_symfony4.xlsx
+		$fileName = 'my_first_excel_symfony4.xlsx';
+		$temp_file = tempnam(sys_get_temp_dir(), $fileName);
+		$writer->save($temp_file);
+		//dump($temp_file);die();
+		
+		// Return the excel file as an attachment
+		return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
+	}
 }
