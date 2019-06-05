@@ -6,6 +6,8 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
+//use DoctrineExtensions\Query\Mysql\Year;
+
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
  * @method User|null findOneBy(array $criteria, array $orderBy = null)
@@ -24,11 +26,19 @@ class UserRepository extends ServiceEntityRepository
      */
     public function getUsers($filters) {
         $qb = $this->createQueryBuilder('u');
+        $em = $this->getEntityManager()->getConfiguration();
+        $em->addCustomDateTimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
         
         if ($filters != NULL) {
             foreach ($filters as $k => $v) {
-                $qb = $qb->andWhere('u.'.$k.' = :'.$k);
-                $qb = $qb->setParameter($k,$v);
+                if ($k != 'year') {
+                    $qb = $qb->andWhere('u.'.$k.' = :'.$k);
+                    $qb = $qb->setParameter($k,$v);
+                }
+                else {
+                    $qb = $qb->andWhere('YEAR(u.arrival) = :'.$k.' OR YEAR(u.departure) = :'.$k);
+                    $qb = $qb->setParameter($k,$v);
+                }
             }
         }
         $qb->orderBy('u.name', 'ASC');
@@ -36,6 +46,24 @@ class UserRepository extends ServiceEntityRepository
         $qb = $qb->getQuery();
         
         return $qb->execute();
+    }
+
+    public function getDistinctYear() {
+        $fields = array('u.arrival', 'u.departure');
+        $qb = $this->createQueryBuilder('u')->select($fields)->distinct(true)->orderBy('u.arrival')->getQuery();
+        $a = $qb->execute();
+        $result = array();
+        foreach($a as $elm) {
+            if ($elm != null) {
+                if ($elm["arrival"]!= null && !in_array($elm["arrival"]->format('Y'), $result)) {
+                    array_push($result, $elm["arrival"]->format('Y'));
+                }
+                if ($elm["departure"]!= null && !in_array($elm["departure"]->format('Y'), $result)) {
+                    array_push($result, $elm["departure"]->format('Y'));
+                }
+            }
+        }
+        return $result;
     }
 
     public function getUserEmail()

@@ -145,7 +145,8 @@ class UserController extends AbstractController
     public function listUser(Request $request)
     {
       $position   = $request->query->get('position') == NULL?NULL:$request->query->get('position');
-      $deptarment = $request->query->get('equipe') == NULL?NULL:$request->query->get('equipe');;
+      $deptarment = $request->query->get('equipe') == NULL?NULL:$request->query->get('equipe');
+      $year = $request->query->get('year') == NULL?NULL:$request->query->get('year');
 
       $filters = array();
       if ($position != NULL && !empty($position)) {
@@ -154,14 +155,17 @@ class UserController extends AbstractController
       if ($deptarment != NULL && !empty($deptarment)) {
         $filters["equipe"] = $deptarment;
       }
+      if ($year != NULL && !empty($year)) {
+        $filters["year"] = $year;
+      }
 
       $users = $this->getDoctrine()->getRepository(User::class)->getUsers($filters);
       $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
       $paramPositions  = $this->getDoctrine()->getRepository(Param::class)->getPositions();
       $paramDepartment = $this->getDoctrine()->getRepository(Param::class)->getDepartment();
-
-
-      return $this->render('user/listageUsers.html.twig', array('users' => $users, 'params' => $params, 'positions' => $paramPositions, 'departments' => $paramDepartment, 'filters' => $filters));
+      $years = $this->getDoctrine()->getRepository(User::class)->getDistinctYear();
+      //dump($years);die();
+      return $this->render('user/listageUsers.html.twig', array('users' => $users, 'params' => $params, 'positions' => $paramPositions, 'departments' => $paramDepartment, 'filters' => $filters, 'years' => $years));
     }
 
     /**
@@ -228,6 +232,7 @@ class UserController extends AbstractController
 
       return $this->render('user/view.html.twig', array('user' => $user, "prets" => $prets, "params" => $params));
     }
+
 
     public function viewPdf(Request $request)
     {

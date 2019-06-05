@@ -36,7 +36,7 @@
 					</select>
         </li>
         <li class="list-group-item d-flex justify-content-between lh-condensed">
-      		<label for="equipe">Equipe</label>
+      		<label for="year">Equipe</label>
 					<select class="form-control" id="equipe" name="equipe">
 						<option value="">--</option>
 						{% for val in departments %}
@@ -50,23 +50,23 @@
 					{% endfor %}
 					</select>
         </li>
-				<!--
+				
         <li class="list-group-item d-flex justify-content-between lh-condensed">
       		<label for="year">Année</label>
 					<select class="form-control" id="year" name="year">
 						<option value="">--</option>
-						{% for val in departments %}
+						{% for val in years %}
 						{% set selected = '' %}
-					  {% if filters.equipe is defined %}
-							{% if (filters["equipe"] and val.id == filters["equipe"]) %}
+					  {% if filters.year is defined %}
+							{% if (filters["year"] and val == filters["year"]) %}
 								{% set selected = 'selected' %}
 							{% endif %}
 						{% endif %}
-						<option value="{{val.id}}" {{selected}}>{{ val.value }}</option>
+						<option value="{{val}}" {{selected}}>{{ val }}</option>
 					{% endfor %}
 					</select>
         </li>
-				-->
+				
       </ul>
     </div>
 
@@ -187,6 +187,15 @@ function getFilters()
 		}
 		filters += "equipe=" + $("#equipe").val();
 	}
+	if ($("#year").val() != "") {
+		if ($("#position").val() != "" || $("#equipe").val() != "") {
+			filters += "&";
+		}
+		else{
+			filters += "?";
+		}
+		filters += "year=" + $("#year").val();
+	}
 	return filters;
 }
 
@@ -224,6 +233,9 @@ function loadList()
 		loadList();
 	});
 	$("#equipe").on('change', function (e) {
+		loadList();
+	});
+	$("#year").on('change', function (e) {
 		loadList();
 	});
 
