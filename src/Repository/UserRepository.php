@@ -36,7 +36,8 @@ class UserRepository extends ServiceEntityRepository
                     $qb = $qb->setParameter($k,$v);
                 }
                 else {
-                    $qb = $qb->andWhere('YEAR(u.arrival) = :'.$k.' OR YEAR(u.departure) = :'.$k);
+                    $qb->innerJoin('u.stays', 's');
+                    $qb = $qb->andWhere('YEAR(s.arrival) = :'.$k.' OR YEAR(s.departure) = :'.$k);
                     $qb = $qb->setParameter($k,$v);
                 }
             }

@@ -30,7 +30,7 @@
 
 <form action="{{ path('user_add') }}" id="saveUser" method="post">
   <input type="hidden" id="userId" name="userId" value="{{user.id}}">
-  <input type="hidden" id="host" name="host" value="{{user.host}}">
+  <input type="hidden" id="host" name="host" value="{{user.host!=null?user.host.id:""}}">
   <div class="form-row">
     <div class="col-md-4 mb-3">
       <input type="text" class="form-control" id="name" name="name" placeholder="Nom" value="{{user.name}}">
@@ -58,7 +58,12 @@
     </div>
     <div class="col-md-4 mb-3">
         <label class="form-label" for="hostName">Responsable</label>
-      <input type="text" class="form-control" id="hostName" placeholder="Responsable" value="">
+          {% set superviseur = '' %}
+          {% if (user.host) %}
+            {% set superviseur = user.host.firstName ~ " " ~ user.host.name %}
+          {% endif %}
+
+      <input type="text" class="form-control" id="hostName" placeholder="Responsable" value="{{superviseur}}">
     </div>
   </div>
 
@@ -323,5 +328,40 @@
   });
 	$("#departure").datepicker({
         dateFormat: "dd/mm/yy"
+	});
+
+	$("#hostName").autocomplete({
+    source: function( request, response ) {
+			$.ajax({
+					dataType: "json",
+					type : 'Get',
+					url: '/searchUserAjax',
+					data: {q: request.term},
+					success: function(data) {
+						var parsed = JSON.parse(data);
+						$('input.suggest-user').removeClass('ui-autocomplete-loading');
+						var newArray = new Array(parsed.length);
+						var i = 0;
+						$.each(parsed["data"], function(index, element) {
+							var newObject = { label: element.name, id: element.id };
+							newArray[i] = newObject;
+							i++;
+						});
+						response(newArray);
+					},
+					error: function(data) {
+							$('input.suggest-user').removeClass('ui-autocomplete-loading');
+					}
+			});
+		},
+		select: function (event, ui) {
+				$("#host").val(ui.item.id);
+				$("#hostName").val(ui.item.label);
+				return false;
+		},
+    minLength: 1,
+    open: function() {},
+    close: function() {},
+    focus: function(event,ui) {}
 	});
 {% endblock %}

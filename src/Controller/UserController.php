@@ -44,10 +44,12 @@ class UserController extends AbstractController
     {
       $array = $request->request->all();
       $nationality = "FR";
-      $host = NULL;
-      $arrival = NULL;
-      $departure = NULL;
-      $user = $this->saveUserInDb(NULL, $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], NULL, $array["financement"], $array["equipe"], NULL, $array["position"], $nationality, $host, $arrival, $departure, true, $passwordEncoder);
+      $host = $array["host"];
+      $arrival = $array["dateStart"];
+      $departure = $array["dateEnd"];
+      $password  = $this->randomPassword(17);
+      $user = $this->saveUserInDb(NULL, $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], NULL, $array["financement"], $array["equipe"], $password, $array["position"], $nationality, $host, $arrival, $departure, true, $passwordEncoder);
+      
 			return new JSonResponse(json_encode($user));
     }
 
@@ -88,9 +90,14 @@ class UserController extends AbstractController
       {
         $User = $entityManager->getRepository(User::class)->find($userId);
       }
+      if ($host == NULL || $host == "") {
+        $host = NULL;
+      }
+      
+      if($host != null) {
+        $host = $entityManager->getRepository(User::class)->find($host);
+      }
 
-
-      $host = empty($array["host"])?NULL:NULL;
       if ($arrival != NULL && !empty($arrival)) {
         $arrival = DateTime::createFromFormat('d/m/Y', $arrival);
       }
@@ -110,6 +117,13 @@ class UserController extends AbstractController
       }
       if ($position == NULL || empty($position)) {
         $position = NULL;
+      }
+
+      $stay = NULL;
+      if ($departure != NULL && $arrival != NULL) {
+        $stay = new Stay();
+        $stay->setArrival($arrival);
+        $stay->setDeparture($departure);
       }
 
       $User->setRoles(array($role));
@@ -135,11 +149,16 @@ class UserController extends AbstractController
       if ($newUser) {
         $entityManager->persist($User);
       }
+      if ($stay != NULL) {
+        $User->addStay($stay);
+        $entityManager->persist($stay);
+        $entityManager->persist($User);
+      }
   
       // actually executes the queries (i.e. the INSERT query)
       $entityManager->flush();
 
-      return $User;
+      return $entityManager->getRepository(User::class)->find($User->getId());
     }
 
     private function getListUserFilters(Request $request)
@@ -171,7 +190,7 @@ class UserController extends AbstractController
       $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
       $paramPositions  = $this->getDoctrine()->getRepository(Param::class)->getPositions();
       $paramDepartment = $this->getDoctrine()->getRepository(Param::class)->getDepartment();
-      $years = $this->getDoctrine()->getRepository(User::class)->getDistinctYear();
+      $years = $this->getDoctrine()->getRepository(Stay::class)->getDistinctYear();
       //dump($years);die();
       return $this->render('user/listageUsers.html.twig', array('users' => $users, 'params' => $params, 'positions' => $paramPositions, 'departments' => $paramDepartment, 'filters' => $filters, 'years' => $years));
     }
@@ -198,6 +217,10 @@ class UserController extends AbstractController
           return $this->render('user/replaceCreator.html.twig', array('user' => $user, "keys" => $keys));
         }
 
+        $stays = $this->getDoctrine()->getRepository(Stay::class)->byUser($user->getId());
+        foreach ($stays as $stay) {
+          $entityManager->remove($stay);
+        }
         $entityManager->remove($user);
         $entityManager->flush();
         return $this->listUser($request);
@@ -350,7 +373,7 @@ class UserController extends AbstractController
       $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
       
       $stay = null;
-      if(isset($stayId)) {
+      if(isset($stayId) && $stayId != "") {
         $stay = $this->getDoctrine()->getRepository(Stay::class)->find($stayId);
       } else {
         $stay = new Stay();
@@ -360,7 +383,7 @@ class UserController extends AbstractController
       $user->addStay($stay);
       
 
-      if(!isset($stayId)) {
+      if(!isset($stayId) || $stayId == "") {
 		    $entityManager->persist($stay);
       }
       $entityManager->flush();

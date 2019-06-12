@@ -98,6 +98,13 @@
 					</div>
 
 					<div class="form-row">
+						<div class="col-md-12 mb-3">
+							<label for="hostname">Email</label>
+							<input type="email" class="form-control" id="email" name="email" placeholder="Email" value="">
+						</div>
+					</div>
+
+					<div class="form-row">
 						<div class="col-md-4 mb-3">
 							<label for="hostname">Origine</label>
 							<input type="text" class="form-control" id="origine" name="origine" placeholder="Origine" value="">
@@ -109,9 +116,35 @@
 						</div>
 
 						<div class="col-md-4 mb-3">
+							<label for="nationality">Nationalité</label>
+							<select class="form-control" id="nationality" name="nationality">
+							{% for k,v in nationalities %}
+								<option value="{{k}}">{{ v }}</option>
+							{% endfor %}
+							</select>
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="col-md-4 mb-3">
+							<label for="position">Position</label>
+								<select class="form-control" id="position" name="position">
+								{% for val in positions %}
+								<option value="{{val.id}}">{{ val.value }}</option>
+								{% endfor %}
+								</select>
+						</div>
+
+						<div class="col-md-4 mb-3">
+							<label for="hostName">Reponsable</label>
+							<input type="hidden" id="host" name="host">
+							<input type="text" class="form-control" id="hostName" name="hostName" placeholder="Responsable" value="">
+						</div>
+
+						<div class="col-md-4 mb-3">
 							<label for="equipe">Equipe</label>
 							<select class="form-control" id="equipe" name="equipe">
-							{% for val in department %}
+							{% for val in departments %}
 								<option value="{{val.id}}">{{ val.value }}</option>
 							{% endfor %}
 							</select>
@@ -119,11 +152,16 @@
 					</div>
 
 					<div class="form-row">
-						<div class="col-md-12 mb-3">
-							<label for="hostname">Email</label>
-							<input type="email" class="form-control" id="email" name="email" placeholder="Email" value="">
+						<div class="col-sm">
+							<label for="dateModif">Date Début</label>
+							<input type="text" class="form-control" id="userDateStart" name="userDateStart" placeholder="" value="">
+						</div>
+						<div class="col-sm"> 
+							<label for="dateModif">Date Fin</label>
+							<input type="text" class="form-control" id="userDateEnd" name="userDateEnd" placeholder="" value="">
 						</div>
 					</div>
+
 				</form>
       </div>
       <div class="modal-footer">
@@ -159,13 +197,16 @@ function saveUser()
 	$.ajax({
 		url:"{{ path("user_add_ajax") }}",
 		method: "post",
-		data: {name: $("#name").val(), firstname: $("#firstname").val(), roles: $("#roles").val(), origine: $("#origine").val(), financement: $("#financement").val(), equipe: $("#equipe").val(), email: $("#email").val()},
+		data: {name: $("#name").val(), firstname: $("#firstname").val(), roles: $("#roles").val(), origine: $("#origine").val(), financement: $("#financement").val(), equipe: $("#equipe").val(), email: $("#email").val(), nationality: $("#nationality").val(), position: $("#position").val(), host: $("#host").val(), dateStart: $("#userDateStart").val(), dateEnd: $("#userDateEnd").val()},
 		dataType: 'json',
 		success: function (data) {
 				js = JSON.parse(data);
 				$("#userId").val(js["id"]);
 				$("#searchId").val(js["firstName"] + " " + js["name"]);
-			$('#modalNewUser').modal('hide');
+				var stays = JSON.parse(js.stay);
+				$("#dateStart").val(stays[0].arrival);
+				$("#dateEnd").val(stays[0].departure);
+				$('#modalNewUser').modal('hide');
 		}
 	});
 }
@@ -181,6 +222,15 @@ function saveUser()
 	});
 
 	$("#dateStart").datepicker("setDate", new Date());
+
+
+	$("#userDateEnd").datepicker({
+		language:"fr",
+	});
+
+	$("#userDateStart").datepicker({
+		language:"fr",
+	});
 
 	$("#newUserButton").on("click", function(event) {
 		$('#modalNewUser').modal('show');
@@ -271,4 +321,40 @@ function saveUser()
     close: function() {},
     focus: function(event,ui) {}
 	});
+
+	$("#hostName").autocomplete({
+    source: function( request, response ) {
+			$.ajax({
+					dataType: "json",
+					type : 'Get',
+					url: '/searchUserAjax',
+					data: {q: request.term},
+					success: function(data) {
+						var parsed = JSON.parse(data);
+						$('input.suggest-user').removeClass('ui-autocomplete-loading');
+						var newArray = new Array(parsed.length);
+						var i = 0;
+						$.each(parsed["data"], function(index, element) {
+							var newObject = { label: element.name, id: element.id };
+							newArray[i] = newObject;
+							i++;
+						});
+						response(newArray);
+					},
+					error: function(data) {
+							$('input.suggest-user').removeClass('ui-autocomplete-loading');
+					}
+			});
+		},
+		select: function (event, ui) {
+				$("#host").val(ui.item.id);
+				$("#hostName").val(ui.item.label);
+				return false;
+		},
+    minLength: 1,
+    open: function() {},
+    close: function() {},
+    focus: function(event,ui) {}
+	});
+	$("#hostName").autocomplete("option", "appendTo", "#saveUser");
 {% endblock %}

@@ -317,15 +317,16 @@ public function setRoles(array $roles): void
 }
 
     public function jsonSerialize() {
-        return [
+        $a =  [
             'name' => $this->name,
             'origine' => $this->origine,
             'note' => $this->note,
             'firstName' => $this->firstName,
             'id' => $this->id,
             'email' => $this->email,
-            'stay' => $this->stays,
+            'stay' => json_encode($this->stays->toArray()),
         ];
+        return $a;
     }
 
     public function getFinancement(): ?string

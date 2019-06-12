@@ -208,9 +208,12 @@ class KeyringController extends AbstractController
 		$paramTypes = $this->getDoctrine()->getRepository(Param::class)->getKeyType();
 		$paramLieux = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
 		$paramMails = $this->getDoctrine()->getRepository(User::class)->getUserEmail();
+		$paramDepartment = $this->getDoctrine()->getRepository(Param::class)->getDepartment();
+		$paramPositions  = $this->getDoctrine()->getRepository(Param::class)->getPositions();
+		$nationalities   = Param::getNationality();
 
 		$lend = $this->getDoctrine()->getRepository(Pret::class)->find($idPret);
-		return $this->render('lend/modify.html.twig', array('pret' => $lend,'types' => $paramTypes, 'lieux' => $paramLieux,'mails'=>$paramMails));
+		return $this->render('lend/modify.html.twig', array('pret' => $lend,'types' => $paramTypes, 'lieux' => $paramLieux,'mails'=>$paramMails, 'departments' => $paramDepartment, 'positions' => $paramPositions, "nationalities" => $nationalities));
 
 	}
 
@@ -255,7 +258,6 @@ class KeyringController extends AbstractController
 	public function mail (Request $request, \Swift_Mailer $mailer){
 		$lendsByUser = $this->checkNextExpiralLends();
 		$assocArrayParams = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
-		//dump($lends);die();
 
 
 		foreach($lendsByUser as $lbu)
@@ -263,8 +265,8 @@ class KeyringController extends AbstractController
 			$email = $lbu[0]->getUser()->getEmail();
 			$message = (new \Swift_Message('Restitution de clefs/badges'))
 			->setFrom('olivier.chabrol@univ-amu.fr')
-			->setTo('olivier.chabrol@univ-amu.fr')
-			//->setTo($email)
+			//->setTo('olivier.chabrol@univ-amu.fr')
+			->setTo($email)
 			->setBody(
 				$this->renderView(
 					// templates/emails/registration.html.twig
@@ -308,8 +310,10 @@ class KeyringController extends AbstractController
 		$paramLieux = $this->getDoctrine()->getRepository(Param::class)->getKeySite();
 		$paramMails = $this->getDoctrine()->getRepository(User::class)->getUserEmail();
 		$paramDepartment = $this->getDoctrine()->getRepository(Param::class)->getDepartment();
+		$paramPositions  = $this->getDoctrine()->getRepository(Param::class)->getPositions();
+		$nationalities   = Param::getNationality();
 
-		return $this->render('keyring/pret.html.twig', array('types' => $paramTypes, 'lieux' => $paramLieux, 'mails' => $paramMails,'department' => $paramDepartment));
+		return $this->render('keyring/pret.html.twig', array('types' => $paramTypes, 'lieux' => $paramLieux, 'mails' => $paramMails, 'departments' => $paramDepartment, 'positions' => $paramPositions, "nationalities" => $nationalities));
 
 	}
 

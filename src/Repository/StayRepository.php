@@ -19,6 +19,33 @@ class StayRepository extends ServiceEntityRepository
         parent::__construct($registry, Stay::class);
     }
 
+    public function byUser($userId) {
+        $qb = $this->createQueryBuilder('s')
+            ->andWhere('s.user = :user')
+            ->setParameter('user', $userId)
+            ->getQuery();
+        return $qb->execute();
+    }
+
+
+    public function getDistinctYear() {
+        $fields = array('s.arrival', 's.departure');
+        $qb = $this->createQueryBuilder('s')->select($fields)->distinct(true)->orderBy('s.arrival')->getQuery();
+        $a = $qb->execute();
+        $result = array();
+        foreach($a as $elm) {
+            if ($elm != null) {
+                if ($elm["arrival"]!= null && !in_array($elm["arrival"]->format('Y'), $result)) {
+                    array_push($result, $elm["arrival"]->format('Y'));
+                }
+                if ($elm["departure"]!= null && !in_array($elm["departure"]->format('Y'), $result)) {
+                    array_push($result, $elm["departure"]->format('Y'));
+                }
+            }
+        }
+        return $result;
+    }
+
     // /**
     //  * @return Stay[] Returns an array of Stay objects
     //  */
