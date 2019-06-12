@@ -138,19 +138,19 @@
 {% block js %}
 function searchKey()
 {
-    $.ajax({
-      url:"/listFreeKeyAjax",
-			method: "post",
-			data: {type: $("#type").val(), site: $("#lieu").val()},
-			dataType: 'json',
-			success: function (data) {
-				$("#trousseauId").find("option").remove();
-				$js = JSON.parse(data);
-				$.each($js["data"], function(index, element) {
-					var classCss = "";
-					$('#trousseauId').append(new Option(element.modele + " " + element.ref, element.id));
-				});
-	    }
+	$.ajax({
+		url:"/listFreeKeyAjax",
+		method: "post",
+		data: {type: $("#type").val(), site: $("#lieu").val()},
+		dataType: 'json',
+		success: function (data) {
+			$("#trousseauId").find("option").remove();
+			$js = JSON.parse(data);
+			$.each($js["data"], function(index, element) {
+				var classCss = "";
+				$('#trousseauId').append(new Option(element.modele + " " + element.ref, element.id));
+			});
+		}
 	});
 }
 

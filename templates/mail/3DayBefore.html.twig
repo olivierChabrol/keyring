@@ -1,0 +1,17 @@
+{% block body %}
+
+<h1 class="mt-5">Restitution de clefs/badges</h1>
+Bonjour, 
+Votre séjour à l'I2M s'achève le 
+vous être en possession des clefs et badges suivant :
+<ul>
+{% for lend in lends %}
+    <li>{{ params[lend.trousseau.site] }} {{ params[lend.trousseau.type] }} {{lend.trousseau.ref }}</li>
+{% endfor %}
+</ul>
+
+penser à les rendre au pôle VIVS à soit Chateau Gombert, soit à Luminy.<br>
+Pour toutes questions adresser un email à <a href="mailto:evelyne.henri@univ-amu.fr">evelyne.henri@univ-amu.fr</a> ou <a href="mailto:corinne.roux@univ-amu.fr">corinne.roux@univ-amu.fr</a>
+<br>
+Cordialement
+{% endblock %}

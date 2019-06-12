@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Param;
 use App\Entity\Pret;
 use App\Entity\Trousseau;
+use App\Entity\Stay;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,9 +56,11 @@ class UserController extends AbstractController
       $entityManager = $this->getDoctrine()->getManager();
       $array = $request->request->all();
       
-      $newUser = $request->request->get('userId') == NULL;
+      $arrival   = in_array("arrival", $array)?$array["arrival"]:null;
+      $departure = in_array("departure", $array)?$array["departure"]:null;
+      $newUser   = $request->request->get('userId') == NULL;
       //dump($newUser);die();
-      $this->saveUserInDb($request->request->get('userId'), $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], $array["username"], $array["financement"], $array["equipe"], $array["password"], $array["position"], $array["nationality"], $array["host"], $array["arrival"], $array["departure"], $newUser, $passwordEncoder);
+      $this->saveUserInDb($request->request->get('userId'), $array["roles"], $array["origine"], $array["name"], $array["firstname"], $array["email"], $array["username"], $array["financement"], $array["equipe"], $array["password"], $array["position"], $array["nationality"], $array["host"], $arrival, $departure, $newUser, $passwordEncoder);
 
       return $this->listUser($request);
     }
@@ -313,7 +316,57 @@ class UserController extends AbstractController
       return new JSonResponse(json_encode($retour));
     }
 
+    public function listStayAjax(Request $request)
+    {
+      $userId = $request->get('userId');
+      $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+      return new JSonResponse(json_encode($user));
+    }
 
+    public function loadStayAjax(Request $request)
+    {
+      $stayId = $request->get('stayId');
+      $stay = $this->getDoctrine()->getRepository(Stay::class)->find($stayId);
+      return new JSonResponse(json_encode($stay));
+    }
+    public function deleteStayAjax(Request $request)
+    {
+      $stayId = $request->get('stayId');
+      $entityManager = $this->getDoctrine()->getManager();
+      $stay = $this->getDoctrine()->getRepository(Stay::class)->find($stayId);
+      $entityManager->remove($stay);
+      $entityManager->flush();
+      return new JSonResponse(json_encode($stay));
+    }
+
+    public function saveStayAjax(Request $request)
+    {
+      $userId = $request->get('userId');
+      $stayId = $request->get('stayId');
+      $arrival = $request->get('arrival');
+      $departure = $request->get('departure');
+      $entityManager = $this->getDoctrine()->getManager();
+
+      $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+      
+      $stay = null;
+      if(isset($stayId)) {
+        $stay = $this->getDoctrine()->getRepository(Stay::class)->find($stayId);
+      } else {
+        $stay = new Stay();
+      }
+      $stay->setArrival(DateTime::createFromFormat('d/m/Y', $arrival));
+      $stay->setDeparture(DateTime::createFromFormat('d/m/Y', $departure));
+      $user->addStay($stay);
+      
+
+      if(!isset($stayId)) {
+		    $entityManager->persist($stay);
+      }
+      $entityManager->flush();
+      $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+      return new JSonResponse(json_encode($user));
+    }
 	
 	public function excel(Request $request)
   {

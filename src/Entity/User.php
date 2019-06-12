@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use \JsonSerializable;
+use \Datetime;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -123,11 +124,17 @@ private $arrival;
  */
 private $departure;
 
+/**
+ * @ORM\OneToMany(targetEntity="App\Entity\Stay", mappedBy="user", orphanRemoval=true)
+ */
+private $stays;
+
 
 public function __construct()
 {
     $this->prets = new ArrayCollection();
     $this->trousseaux = new ArrayCollection();
+    $this->stays = new ArrayCollection();
 }
 
 public function getId()
@@ -316,7 +323,8 @@ public function setRoles(array $roles): void
             'note' => $this->note,
             'firstName' => $this->firstName,
             'id' => $this->id,
-            'email' => $this->email
+            'email' => $this->email,
+            'stay' => $this->stays,
         ];
     }
 
@@ -400,6 +408,44 @@ public function setRoles(array $roles): void
     public function setDeparture(?\DateTimeInterface $departure): self
     {
         $this->departure = $departure;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Stay[]
+     */
+    public function getStays(): Collection
+    {
+        return $this->stays;
+    }
+
+    public function addNewStay(DateTime $arrival, DateTime $departure) {
+        $stay = new Stay();
+        $stay->setArrival($arrival);
+        $stay->setDeparture($departure);
+        return $this->addStay($stay);
+    }
+
+    public function addStay(Stay $stay): self
+    {
+        if (!$this->stays->contains($stay)) {
+            $this->stays[] = $stay;
+            $stay->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStay(Stay $stay): self
+    {
+        if ($this->stays->contains($stay)) {
+            $this->stays->removeElement($stay);
+            // set the owning side to null (unless already changed)
+            if ($stay->getUser() === $this) {
+                $stay->setUser(null);
+            }
+        }
 
         return $this;
     }

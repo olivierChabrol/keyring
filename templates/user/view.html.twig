@@ -12,9 +12,19 @@
 
 <div class="row">
   <div class="col-sm">
-    <h2 class="mt-5">{{ user.email }}</h2>
-    {{ user.origine }}<br>
-    Login : {{ user.username }}
+    <div class="row">
+      <h2 class="mt-5">{{ user.email }}</h2>
+      {{ user.origine }}<br>
+      Login : {{ user.username }}
+    </div>
+    <div class="row">
+      <h2 class="mt-5">Séjour(s):</h2>
+      <ul class="list-group">
+      {% for stay in user.stays %}
+        <li class="list-group-item">Du {{ stay.arrival?stay.arrival|date('d/m/Y') }} au {{ stay.departure?stay.departure|date('d/m/Y') }}</li>
+      {% endfor %}
+      </ul>
+    </div>
   </div>
   <div class="col-sm">
     <h2 class="mt-5">Prêts en cours :</h2>

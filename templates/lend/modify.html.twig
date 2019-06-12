@@ -63,7 +63,7 @@
 <div class="row">
     <div class="col-sm">
 		  <label for="dateModif">Date</label>
-		  <input type="text" class="form-control" id="dateStart" name="dateStart" placeholder="" value="{{ pret.start|date('m/d/Y') }}">
+		  <input type="text" class="form-control" id="dateStart" name="dateStart" placeholder="" value="{{ pret.start|date('d/m/Y') }}">
 	 </div>
      <div class="col-sm"> <!--
 	   <div class="form-check">
@@ -73,7 +73,7 @@
        <div class="checkbox">
 		  <label><input type="checkbox" value="" class="form-check-input" id="expirationDate">Expiration date</label>
 		</div>
-      <input type="text" class="form-control" id="dateEnd" name="dateEnd" placeholder="" value="{{ pret.end|date('m/d/Y') }}">
+      <input type="text" class="form-control" id="dateEnd" name="dateEnd" placeholder="" value="{{ pret.end|date('d/m/Y') }}">
     </div>
   </div>
 

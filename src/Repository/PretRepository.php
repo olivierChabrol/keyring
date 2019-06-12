@@ -30,9 +30,19 @@ class PretRepository extends ServiceEntityRepository
 
     public function getPretByUser($userId)
     {
-     $qb = $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->andWhere('p.user = (:userId)')
             ->setParameter('userId', $userId)
+            ->getQuery();
+        return $qb->execute();
+    }
+
+    public function listExpiralLend($date0, $date24)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->andWhere('p.end BETWEEN (:date0) AND (:date24)')
+            ->setParameter('date0', $date0)
+            ->setParameter('date24', $date24)
             ->getQuery();
         return $qb->execute();
     }

@@ -27,6 +27,8 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 
 use \Datetime;
+use \DateInterval;
+use \Swift_Mailer;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -226,7 +228,58 @@ class KeyringController extends AbstractController
 		return $this->listKey($request);
 
 	}
+
+	private function checkNextExpiralLends()
+	{
+		$today0 = new DateTime();
+		$today24 = new DateTime();
+		$today0->setTime(0,0,0,0);
+		$today24->setTime(23,59,59,0);
+
+		// add 3 days
+		$today0->add(new DateInterval('P2D'));
+		$today24->add(new DateInterval('P2D'));
+		//dump($today0);dump($today24);die();
+		$lends = $this->getDoctrine()->getRepository(Pret::class)->listExpiralLend(date_format($today0, 'Y-m-d H:i:s'), date_format($today24, 'Y-m-d H:i:s'));
+		
+		$retour = array();
+		foreach($lends as $lend) {
+			if (!in_array($lend->getUser()->getId(), array_keys($retour))) {
+				$retour[$lend->getUser()->getId()] = array();
+			}
+			$retour[$lend->getUser()->getId()][]= $lend;
+		}
+		return $retour;
+	}
 	
+	public function mail (Request $request, \Swift_Mailer $mailer){
+		$lendsByUser = $this->checkNextExpiralLends();
+		$assocArrayParams = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+		//dump($lends);die();
+
+
+		foreach($lendsByUser as $lbu)
+		{
+			$email = $lbu[0]->getUser()->getEmail();
+			$message = (new \Swift_Message('Restitution de clefs/badges'))
+			->setFrom('olivier.chabrol@univ-amu.fr')
+			->setTo('olivier.chabrol@univ-amu.fr')
+			//->setTo($email)
+			->setBody(
+				$this->renderView(
+					// templates/emails/registration.html.twig
+					'mail/3DayBefore.html.twig',
+					['lends' => $lbu, 'params' => $assocArrayParams]
+				),
+				'text/html'
+			);
+
+			$mailer->send($message);
+		}
+
+		return $this->listLend($request);
+	}
+
 	public function errormsg (Request $request){
 		
 		return $this->render('keyring/errormsg.html.twig',array());

@@ -99,14 +99,21 @@
         {% endfor %}
         </select>
     </div>
-    <div class="col-md-4 mb-3">
-      <label for="arrival">Date d'arrivée</label>
-      <input type="text" class="form-control" id="arrival" name="arrival" placeholder="Date d'arrivée" value="{{ user.arrival|date('d/m/Y') }}">
-    </div>
-    <div class="col-md-4 mb-3">
-      <label for="departure">Date de fin</label>
-      <input type="text" class="form-control" id="departure" name="departure" placeholder="Date de départ" value="{{ user.departure|date('d/m/Y') }}">
-    </div>
+  </div>
+  <hr/>
+  <div class="form-row">
+    <h2>Séjour
+    <span class="actions">
+        <a class="btn" href="#" id="addStayButton">Ajouter</a>
+    </span>
+    </h2>
+  </div>
+  <div class="form-row">
+    <ul class="list-group">
+  {% for stay in user.stays %}
+      <li class="list-group-item" id="liStay{{stay.id}}">Du <b>{{ stay.arrival|date('d/m/Y') }}</b> au <b>{{ stay.departure|date('d/m/Y') }}</b> <button type="button" class="btn btn-primary" id="modifyStayButton{{stay.id}}" name="{{stay.id}}">Modifier</button> <button type="button" class="btn btn-danger" id="deleteStayButton{{stay.id}}" name="{{stay.id}}">Supprimer</button></li>
+  {% endfor %}
+    </ul> 
   </div>
   <hr/>
   <div class="form-row">
@@ -139,6 +146,66 @@
   <button type="submit" id="btn" class="btn btn-success">Save</button>
 </form>
 
+
+<div class="modal fade" id="modalNewStay" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ajouter un nouveau séjour</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="col-md-4 mb-3">
+            <label for="arrival">Date d'arrivée</label>
+            <input type="text" class="form-control" id="arrival" name="arrival" placeholder="Date d'arrivée" value="{{ user.arrival|date('d/m/Y') }}">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="departure">Date de fin</label>
+            <input type="text" class="form-control" id="departure" name="departure" placeholder="Date de départ" value="{{ user.departure|date('d/m/Y') }}">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+        <button type="button" class="btn btn-primary" id="saveNewStayButton">Ajouter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalModifStay" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modifier un nouveau séjour</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="col-md-4 mb-3">
+            <input type="hidden" id="modifyStayId">
+            <label for="arrival">Date d'arrivée</label>
+            <input type="text" class="form-control" id="modifyArrival" name="arrival" placeholder="Date d'arrivée">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="departure">Date de fin</label>
+            <input type="text" class="form-control" id="modifyDeparture" name="departure" placeholder="Date de départ">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+        <button type="button" class="btn btn-primary" id="saveModifStayButton">Ajouter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 {% block js %}
   function validate() {
@@ -158,12 +225,89 @@
     }
   }
 
+  function loadStay(stayId) {
+    	$.ajax({
+      url:"{{ path('user_load_stay_ajax') }}",
+      method: "post",
+      data: {stayId: stayId, userId: $("#userId").val()},
+      dataType: 'json',
+      success: function (data) {
+        json = JSON.parse(data);
+        $("#modifyArrival").val(json["arrival"]);
+        $("#modifyDeparture").val(json["departure"]);
+        $("#modifyStayId").val(json["id"]);
+		    $('#modalModifStay').modal('show');
+      }
+	  });
+  }
+
+  function saveStay(stayId, arrival, departure) {
+		$.ajax({
+      url:"{{ path('user_add_stay_ajax') }}",
+      method: "post",
+      data: {arrival: arrival, departure: departure, userId: $("#userId").val(), stayId: stayId},
+      dataType: 'json',
+      success: function (data) {
+        json = JSON.parse(data);
+        window.location = '/user/modify?id=' + {{user.id}};
+      }
+	  });
+  }
+
+  function deleteStay(stayId, arrival, departure) {
+		$.ajax({
+      url:"{{ path('user_delete_stay_ajax') }}",
+      method: "post",
+      data: {stayId: stayId},
+      dataType: 'json',
+      success: function (data) {
+        json = JSON.parse(data);
+        console.log(json);
+        $("#liStay" + stayId).remove();
+      }
+	  });
+  }
+
+
 {% endblock %}
 
 {% block js_documentReady %}
   $('#backButton').on('click', function(event) {
     window.location = '/listusers';
   });
+  $("#addStayButton").on('click', function(event) {
+		$('#modalNewStay').modal('show');
+  });
+  $("#saveNewStayButton").on('click', function(event) {
+    saveStay(null, $("#arrival").val(), $("#departure").val());
+  });
+  $("#saveModifStayButton").on('click', function(event) {
+    saveStay($("#modifyStayId").val(), $("#modifyArrival").val(), $("#modifyDeparture").val());
+  });
+
+	$("[id^=deleteStayButton]").click(function() {
+		deleteStay(this.name);
+	});
+	$("[id^=modifyStayButton]").click(function() {
+		loadStay(this.name);
+	});
+
+
+	$("#modifyArrival").datepicker({
+      dateFormat: "dd/mm/yy",
+      onSelect: function() {
+        var date = $(this).datepicker('getDate');
+        if (date)
+        {
+          date.setDate(date.getDate() + 1);
+          $("#modifyDeparture").val( $.datepicker.formatDate('dd/mm/yy', date));
+        }
+      }
+  });
+	$("#modifyDeparture").datepicker({
+        dateFormat: "dd/mm/yy"
+	});
+
 	$("#arrival").datepicker({
         dateFormat: "dd/mm/yy",
         onSelect: function() {

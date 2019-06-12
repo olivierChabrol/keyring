@@ -82,6 +82,22 @@ user_list_excel:
     path : /user/list/excel
     controller: App\Controller\UserController::excel
 
+user_add_stay_ajax:
+    path : /user/stay/add/ajax
+    controller: App\Controller\UserController::saveStayAjax
+
+user_load_stay_ajax:
+    path : /user/stay/load/ajax
+    controller: App\Controller\UserController::loadStayAjax
+
+user_delete_stay_ajax:
+    path : /user/stay/delete/ajax
+    controller: App\Controller\UserController::deleteStayAjax
+
+user_list_stay_ajax:
+    path : /user/stay/list/ajax
+    controller: App\Controller\UserController::listStayAjax
+
 user_new:
     path: /user/new
     controller: App\Controller\UserController::createUser
@@ -185,3 +201,7 @@ pdf_lend_view:
 excel_lend:
     path: /lend/excel
     controller: App\Controller\KeyringController::excel
+
+admin_mail:
+    path: /admin/mail
+    controller: App\Controller\KeyringController::mail
