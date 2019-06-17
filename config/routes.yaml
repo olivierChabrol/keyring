@@ -86,6 +86,10 @@ user_add_stay_ajax:
     path : /user/stay/add/ajax
     controller: App\Controller\UserController::saveStayAjax
 
+user_stays_list_ajax:
+    path : /user/stay/list
+    controller: App\Controller\UserController::stayListAjax
+
 user_load_stay_ajax:
     path : /user/stay/load/ajax
     controller: App\Controller\UserController::loadStayAjax
@@ -125,6 +129,10 @@ user_profil:
 user_replaceCreatorKeys:
     path: /user/replaceCK
     controller: App\Controller\UserController::replaceCreatorKey
+
+user_email_exist_ajax:
+    path: /user/email/ajax
+    controller: App\Controller\UserController::emailExistAjax
 
 key_new:
     path: /key/new

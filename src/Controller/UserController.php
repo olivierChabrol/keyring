@@ -321,6 +321,22 @@ class UserController extends AbstractController
 
     }
 
+    public static function saveStay($entityManager, $user, DateTime $start, DateTime $end) {
+      //$user = $doctrine->getRepository(User::class)->find($userId);
+      $stay = new Stay();
+      $stay->setArrival($start);
+      $stay->setDeparture($end);
+      $user->addStay($stay);
+      $entityManager->persist($stay);
+      $entityManager->flush();
+    }
+
+    public function stayListAjax(Request $request) {
+      $userId = $request->get('userId');
+      $stays  = $this->getDoctrine()->getRepository(Stay::class)->byUser($userId);
+      return new JSonResponse(json_encode($stays));
+    }
+
     public function autoComplete(Request $request)
     {
       $q = $request->query->get('q');
@@ -337,6 +353,13 @@ class UserController extends AbstractController
       $retour["query" ] = $q;
       $retour["data"] = $json;
       return new JSonResponse(json_encode($retour));
+    }
+
+    public function emailExistAjax(Request $request)
+    {
+      $email = $request->get('email');
+      $user = $this->getDoctrine()->getRepository(User::class)->getByMail($email);
+      return new JSonResponse(json_encode($user));
     }
 
     public function listStayAjax(Request $request)

@@ -22,6 +22,7 @@ use App\Entity\Param;
 use App\Entity\Trousseau;
 use App\Entity\Pret;
 use App\Entity\User;
+use App\Entity\Stay;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -239,7 +240,7 @@ class KeyringController extends AbstractController
 		$today0->setTime(0,0,0,0);
 		$today24->setTime(23,59,59,0);
 
-		// add 3 days
+		// add 2 days
 		$today0->add(new DateInterval('P2D'));
 		$today24->add(new DateInterval('P2D'));
 		//dump($today0);dump($today24);die();
@@ -258,16 +259,20 @@ class KeyringController extends AbstractController
 	public function mail (Request $request, \Swift_Mailer $mailer){
 		$lendsByUser = $this->checkNextExpiralLends();
 		$assocArrayParams = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
-
+		$emails = $this->getDoctrine()->getRepository(Param::class)->getAdminEmails();
 
 		foreach($lendsByUser as $lbu)
 		{
 			$email = $lbu[0]->getUser()->getEmail();
-			$message = (new \Swift_Message('Restitution de clefs/badges'))
-			->setFrom('olivier.chabrol@univ-amu.fr')
+			$message = (new \Swift_Message('Restitution de clefs/badges'))->setFrom('olivier.chabrol@univ-amu.fr');
+			$message->setTo($email);
+			foreach($emails as $email) {
+				//dump($email->getValue());die();
+				$message = $message->addTo($email->getValue());
+			}
 			//->setTo('olivier.chabrol@univ-amu.fr')
-			->setTo($email)
-			->setBody(
+			
+			$message->setBody(
 				$this->renderView(
 					// templates/emails/registration.html.twig
 					'mail/3DayBefore.html.twig',
@@ -407,8 +412,16 @@ class KeyringController extends AbstractController
 
 		if ($newPret) {
 		  $entityManager->persist($pret);
-	    }
+		}
+		
 		$entityManager->flush();
+		if ($pret->getEnd() != null) {
+			$stays = $this->getDoctrine()->getRepository(Stay::class)->byUser($array["userId"]);
+			if ($stays[count($stays) -1]->getDeparture() < $pret->getEnd()) {
+				UserController::saveStay($entityManager, $user, $pret->getStart(), $pret->getEnd());
+			}
+
+		}
 
 	    return $this->listLend($request);
 	}

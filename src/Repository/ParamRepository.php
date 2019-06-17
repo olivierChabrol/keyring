@@ -30,6 +30,10 @@ class ParamRepository extends ServiceEntityRepository
         return $qb->execute();
 
     }
+
+    public function getAdminEmails() {
+        return $this->getParamByType(Param::MAIL_ADMIN);
+    }
     
     public function getDepartment()
     {

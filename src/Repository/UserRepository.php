@@ -49,6 +49,14 @@ class UserRepository extends ServiceEntityRepository
         return $qb->execute();
     }
 
+    public function getByMail($email) {
+        $qb = $this->createQueryBuilder('u');
+        $qb = $qb->andWhere('u.email = :email');
+        $qb = $qb->setParameter('email',$email);
+        $qb = $qb->getQuery();
+        return $qb->execute();
+    }
+
     public function getDistinctYear() {
         $fields = array('u.arrival', 'u.departure');
         $qb = $this->createQueryBuilder('u')->select($fields)->distinct(true)->orderBy('u.arrival')->getQuery();

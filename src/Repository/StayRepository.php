@@ -22,7 +22,7 @@ class StayRepository extends ServiceEntityRepository
     public function byUser($userId) {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.user = :user')
-            ->setParameter('user', $userId)
+            ->setParameter('user', $userId)->orderBy('s.arrival', 'ASC')
             ->getQuery();
         return $qb->execute();
     }

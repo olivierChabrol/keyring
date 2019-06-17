@@ -73,15 +73,15 @@
 
 <!-- Modal -->
 <div class="modal fade" id="modalNewUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ajouter un nouvel utilisateur</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
+  	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+      		<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Ajouter un nouvel utilisateur</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
 				<form action="/adduser" id="saveUser" method="post">
 					<h1>Ajout d'un utilisateur</h1>
 					<div class="form-row">
@@ -161,15 +161,35 @@
 							<input type="text" class="form-control" id="userDateEnd" name="userDateEnd" placeholder="" value="">
 						</div>
 					</div>
-
 				</form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
-        <button type="button" class="btn btn-primary" id="addUser">Sauver</button>
-      </div>
-    </div>
-  </div>
+			</div>		
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+				<button type="button" class="btn btn-primary" id="addUser">Sauver</button>
+			</div>
+		</div>
+  	</div>
+</div>
+
+<div class="modal fade" id="twoModalsExample" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Email existant</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<input type="hidden" id="existingUserId" value="">
+			<div class="modal-body">
+				l'email <b><span id="existingEmail"></span></b> est associé un utilisateur existant voulez-vous utiliser l'utilisateur : <i><b><span id="existingName"></span></b></i>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="existingNoUserButton">Non</button>
+				<button type="button" class="btn btn-primary" id="existingAddUserButton">Oui</button>
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}
 
@@ -210,6 +230,49 @@ function saveUser()
 		}
 	});
 }
+
+function emailExist()
+{
+	$.ajax({
+		url:"{{ path("user_email_exist_ajax") }}",
+		method: "post",
+		data: {email: $("#email").val()},
+		dataType: 'json',
+		success: function (data) {
+				js = JSON.parse(data);
+				console.log(js);
+				if(js.length > 0)
+				{
+					$('#modalNewUser').modal('hide');
+					$("#existingEmail").html(js[0]["email"]);
+					$("#existingName").html(js[0]["firstName"] + " " + js[0]["name"]);
+					$("#existingUserId").val(js[0]["id"]);
+					$('#twoModalsExample').modal('show');
+				}
+		}
+	});
+}
+
+function loadUserStay() {
+	$.ajax({
+		url:"{{ path("user_stays_list_ajax") }}",
+		method: "post",
+		data: {userId: $("#userId").val()},
+		dataType: 'json',
+		success: function (data) {
+				js = JSON.parse(data);
+				console.log(js.length);
+				if (js.length > 0) {
+					var stay = js[js.length -1];
+				
+					$("#dateStart").val(stay["arrival"]);
+					$("#dateEnd").val(stay["departure"]);
+				}
+				console.log(js);
+		}
+	});
+}
+
 {% endblock %}
 {% block js_documentReady %}
 
@@ -219,6 +282,16 @@ function saveUser()
 
 	$("#addUser").on("click", function(event) {
 		saveUser();
+	});
+	$("#existingAddUserButton").on("click", function(event) {
+		$("#userId").val($("#existingUserId").val());
+		$("#searchId").val($("#existingName").html());
+		$('#twoModalsExample').modal('hide');
+	});
+	
+	$("#existingNoUserButton").on("click", function(event) {
+		$('#modalNewUser').modal('show');
+		$('#twoModalsExample').modal('hide');
 	});
 
 	$("#dateStart").datepicker("setDate", new Date());
@@ -247,6 +320,10 @@ function saveUser()
 	  else {
 			$('#dateEnd').prop('disabled', true);
 	  }
+	});
+
+	$("#email").focusout(function(event) {
+		emailExist();
 	});
 
 	if($('#expirationDate').val() != true  )
@@ -311,9 +388,9 @@ function saveUser()
 			});
 		},
 		select: function (event, ui) {
-				//alert(ui.item.id);
 				$("#userId").val(ui.item.id);
 				$("#searchId").val(ui.item.label);
+				loadUserStay();
 				return false;
 		},
     minLength: 1,

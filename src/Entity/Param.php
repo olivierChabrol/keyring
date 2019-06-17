@@ -14,6 +14,8 @@ class Param
     const STATE = 3;
     const DEPARTMENT = 4;
     const POSITION = 5;
+    const MAIL_ADMIN = 6;
+    const MAIL_KEY = 7;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -67,7 +69,9 @@ class Param
             Param::POSITION => "Position",
         Param::SITE  => "Site",
         Param::STATE => "State",
-        Param::TYPE  => "Type",);
+        Param::TYPE  => "Type",
+        Param::MAIL_ADMIN  => "Email Administrateur",
+        Param::MAIL_KEY  => "Email Key",);
         return $assoc;
     }
 
