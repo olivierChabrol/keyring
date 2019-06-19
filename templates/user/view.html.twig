@@ -16,65 +16,65 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-2">
+    <div class="col-sm-4">
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm-3">
           Email :
         </div>
-        <div class="col-sm">
+        <div class="col-sm-8">
           {{ user.email }}
         </div>
       </div>
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm-3">
           Nationalité :
         </div>
-        <div class="col-sm">
+        <div class="col-sm-8">
           {{ nationalities[user.nationality] }}
         </div>
       </div>
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm-3">
           Origine :
         </div>
-        <div class="col-sm">
+        <div class="col-sm-8">
           {{ user.origine }}
         </div>
       </div>
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm-3">
           Statut :
         </div>
-        <div class="col-sm">
+        <div class="col-sm-8">
           {{ params[user.position] }}
         </div>
       </div>
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm-3">
           Financement :
         </div>
-        <div class="col-sm">
+        <div class="col-sm-8">
           {{ user.financement }}
         </div>
       </div>
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm-3">
           Invitant :
         </div>
-        <div class="col-sm">
+        <div class="col-sm-8">
           {{ user.host?user.host.firstName~" "~user.host.name:"" }}
         </div>
       </div>
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm-3">
           Equipe :
         </div>
-        <div class="col-sm">
+        <div class="col-sm-8">
           {{ params[user.equipe] }}
         </div>
       </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-6">
       <h2 class="mt-5">Prêts en cours :</h2>
       <div class="alert alert-success">
         {% if prets == null %}
@@ -82,7 +82,9 @@
         {% endif %}
         <br />
         {% for val in prets %}
-          <ul><h5>{{ params[val.trousseau.type] }} :</h5>{{ val.trousseau.modele }} {% if val.trousseau.modele != NULL or val.trousseau.modele != "" %},{% endif %} {{ val.trousseau.ref }}</ul>
+          <ul><strong>{{ params[val.trousseau.type] }} :</strong>{{ val.trousseau.modele }} {% if val.trousseau.modele != NULL or val.trousseau.modele != "" %},{% endif %} {{ val.trousseau.ref }}
+          , <strong>Bureau :</strong> {{ val.trousseau.access}}
+          </ul>
         {% endfor %}
       </div>
     </div>
@@ -90,10 +92,10 @@
 
 
 <div class="row">
-  <div class=".col-md-6">
-    <h2 class="mt-5">Séjour(s):</h2>
+  <div class="mb-auto p-2 bd-highlight">
+      <h2 class="mt-5">Séjour(s):</h2>
   </div>
-  <div class=".col-md-6">
+  <div class="mb-auto">
     <ul class="list-group">
     {% for stay in user.stays %}
       <li class="list-group-item">Du {{ stay.arrival?stay.arrival|date('d/m/Y') }} au {{ stay.departure?stay.departure|date('d/m/Y') }}</li>
