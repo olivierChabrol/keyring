@@ -6,37 +6,99 @@
 
 {% block body %}
 
-<h1 class="mt-5">{{ user.firstName }} {{ user.name }}</h1>
-<a href="{{ path("user_view_pdf", {id: user.id} ) }}" class="btn btn-info"> PDF </a>
-<a href="{{ path("user_modify", {id: user.id} ) }}" class="btn btn-success"> Modifier </a>
-
-<div class="row">
-  <div class="col-sm">
-    <div class="row">
-      <h2 class="mt-5">{{ user.email }}</h2>
-      {{ user.origine }}<br>
-      Login : {{ user.username }}
+  <div class="row">
+    <div class="col-md-2 col-sm-12">
+      <h3 id="quote">{{ user.firstName }} {{ user.name }}</h3>
     </div>
-    <div class="row">
-      <h2 class="mt-5">Séjour(s):</h2>
-      <ul class="list-group">
-      {% for stay in user.stays %}
-        <li class="list-group-item">Du {{ stay.arrival?stay.arrival|date('d/m/Y') }} au {{ stay.departure?stay.departure|date('d/m/Y') }}</li>
-      {% endfor %}
-      </ul>
+    <div class="col-md-2 col-sm-12">
+      <a href="{{ path("user_view_pdf", {id: user.id} ) }}" class="btn btn-primary" > PDF </a>
+      <a href="{{ path("user_modify", {id: user.id} ) }}" class="btn btn-success" > Modifier </a>
     </div>
   </div>
-  <div class="col-sm">
-    <h2 class="mt-5">Prêts en cours :</h2>
-    <div class="alert alert-success">
-      {% if prets == null %}
-        Aucun
-      {% endif %}
-  		<br />
-			{% for val in prets %}
-				<ul><h5>{{ params[val.trousseau.type] }} :</h5>{{ val.trousseau.modele }} {% if val.trousseau.modele != NULL or val.trousseau.modele != "" %},{% endif %} {{ val.trousseau.ref }}</ul>
-			{% endfor %}
+  <div class="row">
+    <div class="col-sm-2">
+      <div class="row">
+        <div class="col-sm">
+          Email :
+        </div>
+        <div class="col-sm">
+          {{ user.email }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          Nationalité :
+        </div>
+        <div class="col-sm">
+          {{ nationalities[user.nationality] }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          Origine :
+        </div>
+        <div class="col-sm">
+          {{ user.origine }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          Statut :
+        </div>
+        <div class="col-sm">
+          {{ params[user.position] }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          Financement :
+        </div>
+        <div class="col-sm">
+          {{ user.financement }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          Invitant :
+        </div>
+        <div class="col-sm">
+          {{ user.host?user.host.firstName~" "~user.host.name:"" }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          Equipe :
+        </div>
+        <div class="col-sm">
+          {{ params[user.equipe] }}
+        </div>
+      </div>
     </div>
+    <div class="col-sm-2">
+      <h2 class="mt-5">Prêts en cours :</h2>
+      <div class="alert alert-success">
+        {% if prets == null %}
+          Aucun
+        {% endif %}
+        <br />
+        {% for val in prets %}
+          <ul><h5>{{ params[val.trousseau.type] }} :</h5>{{ val.trousseau.modele }} {% if val.trousseau.modele != NULL or val.trousseau.modele != "" %},{% endif %} {{ val.trousseau.ref }}</ul>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+
+<div class="row">
+  <div class=".col-md-6">
+    <h2 class="mt-5">Séjour(s):</h2>
+  </div>
+  <div class=".col-md-6">
+    <ul class="list-group">
+    {% for stay in user.stays %}
+      <li class="list-group-item">Du {{ stay.arrival?stay.arrival|date('d/m/Y') }} au {{ stay.departure?stay.departure|date('d/m/Y') }}</li>
+    {% endfor %}
+    </ul>
   </div>
 </div>
 

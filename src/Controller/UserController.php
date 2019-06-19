@@ -260,8 +260,9 @@ class UserController extends AbstractController
       $user   = $this->getDoctrine()->getRepository(User::class)->find($userId);
       $prets  = $this->getDoctrine()->getRepository(Pret::class)->getPretByUser($userId);
       $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+      $nationalities = Param::getNationality();
 
-      return $this->render('user/view.html.twig', array('user' => $user, "prets" => $prets, "params" => $params));
+      return $this->render('user/view.html.twig', array('user' => $user, "prets" => $prets, "params" => $params, "nationalities" => $nationalities));
     }
 
 
@@ -276,6 +277,7 @@ class UserController extends AbstractController
       $user   = $this->getDoctrine()->getRepository(User::class)->find($userId);
       $prets  = $this->getDoctrine()->getRepository(Pret::class)->getPretByUser($userId);
       $params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+      $nationalities = Param::getNationality();
 
 
       $pdfOptions = new Options();
@@ -286,7 +288,7 @@ class UserController extends AbstractController
 
       // Retrieve the HTML generated in our twig file
       $html = $this->renderView('user/viewPdf.html.twig', [
-          'user' => $user, "prets" => $prets, "params" => $params
+          'user' => $user, "prets" => $prets, "params" => $params, "nationalities" => $nationalities,
       ]);
 
       // Load HTML to Dompdf

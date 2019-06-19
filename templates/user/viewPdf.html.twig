@@ -3,13 +3,77 @@
 {% block title %}Fiche de prêt, {{ user.firstName }} {{ user.name }}{% endblock %}
 
 {% block body %}
-
+<table>
+  <tr>
+    <td width="60%">
+      <img src="i2m.jpg"><br>
+      <p class="text-center">
+      <h3>Fiche d'accueil</h3>
+      </p><br>
+      {{ params[user.position] }}<br>
+      <p class="font-weight-bold">Last name - Nom : <span class="font-weight-normal">{{ user.name }}</span></p><br>
+      <p class="font-weight-bold">First name - Prénom : <span class="font-weight-normal">{{ user.firstName }}</span></p><br>
+      <p class="font-weight-bold">Nationality - Nationalité : <span class="font-weight-normal">{{ nationalities[user.nationality] }}</span></p><br>
+      <p class="font-weight-bold">University - Université : <span class="font-weight-normal">{{ user.origine }}</span></p><br>
+      <p class="font-weight-bold">Position - Statut : <span class="font-weight-normal">{{ params[user.position] }}</span></p><br>
+      <p class="font-weight-bold">Funding - Financement : <span class="font-weight-normal">{{ user.financement }}</span></p><br><br>
+    </td>
+    <td width="40%">
+      <table border="1">
+        <tr>
+          <td>
+              <small class="text-muted">
+              Reserved Area pole VIVS<br>
+              Cadre réservé au pôle VIVS
+              </small>
+          </td>
+        </tr>
+        <tr>
+          <td>Badge:</td>
+        </tr>
+        <tr>
+          <td>Activation Ticket ENT:<br>
+          ___
+          </td>
+        </tr>
+        <tr>
+          <td>Prolongation séjour<br>
+          Ticket ENT:<br>
+          ...
+          </td>
+        </tr>
+        <tr>
+          <td>Désactivation Ticket ENT:<br>
+          ___
+          </td>
+        </tr>
+        <tr>
+          <td>Perte ou vol Ticket ENT:<br>
+          ___
+          </td>
+        </tr>
+        <tr>
+          <td>Badge endommagé
+          </td>
+        </tr>
+      </table>
+    </td>
+  <tr>
+</table>
+<p class="font-weight-bold">Mail address - Adresse email : <span class="font-weight-normal">{{ user.email }}</span></p><br>
+<p class="font-weight-bold">Invitant : <span class="font-weight-normal">{{ user.host?user.host.firstName~" "~user.host.name:"" }}</span></p><br>
+<p class="font-weight-bold">Research team - Equipe de recherche : <span class="font-weight-normal">{{ params[user.equipe] }}</span></p><br>
+<p class="font-weight-bold">Date of stay - Date de séjour : <span class="font-weight-normal">{%if user.stays %}{{ (user.stays|last).arrival|date('d/m/Y') }} au {{ (user.stays|last).departure|date('d/m/Y') }} {% endif %}</span> </p><br>
+<p class="font-weight-bold">Site : <span class="font-weight-normal">____________________</span></p><br>
 <div class="row">
-    <div class="col-sm">
-        {{ user.email }}
-    </div>
-    <br />
+  <ul>
+  {% for val in prets %}
+  <li><span class="font-weight-bold">{{ params[val.trousseau.type] }} : </span>{{ val.trousseau.modele }}, {{ val.trousseau.ref }}, Bureau : {{ val.trousseau.access }}</li>
+  {% endfor %}
+  </ul>
 </div>
+
+<!--
 <div class="row">
     <div class="col-sm">
         Je soussigné {{ user.firstName }} {{ user.name }}, reconnais avoir reçu le {{ prets[0].start|date('d/m/Y') }} l'ensemble des biens suivants :
@@ -59,5 +123,6 @@
         <br />
       </div>
     </div>
-
+</div>
+-->
 {% endblock %}

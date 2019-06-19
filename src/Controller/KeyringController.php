@@ -263,12 +263,11 @@ class KeyringController extends AbstractController
 
 		foreach($lendsByUser as $lbu)
 		{
-			$email = $lbu[0]->getUser()->getEmail();
+			//$email = $lbu[0]->getUser()->getEmail();
 			$message = (new \Swift_Message('Restitution de clefs/badges'))->setFrom('olivier.chabrol@univ-amu.fr');
-			$message->setTo($email);
+			$message->setTo($lbu[0]->getUser()->getEmail());
 			foreach($emails as $email) {
-				//dump($email->getValue());die();
-				$message = $message->addTo($email->getValue());
+				$message = $message->addCc($email->getValue())->addReplyTo($email->getValue());
 			}
 			//->setTo('olivier.chabrol@univ-amu.fr')
 			
@@ -450,6 +449,7 @@ class KeyringController extends AbstractController
 		$user   = $this->getDoctrine()->getRepository(User::class)->find($userId);
 		$prets  = $this->getDoctrine()->getRepository(Pret::class)->getPretByUser($userId);
 		$params = $this->getDoctrine()->getRepository(Param::class)->getAssociativeArrayParam();
+		$nationalities = Param::getNationality();
 
 		$pdfOptions = new Options();
 		$pdfOptions->set('defaultFont', 'Arial');
@@ -459,7 +459,7 @@ class KeyringController extends AbstractController
 		
 		// Retrieve the HTML generated in our twig file
 		$html = $this->renderView('user/viewPdf.html.twig', [
-				'user' => $user, "prets" => $prets, "params" => $params
+			'user' => $user, "prets" => $prets, "params" => $params, "nationalities" => $nationalities,
 		]);
 
 		// Load HTML to Dompdf
